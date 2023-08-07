@@ -1,14 +1,13 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Bird.h"
 
+#include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Engine/SkeletalMesh.h"
+#include "Animation/AnimationAsset.h"
 
-// Sets default values
 ABird::ABird()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 
@@ -16,30 +15,58 @@ ABird::ABird()
 	CapsuleCollider->SetCapsuleRadius(15.f);
 	CapsuleCollider->SetCapsuleHalfHeight(20.f);
 	SetRootComponent(CapsuleCollider);
-
-	BirdMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("BirdMesh"));
-	BirdMesh->SetupAttachment(GetRootComponent());
+	CapsuleCollider->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	CapsuleCollider->SetCollisionResponseToAllChannels(ECR_Block);
 	
+	
+	BirdMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("BirdMesh"));
+	BirdMeshComponent->SetupAttachment(GetRootComponent());
+
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> BirdMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/AnimalVarietyPack/Crow/Meshes/SK_Crow.SK_Crow'"));
+	static ConstructorHelpers::FObjectFinder<UAnimSequence> BirdAnimation(TEXT("/Script/Engine.AnimSequence'/Game/AnimalVarietyPack/Crow/Animations/ANIM_Crow_Fly.ANIM_Crow_Fly'"));
+
+	BirdFlyAnimation = BirdAnimation.Object;
+	
+	if (BirdMesh.Succeeded() && BirdMeshComponent)
+	{
+		BirdMeshComponent->SetSkeletalMesh(BirdMesh.Object);
+		BirdMeshComponent->SetAnimationMode(EAnimationMode::AnimationSingleNode);
+	}
+
+	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
+	CameraBoom->SetupAttachment(GetRootComponent());
+	CameraBoom->TargetArmLength = 300.f;
+	CameraBoom->SetRelativeRotation(FRotator(-30.f, 0.f, 0.f));
+
+	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	Camera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+	Camera->SetRelativeRotation(FRotator::ZeroRotator);
+
+	bUseControllerRotationPitch = true;
+	bUseControllerRotationYaw = true;
 }
 
-// Called when the game starts or when spawned
 void ABird::BeginPlay()
 {
 	Super::BeginPlay();
+
+		UE_LOG(LogTemp, Warning, TEXT("Animation loaded successfully"));
+		//BirdMeshComponent->SetAnimation(BirdFlyAnimation);
+		BirdMeshComponent->PlayAnimation(BirdFlyAnimation, true);
 }
 
-// Called every frame
 void ABird::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
-// Called to bind functionality to input
 void ABird::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis("Forward", this, &ABird::MoveForward);
+	PlayerInputComponent->BindAxis(FName("Forward"), this, &ABird::MoveForward);
+	PlayerInputComponent->BindAxis(FName("TurnRight"), this, &APawn::AddControllerYawInput);
+	PlayerInputComponent->BindAxis(FName("LookUp"), this, &APawn::AddControllerPitchInput);
 }
 
 void ABird::MoveForward(float ScaleValue)
@@ -49,4 +76,5 @@ void ABird::MoveForward(float ScaleValue)
 		FVector ForwardVector = GetActorForwardVector(); 
 		AddMovementInput(ForwardVector, ScaleValue);
 	}
+	
 }

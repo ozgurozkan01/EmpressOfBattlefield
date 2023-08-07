@@ -6,6 +6,8 @@
 #include "GameFramework/Pawn.h"
 #include "Bird.generated.h"
 
+class UCameraComponent;
+class USpringArmComponent;
 class UCapsuleComponent;
 class USkeletalMeshComponent;
 
@@ -31,5 +33,15 @@ private:
 	UCapsuleComponent *CapsuleCollider;
 
 	UPROPERTY(EditDefaultsOnly, Category="Main")
-	USkeletalMeshComponent *BirdMesh;
+	USkeletalMeshComponent *BirdMeshComponent;
+
+	UPROPERTY()
+	UAnimSequence* BirdFlyAnimation;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Main")
+	USpringArmComponent* CameraBoom;
+
+	UPROPERTY(EditDefaultsOnly, Category="Main")
+	UCameraComponent* Camera;
+	
 };
