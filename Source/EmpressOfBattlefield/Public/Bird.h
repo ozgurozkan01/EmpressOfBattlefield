@@ -6,10 +6,13 @@
 #include "GameFramework/Pawn.h"
 #include "Bird.generated.h"
 
+struct FInputActionValue;
+class UInputAction;
 class UCameraComponent;
 class USpringArmComponent;
 class UCapsuleComponent;
 class USkeletalMeshComponent;
+class UInputMappingContext;
 
 UCLASS()
 class EMPRESSOFBATTLEFIELD_API ABird : public APawn
@@ -26,7 +29,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	void MoveForward(float ScaleValue);
+	void Move(const FInputActionValue& Value);
 	
 private:
 	UPROPERTY(EditDefaultsOnly, Category="Main")
@@ -43,5 +46,11 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category="Main")
 	UCameraComponent* Camera;
+
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	UInputMappingContext* BirdMappingContext;
+
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	UInputAction* MoveAction;
 	
 };

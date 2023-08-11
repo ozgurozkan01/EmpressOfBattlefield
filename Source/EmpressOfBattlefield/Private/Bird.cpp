@@ -5,6 +5,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Engine/SkeletalMesh.h"
 #include "Animation/AnimationAsset.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
 
 ABird::ABird()
 {
@@ -50,9 +52,28 @@ void ABird::BeginPlay()
 {
 	Super::BeginPlay();
 
-		UE_LOG(LogTemp, Warning, TEXT("Animation loaded successfully"));
-		//BirdMeshComponent->SetAnimation(BirdFlyAnimation);
-		BirdMeshComponent->PlayAnimation(BirdFlyAnimation, true);
+	//BirdMeshComponent->SetAnimation(BirdFlyAnimation);
+	BirdMeshComponent->PlayAnimation(BirdFlyAnimation, true);
+
+	APlayerController* BirdController = Cast<APlayerController>(GetController());
+
+	if (BirdController)
+	{
+		UEnhancedInputLocalPlayerSubsystem* BirdSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(BirdController->GetLocalPlayer());
+
+		if (BirdSubsystem)
+		{
+			BirdSubsystem->AddMappingContext(BirdMappingContext, 0);
+		}
+	}
+}
+
+void ABird::Move(const FInputActionValue& Value)
+{
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(0, 2.f, FColor::Cyan, "Move Action!");
+	}
 }
 
 void ABird::Tick(float DeltaTime)
@@ -64,11 +85,19 @@ void ABird::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis(FName("Forward"), this, &ABird::MoveForward);
+	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
+
+	if(EnhancedInputComponent)
+	{
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABird::Move);	
+	}
+	
+	/*PlayerInputComponent->BindAxis(FName("Forward"), this, &ABird::MoveForward);
 	PlayerInputComponent->BindAxis(FName("TurnRight"), this, &APawn::AddControllerYawInput);
-	PlayerInputComponent->BindAxis(FName("LookUp"), this, &APawn::AddControllerPitchInput);
+	PlayerInputComponent->BindAxis(FName("LookUp"), this, &APawn::AddControllerPitchInput);*/
 }
 
+/*
 void ABird::MoveForward(float ScaleValue)
 {
 	if ( (Controller != nullptr) && (ScaleValue != 0.f))
@@ -77,4 +106,4 @@ void ABird::MoveForward(float ScaleValue)
 		AddMovementInput(ForwardVector, ScaleValue);
 	}
 	
-}
+}*/
