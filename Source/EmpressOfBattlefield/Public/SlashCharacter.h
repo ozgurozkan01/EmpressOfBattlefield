@@ -3,8 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InputActionValue.h"
 #include "GameFramework/Character.h"
 #include "SlashCharacter.generated.h"
+
+class UGroomComponent;
+class UCameraComponent;
+class USpringArmComponent;
+class UInputMappingContext;
+class UInputAction;
 
 UCLASS()
 class EMPRESSOFBATTLEFIELD_API ASlashCharacter : public ACharacter
@@ -12,18 +19,38 @@ class EMPRESSOFBATTLEFIELD_API ASlashCharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	ASlashCharacter();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+protected:
+	virtual void BeginPlay() override;
+	
+	void Movement(const FInputActionValue& Value);
+	void Look(const FInputActionValue& Value);
+public:
+
+	UPROPERTY(EditDefaultsOnly, Category="Camera")
+	USpringArmComponent* CameraBoom;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Camera")
+	UCameraComponent* Camera;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	UInputMappingContext* SlashMappingContext;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Input")	
+	UInputAction* MovementAction;
+
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	UInputAction* LookAction;
+
+	// Groom Component is used for the hair, eyebrows or etc.
+	UPROPERTY(EditDefaultsOnly, Category=Hair)
+	UGroomComponent* Hair;
+
+	UPROPERTY(EditDefaultsOnly, Category=Hair)
+	UGroomComponent* EyeBrows;
 };
