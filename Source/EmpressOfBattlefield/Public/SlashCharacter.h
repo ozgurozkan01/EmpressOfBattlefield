@@ -53,4 +53,5 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category=Hair)
 	UGroomComponent* EyeBrows;
+
 };

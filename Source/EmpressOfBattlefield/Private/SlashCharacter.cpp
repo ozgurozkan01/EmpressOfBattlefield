@@ -35,7 +35,8 @@ ASlashCharacter::ASlashCharacter()
 	
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
-
+	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+	
 	// Player does not turn with mouse but camera does
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -44,7 +45,6 @@ ASlashCharacter::ASlashCharacter()
 
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character turns the movement direction
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 450.f, 0.f);
-	
 	
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
