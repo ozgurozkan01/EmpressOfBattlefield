@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InputActionValue.h"
 #include "GameFramework/Pawn.h"
 #include "Bird.generated.h"
 
@@ -30,6 +31,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	void Move(const FInputActionValue& Value);
+	void Look(const FInputActionValue& Value);
 	
 private:
 	UPROPERTY(EditDefaultsOnly, Category="Main")
@@ -52,5 +54,8 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	UInputAction* MoveAction;
+
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	UInputAction* LookAction;
 	
 };

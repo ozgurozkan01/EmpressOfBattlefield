@@ -20,10 +20,11 @@ ABird::ABird()
 	CapsuleCollider->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	CapsuleCollider->SetCollisionResponseToAllChannels(ECR_Block);
 	
-	
 	BirdMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("BirdMesh"));
 	BirdMeshComponent->SetupAttachment(GetRootComponent());
-
+	BirdMeshComponent->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
+	BirdMeshComponent->SetRelativeLocation(FVector(0.f, 0.f, -20.f));
+	
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> BirdMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/AnimalVarietyPack/Crow/Meshes/SK_Crow.SK_Crow'"));
 	static ConstructorHelpers::FObjectFinder<UAnimSequence> BirdAnimation(TEXT("/Script/Engine.AnimSequence'/Game/AnimalVarietyPack/Crow/Animations/ANIM_Crow_Fly.ANIM_Crow_Fly'"));
 
@@ -54,25 +55,13 @@ void ABird::BeginPlay()
 
 	//BirdMeshComponent->SetAnimation(BirdFlyAnimation);
 	BirdMeshComponent->PlayAnimation(BirdFlyAnimation, true);
-
-	APlayerController* BirdController = Cast<APlayerController>(GetController());
-
-	if (BirdController)
+	
+	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 	{
-		UEnhancedInputLocalPlayerSubsystem* BirdSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(BirdController->GetLocalPlayer());
-
-		if (BirdSubsystem)
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
-			BirdSubsystem->AddMappingContext(BirdMappingContext, 0);
+			Subsystem->AddMappingContext(BirdMappingContext, 0);
 		}
-	}
-}
-
-void ABird::Move(const FInputActionValue& Value)
-{
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(0, 2.f, FColor::Cyan, "Move Action!");
 	}
 }
 
@@ -85,25 +74,33 @@ void ABird::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
-
-	if(EnhancedInputComponent)
+	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABird::Move);	
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABird::Move);
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABird::Look);
 	}
-	
-	/*PlayerInputComponent->BindAxis(FName("Forward"), this, &ABird::MoveForward);
-	PlayerInputComponent->BindAxis(FName("TurnRight"), this, &APawn::AddControllerYawInput);
-	PlayerInputComponent->BindAxis(FName("LookUp"), this, &APawn::AddControllerPitchInput);*/
 }
 
-/*
-void ABird::MoveForward(float ScaleValue)
+void ABird::Move(const FInputActionValue& Value)
 {
-	if ( (Controller != nullptr) && (ScaleValue != 0.f))
+	const float DirectionValue = Value.Get<float>();
+
+	if (Controller && DirectionValue != 0)
 	{
-		FVector ForwardVector = GetActorForwardVector(); 
-		AddMovementInput(ForwardVector, ScaleValue);
+		FVector ForwardVector = GetActorForwardVector();
+		AddMovementInput(ForwardVector, DirectionValue);
 	}
-	
-}*/
+}
+
+void ABird::Look(const FInputActionValue& Value)
+{
+	const FVector2d LookDirection = Value.Get<FVector2D>();
+
+	if (Controller == nullptr)
+	{
+		return;
+	}
+
+	AddControllerYawInput(LookDirection.X);
+	AddControllerPitchInput(LookDirection.Y);
+}
