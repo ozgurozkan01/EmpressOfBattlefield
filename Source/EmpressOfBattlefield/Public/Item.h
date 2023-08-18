@@ -4,6 +4,9 @@
 #include "GameFramework/Actor.h"
 #include "Item.generated.h"
 
+
+class UCapsuleComponent;
+
 UCLASS()
 class EMPRESSOFBATTLEFIELD_API AItem : public AActor
 {
@@ -14,6 +17,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category="Mesh")
 	UStaticMeshComponent* ItemMesh;
+
+	UPROPERTY(EditDefaultsOnly, Category="Mesh")
+	UCapsuleComponent* CapsuleCollider;
 	
 protected:
 	virtual void BeginPlay() override;
