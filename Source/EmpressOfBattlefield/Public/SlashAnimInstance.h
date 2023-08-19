@@ -15,7 +15,10 @@ class EMPRESSOFBATTLEFIELD_API USlashAnimInstance : public UAnimInstance
 	GENERATED_BODY()
 protected:
 
+	// as BeginPlay()
 	virtual void NativeInitializeAnimation() override;;
+
+	// as Tick()
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 	UPROPERTY(BlueprintReadOnly)
@@ -26,4 +29,7 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category=Movement)	
 	float GroundSpeed;
+
+	UPROPERTY(BlueprintReadOnly, Category=Movement)	
+	bool IsFalling;
 };
