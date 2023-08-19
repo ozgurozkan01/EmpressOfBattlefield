@@ -30,6 +30,7 @@ protected:
 	
 	void Movement(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
+	void Jump(const FInputActionValue& Value);
 public:
 
 	UPROPERTY(EditDefaultsOnly, Category="Camera")
@@ -47,6 +48,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	UInputAction* LookAction;
 
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	UInputAction* JumpAction;	
+	
 	// Groom Component is used for the hair, eyebrows or etc.
 	UPROPERTY(EditDefaultsOnly, Category=Hair)
 	UGroomComponent* Hair;

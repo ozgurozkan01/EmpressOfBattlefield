@@ -79,6 +79,8 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	{
 		EnhancedInputComponent->BindAction(MovementAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Movement);
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Look);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Jump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 	}
 }
 
@@ -104,4 +106,14 @@ void ASlashCharacter::Look(const FInputActionValue& Value)
 
 	AddControllerPitchInput(LookDirection.Y);
 	AddControllerYawInput(LookDirection.X);
+}
+
+void ASlashCharacter::Jump(const FInputActionValue& Value)
+{
+	const bool CanJump = Value.Get<bool>();
+	
+	if (CanJump && !GetCharacterMovement()->IsFalling())
+	{
+		ACharacter::Jump();
+	}
 }
