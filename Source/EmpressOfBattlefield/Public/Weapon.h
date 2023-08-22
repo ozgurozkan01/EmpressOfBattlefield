@@ -13,5 +13,9 @@ UCLASS()
 class EMPRESSOFBATTLEFIELD_API AWeapon : public AItem
 {
 	GENERATED_BODY()
-	
+
+public:
+
+	void OverlappingBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult) override;
+	void OverlappingEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) override;
 };
