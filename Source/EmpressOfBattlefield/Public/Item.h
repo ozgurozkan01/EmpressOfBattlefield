@@ -5,7 +5,7 @@
 #include "Item.generated.h"
 
 
-class UCapsuleComponent;
+class USphereComponent;
 
 UCLASS()
 class EMPRESSOFBATTLEFIELD_API AItem : public AActor
@@ -15,16 +15,36 @@ class EMPRESSOFBATTLEFIELD_API AItem : public AActor
 public:	
 	AItem();
 
-	UPROPERTY(EditDefaultsOnly, Category="Mesh")
-	UStaticMeshComponent* ItemMesh;
-
-	UPROPERTY(EditDefaultsOnly, Category="Mesh")
-	UCapsuleComponent* CapsuleCollider;
+	virtual void Tick(float DeltaTime) override;
+	void SinusoidalMovement();
 	
+	UFUNCTION()
+	virtual void OverlappingBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+	UFUNCTION()
+	virtual void OverlappingEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);	
+
 protected:
 	virtual void BeginPlay() override;
 
-public:	
-	virtual void Tick(float DeltaTime) override;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Mesh")
+	UStaticMeshComponent* ItemMesh;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Mesh")
+	USphereComponent* SphereCollider;
+
+	UPROPERTY()
+	float RunningTime;
+
+	UPROPERTY()
+	float SinResult;
+
+	UPROPERTY(EditDefaultsOnly, Category="Offset")
+	float OffsetMultiplier;
+
+	UPROPERTY(EditDefaultsOnly, Category="Offset")
+	float OffsetSpeed;
+
+	UPROPERTY(VisibleInstanceOnly, Category="Equip")
+	bool IsItemTaken;	
 };
 
