@@ -9,6 +9,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GroomComponent.h"
+#include "Weapon.h"
 
 // Sets default values
 ASlashCharacter::ASlashCharacter()
@@ -81,6 +82,7 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Look);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+		EnhancedInputComponent->BindAction(EquipWeaponAction, ETriggerEvent::Triggered, this, &ASlashCharacter::EquipWeapon);
 	}
 }
 
@@ -115,5 +117,17 @@ void ASlashCharacter::Jump(const FInputActionValue& Value)
 	if (CanJump && !GetCharacterMovement()->IsFalling())
 	{
 		ACharacter::Jump();
+	}
+}
+
+void ASlashCharacter::EquipWeapon(const FInputActionValue& Value)
+{
+	const bool bEKeyPressed = Value.Get<bool>();
+
+	AWeapon* OverlappedWeapon = Cast<AWeapon>(OverlappingItem);
+
+	if(OverlappingItem && bEKeyPressed)
+	{
+		OverlappedWeapon->Equip(GetMesh(), FName("WeaponSocket"));
 	}
 }

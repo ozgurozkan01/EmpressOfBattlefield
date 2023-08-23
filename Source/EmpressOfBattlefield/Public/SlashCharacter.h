@@ -12,6 +12,7 @@ class UCameraComponent;
 class USpringArmComponent;
 class UInputMappingContext;
 class UInputAction;
+class AItem;
 
 UCLASS()
 class EMPRESSOFBATTLEFIELD_API ASlashCharacter : public ACharacter
@@ -25,12 +26,15 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
+
 protected:
 	virtual void BeginPlay() override;
 	
 	void Movement(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void Jump(const FInputActionValue& Value);
+	void EquipWeapon(const FInputActionValue& Value);
 public:
 
 	UPROPERTY(EditDefaultsOnly, Category="Camera")
@@ -50,6 +54,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	UInputAction* JumpAction;	
+
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	UInputAction* EquipWeaponAction;		
 	
 	// Groom Component is used for the hair, eyebrows or etc.
 	UPROPERTY(EditDefaultsOnly, Category=Hair)
@@ -58,4 +65,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category=Hair)
 	UGroomComponent* EyeBrows;
 
+	UPROPERTY(VisibleInstanceOnly, Category="Item")
+	AItem* OverlappingItem;
+	
 };
