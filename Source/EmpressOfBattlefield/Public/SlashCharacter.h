@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "InputActionValue.h"
 #include "GameFramework/Character.h"
+#include "CharacterTypes.h"
 #include "SlashCharacter.generated.h"
 
 class UGroomComponent;
@@ -27,7 +28,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
-
+	FORCEINLINE ECharacterState GetCharacterCurrentState() { return CurrentState; }
+	
 protected:
 	virtual void BeginPlay() override;
 	
@@ -67,5 +69,6 @@ public:
 
 	UPROPERTY(VisibleInstanceOnly, Category="Item")
 	AItem* OverlappingItem;
-	
+
+	ECharacterState CurrentState;
 };

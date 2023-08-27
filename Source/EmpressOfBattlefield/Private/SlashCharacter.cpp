@@ -48,6 +48,8 @@ ASlashCharacter::ASlashCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 450.f, 0.f);
 	
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
+
+	CurrentState = ECharacterState::ECS_Unequipped;
 }
 
 // Called when the game starts or when spawned
@@ -129,5 +131,6 @@ void ASlashCharacter::EquipWeapon(const FInputActionValue& Value)
 	if(OverlappingItem && bEKeyPressed)
 	{
 		OverlappedWeapon->Equip(GetMesh(), FName("WeaponSocket"));
+		CurrentState = ECharacterState::ECS_EquippedTwoHandWeapon;
 	}
 }
