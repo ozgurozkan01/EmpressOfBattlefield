@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "CharacterTypes.h"
 #include "SlashAnimInstance.generated.h"
 
 class ASlashCharacter;
@@ -21,6 +22,9 @@ protected:
 	// as Tick()
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
+	UPROPERTY(BlueprintReadOnly, Category="Movement | Character State")
+	ECharacterState CharacterState;
+	
 	UPROPERTY(BlueprintReadOnly)
 	ASlashCharacter* SlashCharacter;
 
