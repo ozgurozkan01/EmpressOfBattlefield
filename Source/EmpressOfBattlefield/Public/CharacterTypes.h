@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 UENUM(Blueprintable)
-enum class ECharacterState
+enum class ECharacterState : uint8
 {
 	ECS_Unequipped UMETA(Display = "Unequipped"),
 	ECS_EquippedOneHandWeapon UMETA(Display = "Equipped One-Hand Weapon"),
