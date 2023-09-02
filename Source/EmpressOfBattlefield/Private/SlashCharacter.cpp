@@ -93,8 +93,10 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 void ASlashCharacter::Movement(const FInputActionValue& Value)
 {
+	if (CurrentAction == EActionState::EAS_Attacking) { return; }
+
 	const FVector2D MovementDirection = Value.Get<FVector2D>();
-	
+
 	const FRotator ControllerRotation = GetControlRotation();
 	const FRotator YawRotation = FRotator(0.f, ControllerRotation.Yaw, 0.f);
 
