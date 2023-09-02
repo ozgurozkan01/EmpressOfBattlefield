@@ -33,13 +33,17 @@ public:
 	
 protected:
 	virtual void BeginPlay() override;
-	
+
+	// Callbacks for input
 	void Movement(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void Jump(const FInputActionValue& Value);
 	void EquipWeapon(const FInputActionValue& Value);
 	void Attack(const FInputActionValue& Value);
 
+	// Play Montage Functions
+	void PlayAttackMontage();
+	
 public:
 
 	UPROPERTY(EditDefaultsOnly, Category=Camera)

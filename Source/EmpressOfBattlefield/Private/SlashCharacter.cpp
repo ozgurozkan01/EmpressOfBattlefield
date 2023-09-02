@@ -141,12 +141,20 @@ void ASlashCharacter::Attack(const FInputActionValue& Value)
 {
 	const bool CanAttack = Value.Get<bool>();
 
+	if (CanAttack)
+	{
+		PlayAttackMontage();
+	}
+}
+
+void ASlashCharacter::PlayAttackMontage()
+{
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	
-	if (CanAttack && AttackMontage && AnimInstance && CurrentState != ECharacterState::ECS_Unequipped)
+	if (AttackMontage && AnimInstance && CurrentState != ECharacterState::ECS_Unequipped)
 	{
 		AnimInstance->Montage_Play(AttackMontage);
-		int32 Selection = FMath::RandRange(0, 1);
+		const int32 Selection = FMath::RandRange(0, 1);
 		FName SectionName = FName();
 		switch (Selection)
 		{
@@ -161,5 +169,5 @@ void ASlashCharacter::Attack(const FInputActionValue& Value)
 		}
 
 		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
-	}	
+	}
 }
