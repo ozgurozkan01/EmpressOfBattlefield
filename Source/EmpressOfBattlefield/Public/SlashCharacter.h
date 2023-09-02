@@ -14,6 +14,7 @@ class USpringArmComponent;
 class UInputMappingContext;
 class UInputAction;
 class AItem;
+class UAnimMontage;
 
 UCLASS()
 class EMPRESSOFBATTLEFIELD_API ASlashCharacter : public ACharacter
@@ -37,28 +38,33 @@ protected:
 	void Look(const FInputActionValue& Value);
 	void Jump(const FInputActionValue& Value);
 	void EquipWeapon(const FInputActionValue& Value);
+	void Attack(const FInputActionValue& Value);
+
 public:
 
-	UPROPERTY(EditDefaultsOnly, Category="Camera")
+	UPROPERTY(EditDefaultsOnly, Category=Camera)
 	USpringArmComponent* CameraBoom;
 	
-	UPROPERTY(EditDefaultsOnly, Category="Camera")
+	UPROPERTY(EditDefaultsOnly, Category=Camera)
 	UCameraComponent* Camera;
 	
-	UPROPERTY(EditDefaultsOnly, Category="Input")
+	UPROPERTY(EditDefaultsOnly, Category="Input | Map")
 	UInputMappingContext* SlashMappingContext;
 	
-	UPROPERTY(EditDefaultsOnly, Category="Input")	
+	UPROPERTY(EditDefaultsOnly, Category="Input | Action")	
 	UInputAction* MovementAction;
 
-	UPROPERTY(EditDefaultsOnly, Category="Input")
+	UPROPERTY(EditDefaultsOnly, Category="Input | Action")
 	UInputAction* LookAction;
 
-	UPROPERTY(EditDefaultsOnly, Category="Input")
+	UPROPERTY(EditDefaultsOnly, Category="Input | Action")
 	UInputAction* JumpAction;	
 
-	UPROPERTY(EditDefaultsOnly, Category="Input")
+	UPROPERTY(EditDefaultsOnly, Category="Input | Action")
 	UInputAction* EquipWeaponAction;		
+
+	UPROPERTY(EditDefaultsOnly, Category="Input | Action")
+	UInputAction* AttackAction;		
 	
 	// Groom Component is used for the hair, eyebrows or etc.
 	UPROPERTY(EditDefaultsOnly, Category=Hair)
@@ -67,8 +73,11 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category=Hair)
 	UGroomComponent* EyeBrows;
 
-	UPROPERTY(VisibleInstanceOnly, Category="Item")
+	UPROPERTY(VisibleInstanceOnly, Category=Item)
 	AItem* OverlappingItem;
 
 	ECharacterState CurrentState;
+
+	UPROPERTY(EditDefaultsOnly, Category=Montage)
+	UAnimMontage* AttackMontage;
 };

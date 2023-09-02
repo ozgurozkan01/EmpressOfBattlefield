@@ -10,6 +10,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GroomComponent.h"
 #include "Weapon.h"
+#include "Animation/AnimMontage.h"
 
 // Sets default values
 ASlashCharacter::ASlashCharacter()
@@ -85,6 +86,7 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 		EnhancedInputComponent->BindAction(EquipWeaponAction, ETriggerEvent::Triggered, this, &ASlashCharacter::EquipWeapon);
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Attack);
 	}
 }
 
@@ -131,6 +133,33 @@ void ASlashCharacter::EquipWeapon(const FInputActionValue& Value)
 	if(OverlappingItem && bEKeyPressed)
 	{
 		OverlappedWeapon->Equip(GetMesh(), FName("WeaponSocket"));
-		CurrentState = ECharacterState::ECS_EquippedTwoHandWeapon;
+		CurrentState = ECharacterState::ECS_EquippedOneHandWeapon;
 	}
+}
+
+void ASlashCharacter::Attack(const FInputActionValue& Value)
+{
+	const bool CanAttack = Value.Get<bool>();
+
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	
+	if (CanAttack && AttackMontage && AnimInstance && CurrentState != ECharacterState::ECS_Unequipped)
+	{
+		AnimInstance->Montage_Play(AttackMontage);
+		int32 Selection = FMath::RandRange(0, 1);
+		FName SectionName = FName();
+		switch (Selection)
+		{
+		case 0:
+			SectionName = FName("Attack1");
+			break;
+		case 1:
+			SectionName = FName("Attack2");
+			break;
+		default:
+			break;
+		}
+
+		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
+	}	
 }
