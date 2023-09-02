@@ -49,7 +49,9 @@ protected:
 
 	// Play Montage Functions
 	void PlayAttackMontage();
-	
+
+	UFUNCTION(BlueprintCallable)
+	void AttackEnd();
 public:
 
 	UPROPERTY(EditDefaultsOnly, Category=Camera)

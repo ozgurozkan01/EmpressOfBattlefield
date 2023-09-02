@@ -140,9 +140,12 @@ void ASlashCharacter::EquipWeapon(const FInputActionValue& Value)
 
 void ASlashCharacter::Attack(const FInputActionValue& Value)
 {
-	const bool CanAttack = Value.Get<bool>();
+	
+	const bool bCanAttack = Value.Get<bool>() &&
+							CurrentAction == EActionState::EAS_Unoccupied &&
+							CurrentState != ECharacterState::ECS_Unequipped;
 
-	if (CanAttack && CurrentAction == EActionState::EAS_Unoccupied)
+	if (bCanAttack)
 	{
 		CurrentAction = EActionState::EAS_Attacking;
 		PlayAttackMontage();
@@ -153,7 +156,7 @@ void ASlashCharacter::PlayAttackMontage()
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 
-	if (AttackMontage && AnimInstance && CurrentState != ECharacterState::ECS_Unequipped)
+	if (AttackMontage && AnimInstance)
 	{
 		AnimInstance->Montage_Play(AttackMontage);
 		const int32 Selection = FMath::RandRange(0, 1);
@@ -172,4 +175,9 @@ void ASlashCharacter::PlayAttackMontage()
 
 		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
 	}
+}
+
+void ASlashCharacter::AttackEnd()
+{
+	CurrentAction = EActionState::EAS_Unoccupied;
 }
