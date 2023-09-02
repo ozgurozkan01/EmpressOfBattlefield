@@ -51,6 +51,7 @@ ASlashCharacter::ASlashCharacter()
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 
 	CurrentState = ECharacterState::ECS_Unequipped;
+	CurrentAction = EActionState::EAS_Unoccupied;
 }
 
 // Called when the game starts or when spawned
@@ -141,8 +142,9 @@ void ASlashCharacter::Attack(const FInputActionValue& Value)
 {
 	const bool CanAttack = Value.Get<bool>();
 
-	if (CanAttack)
+	if (CanAttack && CurrentAction == EActionState::EAS_Unoccupied)
 	{
+		CurrentAction = EActionState::EAS_Attacking;
 		PlayAttackMontage();
 	}
 }

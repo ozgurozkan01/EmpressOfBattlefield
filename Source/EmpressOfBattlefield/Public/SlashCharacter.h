@@ -81,7 +81,8 @@ public:
 	AItem* OverlappingItem;
 
 	ECharacterState CurrentState;
-
+	EActionState CurrentAction;
+	
 	UPROPERTY(EditDefaultsOnly, Category=Montage)
 	UAnimMontage* AttackMontage;
 };
