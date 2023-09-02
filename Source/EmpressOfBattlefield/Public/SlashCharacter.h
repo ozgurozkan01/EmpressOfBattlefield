@@ -30,6 +30,12 @@ public:
 
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
 	FORCEINLINE ECharacterState GetCharacterCurrentState() { return CurrentState; }
+
+	UPROPERTY(VisibleAnywhere)
+	ECharacterState CurrentState;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess = "true"))
+	EActionState CurrentAction;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -80,9 +86,6 @@ public:
 	UPROPERTY(VisibleInstanceOnly, Category=Item)
 	AItem* OverlappingItem;
 
-	ECharacterState CurrentState;
-	EActionState CurrentAction;
-	
 	UPROPERTY(EditDefaultsOnly, Category=Montage)
 	UAnimMontage* AttackMontage;
 };

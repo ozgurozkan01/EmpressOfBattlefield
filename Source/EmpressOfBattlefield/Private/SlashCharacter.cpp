@@ -152,7 +152,7 @@ void ASlashCharacter::Attack(const FInputActionValue& Value)
 void ASlashCharacter::PlayAttackMontage()
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	
+
 	if (AttackMontage && AnimInstance && CurrentState != ECharacterState::ECS_Unequipped)
 	{
 		AnimInstance->Montage_Play(AttackMontage);
