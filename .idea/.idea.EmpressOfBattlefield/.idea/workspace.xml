@@ -9,7 +9,10 @@
   <component name="ChangeListManager">
     <list default="true" id="fc94a891-8384-4775-afe2-ea58bce52809" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.EmpressOfBattlefield/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.EmpressOfBattlefield/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Character/Audios/MetaSound/SFX_Whoosh.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Character/Audios/MetaSound/SFX_Whoosh.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EmpressOfBattlefield.uproject" beforeDir="false" afterPath="$PROJECT_DIR$/EmpressOfBattlefield.uproject" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/SlashCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/SlashCharacter.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,35 +22,39 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 0
-}]]></component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Epic Games/UE_5.2/Engine/Source/Runtime/Engine/Private/Components/CharacterMovementComponent.cpp" root0="SKIP_HIGHLIGHTING" />
+  </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="2TUDJYTsNJMetnBFT2iiah77RyI" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "main",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "rider.external.source.directories": [
-      "C:\\Users\\ozgur\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\DecompilerCache",
-      "C:\\Users\\ozgur\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\SourcesCache",
-      "C:\\Users\\ozgur\\AppData\\Local\\Symbols\\src"
+  &quot;keyToStringList&quot;: {
+    &quot;rider.external.source.directories&quot;: [
+      &quot;C:\\Users\\ozgur\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\DecompilerCache&quot;,
+      &quot;C:\\Users\\ozgur\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\SourcesCache&quot;,
+      &quot;C:\\Users\\ozgur\\AppData\\Local\\Symbols\\src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="EmpressOfBattlefield" type="CppProject" factoryName="C++ Project">
       <configuration_1>
@@ -121,12 +128,50 @@
       <updated>1691088696819</updated>
       <workItem from="1691088700519" duration="3000" />
       <workItem from="1691089048666" duration="323000" />
+      <workItem from="1691089897106" duration="8837000" />
+      <workItem from="1691148226126" duration="2513000" />
+      <workItem from="1691181061928" duration="2343000" />
+      <workItem from="1691245556028" duration="6679000" />
+      <workItem from="1691271780140" duration="2215000" />
+      <workItem from="1691312280353" duration="2921000" />
+      <workItem from="1691349863703" duration="6010000" />
+      <workItem from="1691402762234" duration="11712000" />
+      <workItem from="1691579236604" duration="594000" />
+      <workItem from="1691611894112" duration="2484000" />
+      <workItem from="1691784667321" duration="2260000" />
+      <workItem from="1691824445458" duration="3523000" />
+      <workItem from="1691879259483" duration="2348000" />
+      <workItem from="1692142952432" duration="294000" />
+      <workItem from="1692174725099" duration="11811000" />
+      <workItem from="1692216771586" duration="2399000" />
+      <workItem from="1692229326055" duration="565000" />
+      <workItem from="1692230063257" duration="228000" />
+      <workItem from="1692230416396" duration="132000" />
+      <workItem from="1692264288638" duration="327000" />
+      <workItem from="1692264889437" duration="186000" />
+      <workItem from="1692265306472" duration="1622000" />
+      <workItem from="1692352071061" duration="7408000" />
+      <workItem from="1692387885971" duration="3062000" />
+      <workItem from="1692460963672" duration="1300000" />
+      <workItem from="1692558196782" duration="3148000" />
+      <workItem from="1692614620683" duration="6950000" />
+      <workItem from="1692635197094" duration="5295000" />
+      <workItem from="1692652866459" duration="1785000" />
+      <workItem from="1692707016494" duration="6110000" />
+      <workItem from="1692730638765" duration="755000" />
+      <workItem from="1692770920158" duration="6684000" />
+      <workItem from="1692830607199" duration="2530000" />
+      <workItem from="1692868442998" duration="4534000" />
+      <workItem from="1693572427137" duration="1189000" />
+      <workItem from="1693650159691" duration="11346000" />
+      <workItem from="1693749695381" duration="625000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>
