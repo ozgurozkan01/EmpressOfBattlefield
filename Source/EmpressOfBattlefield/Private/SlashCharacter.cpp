@@ -145,7 +145,8 @@ void ASlashCharacter::Attack(const FInputActionValue& Value)
 	
 	const bool bCanAttack = Value.Get<bool>() &&
 							CurrentAction == EActionState::EAS_Unoccupied &&
-							CurrentState != ECharacterState::ECS_Unequipped;
+							CurrentState != ECharacterState::ECS_Unequipped &&
+							!GetCharacterMovement()->IsFalling();
 
 	if (bCanAttack)
 	{
