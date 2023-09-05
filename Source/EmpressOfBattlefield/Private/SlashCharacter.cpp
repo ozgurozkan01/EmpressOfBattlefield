@@ -93,7 +93,7 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 void ASlashCharacter::Movement(const FInputActionValue& Value)
 {
-	if (CurrentAction == EActionState::EAS_Attacking) { return; }
+	if (CurrentAction != EActionState::EAS_Unoccupied) { return; }
 
 	const FVector2D MovementDirection = Value.Get<FVector2D>();
 
@@ -145,17 +145,17 @@ void ASlashCharacter::EquipWeapon(const FInputActionValue& Value)
 	{
 		if (CanDisarm())
 		{
-			GEngine->AddOnScreenDebugMessage(1, 3, FColor::Cyan, "Disarm");
 			PlayEquipMontage(FName("Unequip"));
 			CurrentState = ECharacterState::ECS_Unequipped;
 		}
 
 		else if (CanArm())
 		{
-			GEngine->AddOnScreenDebugMessage(1, 3, FColor::Cyan, "Arm");
 			PlayEquipMontage(FName("Equip"));
 			CurrentState = ECharacterState::ECS_EquippedOneHandWeapon;
 		}
+		
+		CurrentAction = EActionState::EAS_EquipWeapon;
 	}
 }
  
@@ -185,6 +185,27 @@ bool ASlashCharacter::CanDisarm()
 {
 	return CurrentAction == EActionState::EAS_Unoccupied &&
 		   CurrentState != ECharacterState::ECS_Unequipped;
+}
+
+void ASlashCharacter::Disarm()
+{
+	if (EquippedWeapon)
+	{
+		EquippedWeapon->AttachMeshToSocket(GetMesh(), FName("SpineSocket"));
+	}
+}
+
+void ASlashCharacter::Arm()
+{
+	if (EquippedWeapon)
+	{
+		EquippedWeapon->AttachMeshToSocket(GetMesh(), FName("WeaponSocket"));
+	}
+}
+
+void ASlashCharacter::FinishedEquipping()
+{
+	CurrentAction = EActionState::EAS_Unoccupied;
 }
 
 void ASlashCharacter::PlayAttackMontage()
