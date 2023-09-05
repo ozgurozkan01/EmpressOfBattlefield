@@ -50,6 +50,15 @@ protected:
 
 	bool CanArm();
 	bool CanDisarm();
+
+	UFUNCTION(BlueprintCallable)
+	void Disarm();
+
+	UFUNCTION(BlueprintCallable)
+	void Arm();
+
+	UFUNCTION(BlueprintCallable)
+	void FinishedEquipping();
 	
 	// Play Montage Functions
 	void PlayAttackMontage();
