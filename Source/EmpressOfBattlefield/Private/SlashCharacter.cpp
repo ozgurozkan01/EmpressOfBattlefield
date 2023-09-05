@@ -86,7 +86,7 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Look);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
-		EnhancedInputComponent->BindAction(EquipWeaponAction, ETriggerEvent::Triggered, this, &ASlashCharacter::EquipWeapon);
+		EnhancedInputComponent->BindAction(EquipWeaponAction, ETriggerEvent::Started, this, &ASlashCharacter::EquipWeapon);
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Attack);
 	}
 }
@@ -133,13 +133,32 @@ void ASlashCharacter::EquipWeapon(const FInputActionValue& Value)
 
 	AWeapon* OverlappedWeapon = Cast<AWeapon>(OverlappingItem);
 
-	if(OverlappingItem && bEKeyPressed)
+	if(OverlappedWeapon && bEKeyPressed)
 	{
 		OverlappedWeapon->Equip(GetMesh(), FName("WeaponSocket"));
 		CurrentState = ECharacterState::ECS_EquippedOneHandWeapon;
+		OverlappingItem = nullptr;
+		EquippedWeapon = OverlappedWeapon;	
+	}
+
+	else
+	{
+		if (CanDisarm())
+		{
+			GEngine->AddOnScreenDebugMessage(1, 3, FColor::Cyan, "Disarm");
+			PlayEquipMontage(FName("Unequip"));
+			CurrentState = ECharacterState::ECS_Unequipped;
+		}
+
+		else if (CanArm())
+		{
+			GEngine->AddOnScreenDebugMessage(1, 3, FColor::Cyan, "Arm");
+			PlayEquipMontage(FName("Equip"));
+			CurrentState = ECharacterState::ECS_EquippedOneHandWeapon;
+		}
 	}
 }
-
+ 
 void ASlashCharacter::Attack(const FInputActionValue& Value)
 {
 	
@@ -153,6 +172,19 @@ void ASlashCharacter::Attack(const FInputActionValue& Value)
 		CurrentAction = EActionState::EAS_Attacking;
 		PlayAttackMontage();
 	}
+}
+
+bool ASlashCharacter::CanArm()
+{
+	return CurrentAction == EActionState::EAS_Unoccupied &&
+		   CurrentState == ECharacterState::ECS_Unequipped &&
+		   EquippedWeapon;
+}
+
+bool ASlashCharacter::CanDisarm()
+{
+	return CurrentAction == EActionState::EAS_Unoccupied &&
+		   CurrentState != ECharacterState::ECS_Unequipped;
 }
 
 void ASlashCharacter::PlayAttackMontage()
@@ -177,6 +209,16 @@ void ASlashCharacter::PlayAttackMontage()
 		}
 
 		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
+	}
+}
+
+void ASlashCharacter::PlayEquipMontage(FName SectionName)
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && EquipMontage)
+	{
+		AnimInstance->Montage_Play(EquipMontage);
+		AnimInstance->Montage_JumpToSection(SectionName, EquipMontage);
 	}
 }
 

@@ -15,6 +15,7 @@ class UInputMappingContext;
 class UInputAction;
 class AItem;
 class UAnimMontage;
+class AWeapon;
 
 UCLASS()
 class EMPRESSOFBATTLEFIELD_API ASlashCharacter : public ACharacter
@@ -47,9 +48,13 @@ protected:
 	void EquipWeapon(const FInputActionValue& Value);
 	void Attack(const FInputActionValue& Value);
 
+	bool CanArm();
+	bool CanDisarm();
+	
 	// Play Montage Functions
 	void PlayAttackMontage();
-
+	void PlayEquipMontage(FName SectionName);
+	
 	UFUNCTION(BlueprintCallable)
 	void AttackEnd();
 public:
@@ -88,6 +93,12 @@ public:
 	UPROPERTY(VisibleInstanceOnly, Category=Item)
 	AItem* OverlappingItem;
 
+	UPROPERTY(VisibleAnywhere, Category="Item | Weapon")
+	AWeapon* EquippedWeapon;
+	
 	UPROPERTY(EditDefaultsOnly, Category=Montage)
 	UAnimMontage* AttackMontage;
+	
+	UPROPERTY(EditDefaultsOnly, Category=Montage)
+	UAnimMontage* EquipMontage;
 };
