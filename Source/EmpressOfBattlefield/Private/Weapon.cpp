@@ -3,8 +3,15 @@
 
 #include "Weapon.h"
 
+#include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
+
+AWeapon::AWeapon()
+{
+	DamageBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Damage Box"));
+	DamageBox->SetupAttachment(GetRootComponent());
+}
 
 void AWeapon::Equip(USceneComponent* InParent, FName InSocketName)
 {
