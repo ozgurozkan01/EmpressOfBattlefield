@@ -10,9 +10,12 @@
     <list default="true" id="fc94a891-8384-4775-afe2-ea58bce52809" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.EmpressOfBattlefield/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.EmpressOfBattlefield/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Character/Audios/MetaSound/SFX_Whoosh.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Character/Audios/MetaSound/SFX_Whoosh.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmpressOfBattlefield.uproject" beforeDir="false" afterPath="$PROJECT_DIR$/EmpressOfBattlefield.uproject" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/AncientContent/Characters/Echo/Meshes/Echo_Skeleton.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Assets/AncientContent/Characters/Echo/Meshes/Echo_Skeleton.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Item/Weapon/BP_Sword.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Item/Weapon/BP_Sword.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/MainMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/MainMap.umap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/SlashCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/SlashCharacter.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/Weapon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/Weapon.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/Weapon.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/Weapon.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -164,7 +167,12 @@
       <workItem from="1692868442998" duration="4534000" />
       <workItem from="1693572427137" duration="1189000" />
       <workItem from="1693650159691" duration="11346000" />
-      <workItem from="1693749695381" duration="625000" />
+      <workItem from="1693749695381" duration="1671000" />
+      <workItem from="1693833454959" duration="595000" />
+      <workItem from="1693838366534" duration="593000" />
+      <workItem from="1693901386031" duration="10082000" />
+      <workItem from="1693991516927" duration="3248000" />
+      <workItem from="1694086640138" duration="8550000" />
     </task>
     <servers />
   </component>
