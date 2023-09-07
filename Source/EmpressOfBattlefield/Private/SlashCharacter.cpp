@@ -141,7 +141,7 @@ void ASlashCharacter::EquipWeapon(const FInputActionValue& Value)
 		EquippedWeapon = OverlappedWeapon;	
 	}
 
-	else
+	else if (bEKeyPressed && EquippedWeapon)
 	{
 		if (CanDisarm())
 		{
