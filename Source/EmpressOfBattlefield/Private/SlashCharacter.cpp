@@ -11,6 +11,7 @@
 #include "GroomComponent.h"
 #include "Weapon.h"
 #include "Animation/AnimMontage.h"
+#include "Components/BoxComponent.h"
 
 // Sets default values
 ASlashCharacter::ASlashCharacter()
@@ -206,6 +207,14 @@ void ASlashCharacter::Arm()
 void ASlashCharacter::FinishedEquipping()
 {
 	CurrentAction = EActionState::EAS_Unoccupied;
+}
+
+void ASlashCharacter::SetWeaponDamageBoxCollision(ECollisionEnabled::Type CollisionEnabled)
+{
+	if (EquippedWeapon && EquippedWeapon->GetDamageBox())
+	{
+		EquippedWeapon->GetDamageBox()->SetCollisionEnabled(CollisionEnabled);
+	}
 }
 
 void ASlashCharacter::PlayAttackMontage()

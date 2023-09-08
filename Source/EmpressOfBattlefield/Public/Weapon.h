@@ -18,6 +18,8 @@ public:
 
 	AWeapon();
 	
+	FORCEINLINE UBoxComponent* GetDamageBox() const { return DamageBox; }
+	
 	void AttachMeshToSocket(USceneComponent* InParent, FName InSocketName);
 	void Equip(USceneComponent* InParent, FName InSocketName);
 

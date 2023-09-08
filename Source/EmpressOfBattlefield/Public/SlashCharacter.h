@@ -30,8 +30,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
-	FORCEINLINE ECharacterState GetCharacterCurrentState() { return CurrentState; }
-
+	FORCEINLINE ECharacterState GetCharacterCurrentState() const { return CurrentState; }
+	
 	UPROPERTY(VisibleAnywhere)
 	ECharacterState CurrentState;
 
@@ -47,10 +47,11 @@ protected:
 	void Jump(const FInputActionValue& Value);
 	void EquipWeapon(const FInputActionValue& Value);
 	void Attack(const FInputActionValue& Value);
-
+	
 	bool CanArm();
 	bool CanDisarm();
-
+	
+	
 	UFUNCTION(BlueprintCallable)
 	void Disarm();
 
@@ -59,6 +60,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void FinishedEquipping();
+
+	UFUNCTION(BlueprintCallable)
+	void SetWeaponDamageBoxCollision(ECollisionEnabled::Type CollisionEnabled);
 	
 	// Play Montage Functions
 	void PlayAttackMontage();

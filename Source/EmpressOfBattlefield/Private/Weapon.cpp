@@ -11,7 +11,7 @@ AWeapon::AWeapon()
 {
 	DamageBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Damage Box"));
 	DamageBox->SetupAttachment(GetRootComponent());
-	DamageBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	DamageBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	DamageBox->SetCollisionResponseToAllChannels(ECR_Overlap);
 	DamageBox->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
 
@@ -77,6 +77,8 @@ void AWeapon::OnDamageOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAc
 		BoxHit,
 		true
 		);
+
+	DrawDebugSphere(GetWorld(), BoxHit.ImpactPoint, 25, 15, FColor::Cyan, false, 10);
 }
 
 void AWeapon::AttachMeshToSocket(USceneComponent* InParent, FName InSocketName)
