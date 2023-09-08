@@ -26,7 +26,7 @@ void AWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 
-	DamageBox->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::OnDamageOverlapBegin);
+	DamageBox->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::OnDamageBoxOverlapBegin);
 }
 
 void AWeapon::Equip(USceneComponent* InParent, FName InSocketName)
@@ -55,10 +55,23 @@ void AWeapon::OverlappingEnd(UPrimitiveComponent* OverlappedComponent, AActor* O
 	Super::OverlappingEnd(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex);
 }
 
-void AWeapon::OnDamageOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+void AWeapon::OnDamageBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	const FVector Start = TraceStart->GetComponentLocation();
+	if (OtherActor)
+	{
+		if (GEngine)
+		{
+			FString HitActorName = OtherActor->GetActorNameOrLabel();
+			FString ImpactPointPos = SweepResult.ImpactPoint.ToString();
+			GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Cyan, HitActorName);
+			GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Cyan, ImpactPointPos);
+		}
+
+		DrawDebugSphere(GetWorld(), SweepResult.ImpactPoint, 25, 15, FColor::Red, true);
+	}
+	
+	/*const FVector Start = TraceStart->GetComponentLocation();
 	const FVector End = TraceEnd->GetComponentLocation();
 
 	TArray<AActor*> ActorsToIgnore;
@@ -78,7 +91,7 @@ void AWeapon::OnDamageOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAc
 		true
 		);
 
-	DrawDebugSphere(GetWorld(), BoxHit.ImpactPoint, 25, 15, FColor::Cyan, false, 10);
+	DrawDebugSphere(GetWorld(), BoxHit.ImpactPoint, 25, 15, FColor::Cyan, false, 10);*/
 }
 
 void AWeapon::AttachMeshToSocket(USceneComponent* InParent, FName InSocketName)
