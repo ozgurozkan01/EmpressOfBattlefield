@@ -3,12 +3,20 @@
 
 #include "Enemy.h"
 
+#include "Components/CapsuleComponent.h"
+
 // Sets default values
 AEnemy::AEnemy()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	GetMesh()->SetCollisionObjectType(ECC_WorldDynamic); // Weapon does not overlap with Pawns
+	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block); // Weapon trace channel
+	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore); // prevent breakdown of player's camera when collide with enemy
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore); // same
+	GetMesh()->SetGenerateOverlapEvents(true); // Activate overlap event generation
+	
 }
 
 // Called when the game starts or when spawned

@@ -8,8 +8,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fc94a891-8384-4775-afe2-ea58bce52809" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.EmpressOfBattlefield/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.EmpressOfBattlefield/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Assets/AncientContent/Characters/Echo/Hair/Hair_S_UpdoBuns.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Assets/AncientContent/Characters/Echo/Hair/Hair_S_UpdoBuns.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/Enemy.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/Enemy.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -168,7 +168,7 @@
       <workItem from="1693991516927" duration="3248000" />
       <workItem from="1694086640138" duration="11864000" />
       <workItem from="1694162643614" duration="5752000" />
-      <workItem from="1694439179866" duration="2622000" />
+      <workItem from="1694439179866" duration="2947000" />
     </task>
     <servers />
   </component>
