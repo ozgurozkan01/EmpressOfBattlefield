@@ -58,20 +58,7 @@ void AWeapon::OverlappingEnd(UPrimitiveComponent* OverlappedComponent, AActor* O
 void AWeapon::OnDamageBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor)
-	{
-		if (GEngine)
-		{
-			FString HitActorName = OtherActor->GetActorNameOrLabel();
-			FString ImpactPointPos = SweepResult.ImpactPoint.ToString();
-			GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Cyan, HitActorName);
-			GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Cyan, ImpactPointPos);
-		}
-
-		DrawDebugSphere(GetWorld(), SweepResult.ImpactPoint, 25, 15, FColor::Red, true);
-	}
-	
-	/*const FVector Start = TraceStart->GetComponentLocation();
+	const FVector Start = TraceStart->GetComponentLocation();
 	const FVector End = TraceEnd->GetComponentLocation();
 
 	TArray<AActor*> ActorsToIgnore;
@@ -91,7 +78,7 @@ void AWeapon::OnDamageBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 		true
 		);
 
-	DrawDebugSphere(GetWorld(), BoxHit.ImpactPoint, 25, 15, FColor::Cyan, false, 10);*/
+	DrawDebugSphere(GetWorld(), BoxHit.ImpactPoint, 25, 15, FColor::Cyan, false, 10);
 }
 
 void AWeapon::AttachMeshToSocket(USceneComponent* InParent, FName InSocketName)
