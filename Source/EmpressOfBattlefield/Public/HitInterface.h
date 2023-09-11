@@ -6,7 +6,7 @@
 #include "UObject/Interface.h"
 #include "HitInterface.generated.h"
 
-// This class does not need to be modified.
+// This class does not need to be modified. It is just used to connect with reflection system
 UINTERFACE(MinimalAPI)
 class UHitInterface : public UInterface
 {
@@ -22,4 +22,7 @@ class EMPRESSOFBATTLEFIELD_API IHitInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+
+	// Pure Functions
+	virtual void GetHit() = 0;
 };
