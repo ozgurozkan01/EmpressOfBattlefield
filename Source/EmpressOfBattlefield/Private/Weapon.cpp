@@ -81,6 +81,9 @@ void AWeapon::OnDamageBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 
 	if (BoxHit.GetActor())
 	{
+		// if hit object inherites from IHitInterface, then call the methods,
+		// But this method belongs to hit objects own. So we do not need to cast
+		// specific classes like actor, character etc.
 		IHitInterface* HitInterface = Cast<IHitInterface>(BoxHit.GetActor());
 		if (HitInterface)
 		{
