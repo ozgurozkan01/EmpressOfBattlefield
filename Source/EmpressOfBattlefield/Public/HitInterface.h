@@ -24,5 +24,5 @@ class EMPRESSOFBATTLEFIELD_API IHitInterface
 public:
 
 	// Pure Functions
-	virtual void GetHit() = 0;
+	virtual void GetHit(const FVector& ImpactPoint) = 0;
 };

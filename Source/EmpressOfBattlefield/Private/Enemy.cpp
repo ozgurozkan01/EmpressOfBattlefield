@@ -4,6 +4,7 @@
 #include "Enemy.h"
 
 #include "Components/CapsuleComponent.h"
+#include "EmpressOfBattlefield/DebugMacros.h"
 
 // Sets default values
 AEnemy::AEnemy()
@@ -38,5 +39,10 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void AEnemy::GetHit(const FVector& ImpactPoint)
+{
+	DRAW_DEBUG_SPHERE(ImpactPoint);
 }
 
