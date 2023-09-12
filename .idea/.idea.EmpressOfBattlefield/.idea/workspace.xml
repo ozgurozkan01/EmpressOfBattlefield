@@ -12,7 +12,6 @@
       <change beforePath="$PROJECT_DIR$/Content/Blueprints/Enemy/BP_Enemy.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Enemy/BP_Enemy.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/MainMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/MainMap.umap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/Enemy.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/Enemy.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/Weapon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/Weapon.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/Enemy.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/Enemy.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/HitInterface.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/HitInterface.h" afterDir="false" />
     </list>
@@ -176,7 +175,7 @@
       <workItem from="1694162643614" duration="5752000" />
       <workItem from="1694439179866" duration="3786000" />
       <workItem from="1694522687113" duration="1188000" />
-      <workItem from="1694531070104" duration="3300000" />
+      <workItem from="1694531070104" duration="6746000" />
     </task>
     <servers />
   </component>

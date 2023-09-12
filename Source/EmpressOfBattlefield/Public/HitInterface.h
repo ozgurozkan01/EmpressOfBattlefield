@@ -25,4 +25,5 @@ public:
 
 	// Pure Functions
 	virtual void GetHit(const FVector& ImpactPoint) = 0;
+
 };
