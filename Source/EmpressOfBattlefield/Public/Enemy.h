@@ -24,6 +24,7 @@ protected:
 	virtual void BeginPlay() override;
 	
 	void PlayHitReactionMontage(const FName& SectionName);
+	void CalculateHitLocationAngle(const FVector& ImpactPoint);
 private:
 
 	UPROPERTY(EditDefaultsOnly, Category="Animation | Montage")
