@@ -44,17 +44,17 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AEnemy::GetHit(const FVector& ImpactPoint)
 {
 	DRAW_DEBUG_SPHERE(ImpactPoint);
-	PlayHitReactionMontage();
+	PlayHitReactionMontage(FName("FromFront"));
 }
 
-void AEnemy::PlayHitReactionMontage()
+void AEnemy::PlayHitReactionMontage(const FName& SectionName)
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 
 	if (AnimInstance && HitReactionMontage)
 	{
 		AnimInstance->Montage_Play(HitReactionMontage);
-		AnimInstance->Montage_JumpToSection("FromFront", HitReactionMontage);
+		AnimInstance->Montage_JumpToSection(SectionName, HitReactionMontage);
 	}
 }
 

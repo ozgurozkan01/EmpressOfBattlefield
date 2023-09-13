@@ -19,14 +19,13 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void GetHit(const FVector& ImpactPoint) override;	
-	void PlayHitReactionMontage();
 	
 protected:
 	virtual void BeginPlay() override;
-
-public:
+	
+	void PlayHitReactionMontage(const FName& SectionName);
+private:
 
 	UPROPERTY(EditDefaultsOnly, Category="Animation | Montage")
 	UAnimMontage* HitReactionMontage;
-	
 };
