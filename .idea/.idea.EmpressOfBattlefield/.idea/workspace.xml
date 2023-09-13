@@ -9,11 +9,19 @@
   <component name="ChangeListManager">
     <list default="true" id="fc94a891-8384-4775-afe2-ea58bce52809" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.EmpressOfBattlefield/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.EmpressOfBattlefield/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultEditor.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEditor.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Enemy/Animations/AnimBP/ABP_HitReaction.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Enemy/Animations/AnimBP/ABP_HitReaction.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Enemy/Animations/AnimMontage/AM_HitReaction.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Enemy/Animations/AnimMontage/AM_HitReaction.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Enemy/Animations/Animations/ReacFromBack.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Enemy/Animations/Animations/ReacFromBack.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Enemy/Animations/Animations/ReactFromFront.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Enemy/Animations/Animations/ReactFromFront.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Enemy/Animations/Animations/ReactFromLeft.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Enemy/Animations/Animations/ReactFromLeft.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Enemy/Animations/Animations/ReactFromRight.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Enemy/Animations/Animations/ReactFromRight.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Blueprints/Enemy/BP_Enemy.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Enemy/BP_Enemy.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/MainMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/MainMap.umap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/Enemy.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/Enemy.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/SlashCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/SlashCharacter.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/Enemy.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/Enemy.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/HitInterface.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/HitInterface.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/SlashCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/SlashCharacter.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -176,6 +184,7 @@
       <workItem from="1694439179866" duration="3786000" />
       <workItem from="1694522687113" duration="1188000" />
       <workItem from="1694531070104" duration="6746000" />
+      <workItem from="1694600312364" duration="2437000" />
     </task>
     <servers />
   </component>
