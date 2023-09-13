@@ -9,9 +9,8 @@
   <component name="ChangeListManager">
     <list default="true" id="fc94a891-8384-4775-afe2-ea58bce52809" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.EmpressOfBattlefield/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.EmpressOfBattlefield/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Enemy/Animations/AnimBP/ABP_HitReaction.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Enemy/Animations/AnimBP/ABP_HitReaction.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Enemy/Animations/AnimBP/ABP_HitReaction.uasset" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/Enemy.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/Enemy.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/Enemy.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/Enemy.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -175,7 +174,7 @@
       <workItem from="1694522687113" duration="1188000" />
       <workItem from="1694531070104" duration="6746000" />
       <workItem from="1694600312364" duration="3035000" />
-      <workItem from="1694616133801" duration="356000" />
+      <workItem from="1694616133801" duration="1636000" />
     </task>
     <servers />
   </component>

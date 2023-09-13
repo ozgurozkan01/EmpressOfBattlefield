@@ -70,13 +70,21 @@ void AEnemy::CalculateHitLocationAngle(const FVector& ImpactPoint)
 	const double CosTheta = FVector::DotProduct(Forward, ToHit);
 	double Theta = FMath::Acos(CosTheta);
 	Theta = FMath::RadiansToDegrees(Theta);
+	
+	const FVector CrossProduct = FVector::CrossProduct(Forward, ToHit);
 
-	if (GEngine)
+	if (CrossProduct.Z < 0)
+	{
+		Theta *= -1;
+	}
+	
+//	UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + CrossProduct * 100.f, 10.f, FColor::Blue, 5.f);
+	
+	/*if (GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Cyan, FString::Printf(TEXT("Theta : %f"), Theta));
 	}
 
 	UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + Forward * 100.f, 10.f, FColor::Red, 5.f);
-	UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + ToHit * 100.f, 10.f, FColor::Green, 5.f);
+	UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + ToHit * 100.f, 10.f, FColor::Green, 5.f);*/
 }
-
