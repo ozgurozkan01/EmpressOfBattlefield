@@ -25,6 +25,7 @@ protected:
 	
 	void PlayHitReactionMontage(const FName& SectionName);
 	void CalculateHitLocationAngle(const FVector& ImpactPoint);
+	FName DetermineWhichSideGetHit(const double& Theta);
 private:
 
 	UPROPERTY(EditDefaultsOnly, Category="Animation | Montage")

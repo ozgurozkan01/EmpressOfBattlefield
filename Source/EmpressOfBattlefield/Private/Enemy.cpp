@@ -44,10 +44,7 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AEnemy::GetHit(const FVector& ImpactPoint)
 {
-	DRAW_DEBUG_SPHERE(ImpactPoint);
 	CalculateHitLocationAngle(ImpactPoint);
-	PlayHitReactionMontage(FName("FromFront"));
-	
 }
 
 void AEnemy::PlayHitReactionMontage(const FName& SectionName)
@@ -77,6 +74,9 @@ void AEnemy::CalculateHitLocationAngle(const FVector& ImpactPoint)
 	{
 		Theta *= -1;
 	}
+
+	FName Section = DetermineWhichSideGetHit(Theta);
+	PlayHitReactionMontage(Section);
 	
 //	UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + CrossProduct * 100.f, 10.f, FColor::Blue, 5.f);
 	
@@ -87,4 +87,26 @@ void AEnemy::CalculateHitLocationAngle(const FVector& ImpactPoint)
 
 	UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + Forward * 100.f, 10.f, FColor::Red, 5.f);
 	UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + ToHit * 100.f, 10.f, FColor::Green, 5.f);*/
+}
+
+FName AEnemy::DetermineWhichSideGetHit(const double& Theta)
+{
+	FName Section("FromBack");
+
+	if (Theta >= -45.f && Theta < 45.f)
+	{
+		Section = FName("FromFront");
+	}
+
+	else if (Theta >= -135.f && Theta < -45.f)
+	{
+		Section = FName("FromLeft");
+	}
+
+	else if (Theta >= 45.f && Theta < 135.f)
+	{
+		Section = FName("FromRight");
+	}
+
+	return Section;
 }
