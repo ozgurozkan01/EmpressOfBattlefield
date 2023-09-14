@@ -5,6 +5,7 @@
 
 #include "Components/CapsuleComponent.h"
 #include "EmpressOfBattlefield/DebugMacros.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 // Sets default values
@@ -45,6 +46,10 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AEnemy::GetHit(const FVector& ImpactPoint)
 {
 	CalculateHitLocationAngle(ImpactPoint);
+	if (HitSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
+	}
 }
 
 void AEnemy::PlayHitReactionMontage(const FName& SectionName)
