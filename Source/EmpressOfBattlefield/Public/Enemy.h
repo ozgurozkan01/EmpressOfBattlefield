@@ -33,4 +33,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category="Sound")
 	USoundBase* HitSound;
+
+	UPROPERTY(EditDefaultsOnly, Category="Particle Effect")
+	UParticleSystem* HitParticle;
 };

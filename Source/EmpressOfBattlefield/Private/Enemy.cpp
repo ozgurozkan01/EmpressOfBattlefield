@@ -50,6 +50,11 @@ void AEnemy::GetHit(const FVector& ImpactPoint)
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
 	}
+
+	if (HitParticle)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(this, HitParticle, ImpactPoint);
+	}
 }
 
 void AEnemy::PlayHitReactionMontage(const FName& SectionName)
@@ -82,16 +87,6 @@ void AEnemy::CalculateHitLocationAngle(const FVector& ImpactPoint)
 
 	FName Section = DetermineWhichSideGetHit(Theta);
 	PlayHitReactionMontage(Section);
-	
-//	UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + CrossProduct * 100.f, 10.f, FColor::Blue, 5.f);
-	
-	/*if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Cyan, FString::Printf(TEXT("Theta : %f"), Theta));
-	}
-
-	UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + Forward * 100.f, 10.f, FColor::Red, 5.f);
-	UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + ToHit * 100.f, 10.f, FColor::Green, 5.f);*/
 }
 
 FName AEnemy::DetermineWhichSideGetHit(const double& Theta)
