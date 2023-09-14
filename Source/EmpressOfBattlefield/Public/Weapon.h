@@ -22,7 +22,9 @@ public:
 	
 	void AttachMeshToSocket(USceneComponent* InParent, FName InSocketName);
 	void Equip(USceneComponent* InParent, FName InSocketName);
-
+	
+	UPROPERTY()
+	TArray<AActor*> IgnoredActors;
 protected:
 
 	virtual void BeginPlay() override;
@@ -45,4 +47,5 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, Category="Trace")
 	USceneComponent* TraceEnd;
+
 };

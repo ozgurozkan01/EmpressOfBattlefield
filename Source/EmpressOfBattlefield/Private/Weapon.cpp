@@ -7,6 +7,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "EmpressOfBattlefield/DebugMacros.h"
 
 AWeapon::AWeapon()
 {
@@ -62,9 +63,8 @@ void AWeapon::OnDamageBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 	const FVector Start = TraceStart->GetComponentLocation();
 	const FVector End = TraceEnd->GetComponentLocation();
 
-	TArray<AActor*> ActorsToIgnore;
 	FHitResult BoxHit;
-	
+
 	UKismetSystemLibrary::BoxTraceSingle(
 		this,
 		Start,
@@ -73,7 +73,7 @@ void AWeapon::OnDamageBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 		TraceStart->GetComponentRotation(),
 		TraceTypeQuery1,
 		false,
-		ActorsToIgnore,
+		IgnoredActors,
 		EDrawDebugTrace::None,
 		BoxHit,
 		true
@@ -89,6 +89,8 @@ void AWeapon::OnDamageBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 		{
 			HitInterface->GetHit(BoxHit.ImpactPoint);
 		}
+
+		IgnoredActors.AddUnique(BoxHit.GetActor());
 	}
 }
 
