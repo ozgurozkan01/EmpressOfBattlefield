@@ -9,19 +9,10 @@
   <component name="ChangeListManager">
     <list default="true" id="fc94a891-8384-4775-afe2-ea58bce52809" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.EmpressOfBattlefield/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.EmpressOfBattlefield/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Destructible/GC_DestructiblePot.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Destructible/GC_DestructiblePot.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/MainMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/MainMap.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Megascans/3D_Assets/Flower_Pot_tlvjeclva/MI_Flower_Pot_tlvjeclva_2K.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Megascans/3D_Assets/Flower_Pot_tlvjeclva/S_Flower_Pot_tlvjeclva_lod3.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Megascans/3D_Assets/Flower_Pot_tlvjeclva/T_FlowerPot_tlvjeclva_2K_DpR.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Megascans/3D_Assets/Flower_Pot_tlvjeclva/T_Flower_Pot_tlvjeclva_2K_D.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Megascans/3D_Assets/Flower_Pot_tlvjeclva/T_Flower_Pot_tlvjeclva_2K_N.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Megascans/3D_Assets/Painted_Concrete_Pot_uekhfdwva/MI_Painted_Concrete_Pot_uekhfdwva_2K.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Megascans/3D_Assets/Painted_Concrete_Pot_uekhfdwva/S_Painted_Concrete_Pot_uekhfdwva_lod3_Var1.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Megascans/3D_Assets/Painted_Concrete_Pot_uekhfdwva/T_PaintedConcretePot_uekhfdwva_2K_DpR.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Megascans/3D_Assets/Painted_Concrete_Pot_uekhfdwva/T_Painted_Concrete_Pot_uekhfdwva_2K_D.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Megascans/3D_Assets/Painted_Concrete_Pot_uekhfdwva/T_Painted_Concrete_Pot_uekhfdwva_2K_N.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmpressOfBattlefield.uproject" beforeDir="false" afterPath="$PROJECT_DIR$/EmpressOfBattlefield.uproject" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/Weapon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/Weapon.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/Weapon.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/Weapon.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -190,7 +181,8 @@
       <workItem from="1694702447328" duration="2290000" />
       <workItem from="1694796494875" duration="633000" />
       <workItem from="1694872332172" duration="756000" />
-      <workItem from="1694952803503" duration="6586000" />
+      <workItem from="1694952803503" duration="7734000" />
+      <workItem from="1695035739673" duration="2367000" />
     </task>
     <servers />
   </component>

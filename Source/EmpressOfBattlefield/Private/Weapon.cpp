@@ -7,7 +7,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "EmpressOfBattlefield/DebugMacros.h"
+#include "Field/FieldSystemComponent.h"
 
 AWeapon::AWeapon()
 {
@@ -22,12 +22,24 @@ AWeapon::AWeapon()
 	
 	TraceEnd = CreateDefaultSubobject<USceneComponent>(TEXT("Trace End"));
 	TraceEnd->SetupAttachment(GetRootComponent());
+
+	FieldSystemComponent = CreateDefaultSubobject<UFieldSystemComponent>(TEXT("Field System Component"));
+	FieldSystemComponent->SetupAttachment(GetRootComponent());
+	
+	RadialFalloff = CreateDefaultSubobject<URadialFalloff>(TEXT("Radial Falloff"));
+	RadialVector = CreateDefaultSubobject<URadialVector>(TEXT("Radial Vector"));
+	MetaDataFilter = CreateDefaultSubobject<UFieldSystemMetaDataFilter>(TEXT("Meta Data Filter"));
+	
+	FalloffMagnitude = 1500000000.f;
+	VectorMagnitude = 50000000000.f;
+	SphereRadius = 200.f;
 }
 
 void AWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-
+	MetaDataFilter->ObjectType = EFieldObjectType::Field_Object_Destruction;
+	MetaDataFilter->FilterType = EFieldFilterType::Field_Filter_Dynamic;
 	DamageBox->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::OnDamageBoxOverlapBegin);
 }
 
@@ -44,6 +56,27 @@ void AWeapon::Equip(USceneComponent* InParent, FName InSocketName)
 	if (SphereCollider)
 	{
 		SphereCollider->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+}
+
+void AWeapon::CreateFields(const FVector& FieldLocation)
+{
+	// Min and Max Range is just a number which are multiplied by the Force.
+	// So before the determine these values, watch out that.
+	RadialFalloff->SetRadialFalloff(FalloffMagnitude,0.8f, 1.f, 0.f, SphereRadius, FieldLocation, EFieldFalloffType::Field_FallOff_None);	
+	RadialVector->SetRadialVector(VectorMagnitude, FieldLocation);
+	DrawDebugSphere(GetWorld(), FieldLocation, 32, 16, FColor::Cyan, false, 5);
+	if (FieldSystemComponent)
+	{
+		if (RadialFalloff)
+		{
+			FieldSystemComponent->ApplyPhysicsField(true, Field_ExternalClusterStrain, nullptr, RadialFalloff);
+		}
+
+		if (RadialVector)
+		{
+			FieldSystemComponent->ApplyPhysicsField(true, Field_LinearForce, MetaDataFilter, RadialVector);
+		}
 	}
 }
 
@@ -91,6 +124,7 @@ void AWeapon::OnDamageBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 		}
 
 		IgnoredActors.AddUnique(BoxHit.GetActor());
+		CreateFields(BoxHit.ImpactPoint);
 	}
 }
 

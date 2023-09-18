@@ -6,6 +6,10 @@
 #include "Item.h"
 #include "Weapon.generated.h"
 
+class UFieldSystemComponent;
+class UFieldSystemMetaDataFilter;
+class URadialVector;
+class URadialFalloff;
 class UBoxComponent;
 class USoundBase;
 
@@ -22,6 +26,7 @@ public:
 	
 	void AttachMeshToSocket(USceneComponent* InParent, FName InSocketName);
 	void Equip(USceneComponent* InParent, FName InSocketName);
+	void CreateFields(const FVector& FieldLocation);
 	
 	UPROPERTY()
 	TArray<AActor*> IgnoredActors;
@@ -48,4 +53,26 @@ private:
 	UPROPERTY(VisibleAnywhere, Category="Trace")
 	USceneComponent* TraceEnd;
 
+	// Field System Variables
+
+	UPROPERTY(VisibleAnywhere)
+	UFieldSystemComponent* FieldSystemComponent;
+	
+	UPROPERTY(VisibleAnywhere)
+	URadialFalloff* RadialFalloff;
+
+	UPROPERTY(VisibleAnywhere)
+	URadialVector* RadialVector;
+
+	UPROPERTY(VisibleAnywhere)
+	UFieldSystemMetaDataFilter* MetaDataFilter;
+	
+	UPROPERTY(EditAnywhere)
+	float FalloffMagnitude;
+
+	UPROPERTY(EditAnywhere)
+	float VectorMagnitude;
+	
+	UPROPERTY(EditAnywhere)
+	float SphereRadius;
 };
