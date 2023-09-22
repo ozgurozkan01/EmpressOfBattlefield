@@ -9,9 +9,6 @@
   <component name="ChangeListManager">
     <list default="true" id="fc94a891-8384-4775-afe2-ea58bce52809" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.EmpressOfBattlefield/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.EmpressOfBattlefield/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BreakableActor/BP_BreakableActor.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BreakableActor/BP_BreakableActor.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/MainMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/MainMap.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/BreakableActor.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/BreakableActor.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -185,7 +182,7 @@
       <workItem from="1695133463632" duration="1708000" />
       <workItem from="1695193564132" duration="594000" />
       <workItem from="1695380268694" duration="2171000" />
-      <workItem from="1695383009374" duration="2475000" />
+      <workItem from="1695383009374" duration="3507000" />
     </task>
     <servers />
   </component>
