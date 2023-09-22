@@ -3,13 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "HitInterface.h"
 #include "GameFramework/Actor.h"
 #include "BreakableActor.generated.h"
 
 class UGeometryCollectionComponent;
 
 UCLASS()
-class EMPRESSOFBATTLEFIELD_API ABreakableActor : public AActor
+class EMPRESSOFBATTLEFIELD_API ABreakableActor : public AActor, public IHitInterface
 {
 	GENERATED_BODY()
 	
