@@ -53,6 +53,8 @@ ASlashCharacter::ASlashCharacter()
 
 	CurrentState = ECharacterState::ECS_Unequipped;
 	CurrentAction = EActionState::EAS_Unoccupied;
+
+	AttackMontageSpeedRate = 1.25f;
 }
 
 // Called when the game starts or when spawned
@@ -224,7 +226,7 @@ void ASlashCharacter::PlayAttackMontage()
 
 	if (AttackMontage && AnimInstance)
 	{
-		AnimInstance->Montage_Play(AttackMontage);
+		AnimInstance->Montage_Play(AttackMontage, AttackMontageSpeedRate);
 		const int32 Selection = FMath::RandRange(0, 1);
 		FName SectionName = FName();
 		switch (Selection)

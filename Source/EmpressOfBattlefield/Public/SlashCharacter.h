@@ -114,4 +114,7 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, Category=Montage)
 	UAnimMontage* EquipMontage;
+
+	UPROPERTY(VisibleAnywhere, Category=Montage)
+	float AttackMontageSpeedRate;
 };
