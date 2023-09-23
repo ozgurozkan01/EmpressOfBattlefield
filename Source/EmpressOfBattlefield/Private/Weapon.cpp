@@ -65,7 +65,7 @@ void AWeapon::CreateFields(const FVector& FieldLocation)
 	// So before the determine these values, watch out that.
 	RadialFalloff->SetRadialFalloff(FalloffMagnitude,0.8f, 1.f, 0.f, SphereRadius, FieldLocation, EFieldFalloffType::Field_FallOff_None);	
 	RadialVector->SetRadialVector(VectorMagnitude, FieldLocation);
-	DrawDebugSphere(GetWorld(), FieldLocation, 32, 16, FColor::Cyan, false, 5);
+
 	if (FieldSystemComponent)
 	{
 		if (RadialFalloff)
