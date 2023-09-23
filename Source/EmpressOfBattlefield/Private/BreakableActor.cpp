@@ -16,7 +16,6 @@ ABreakableActor::ABreakableActor()
 	
 	GeometryCollection->SetGenerateOverlapEvents(true);
 	GeometryCollection->SetNotifyBreaks(true);
-	GeometryCollection->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 }
 
 void ABreakableActor::BeginPlay()
@@ -31,7 +30,6 @@ void ABreakableActor::BeginPlay()
 
 void ABreakableActor::BreakActorActive(const FChaosBreakEvent& BreakEvent)
 {
-	GEngine->AddOnScreenDebugMessage(1, 30, FColor::Red, "Break");
 	SetLifeSpan(4.f);
 }
 
