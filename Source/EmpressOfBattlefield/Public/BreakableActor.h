@@ -7,7 +7,9 @@
 #include "GameFramework/Actor.h"
 #include "BreakableActor.generated.h"
 
+struct FChaosBreakEvent;
 class UGeometryCollectionComponent;
+class USoundBase;
 
 UCLASS()
 class EMPRESSOFBATTLEFIELD_API ABreakableActor : public AActor, public IHitInterface
@@ -19,9 +21,17 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	void GetHit_Implementation(const FVector& ImpactPoint) override;
+
+	UFUNCTION()
+	virtual void BreakActorActive(const FChaosBreakEvent& BreakEvent);
 
 private:
-
 	UPROPERTY(VisibleAnywhere)
 	UGeometryCollectionComponent* GeometryCollection;
+
+public:
+	UPROPERTY(EditDefaultsOnly)
+	USoundBase* BreakSound;
+
 };

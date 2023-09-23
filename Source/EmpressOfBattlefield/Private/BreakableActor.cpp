@@ -3,23 +3,41 @@
 
 #include "BreakableActor.h"
 
+#include "Chaos/ChaosGameplayEventDispatcher.h"
 #include "GeometryCollection/GeometryCollectionComponent.h"
+#include "Kismet/GameplayStatics.h"
 
-// Sets default values
 ABreakableActor::ABreakableActor()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
 	GeometryCollection = CreateDefaultSubobject<UGeometryCollectionComponent>(TEXT("Geometry Collection"));
 	SetRootComponent(GeometryCollection);
-
+	
 	GeometryCollection->SetGenerateOverlapEvents(true);
+	GeometryCollection->SetNotifyBreaks(true);
 }
 
-// Called when the game starts or when spawned
 void ABreakableActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	if (GeometryCollection)
+	{
+		GeometryCollection->OnChaosBreakEvent.AddDynamic(this, &ABreakableActor::BreakActorActive);
+	}
+}
+
+void ABreakableActor::BreakActorActive(const FChaosBreakEvent& BreakEvent)
+{
+	GEngine->AddOnScreenDebugMessage(1, 30, FColor::Red, "Break");
+	SetLifeSpan(4.f);
+}
+
+void ABreakableActor::GetHit_Implementation(const FVector& ImpactPoint)
+{
+	if (BreakSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, BreakSound, ImpactPoint, FRotator::ZeroRotator);
+	}
 }
