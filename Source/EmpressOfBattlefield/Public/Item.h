@@ -27,10 +27,10 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Mesh")
-	UStaticMeshComponent* ItemMesh;
+	TObjectPtr<UStaticMeshComponent> ItemMesh;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Mesh")
-	USphereComponent* SphereCollider;
+	TObjectPtr<USphereComponent> SphereCollider;
 
 	UPROPERTY()
 	float RunningTime;

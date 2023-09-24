@@ -73,47 +73,47 @@ protected:
 public:
 
 	UPROPERTY(EditDefaultsOnly, Category=Camera)
-	USpringArmComponent* CameraBoom;
+	TObjectPtr<USpringArmComponent> CameraBoom;
 	
 	UPROPERTY(EditDefaultsOnly, Category=Camera)
-	UCameraComponent* Camera;
+	TObjectPtr<UCameraComponent> Camera;
 	
 	UPROPERTY(EditDefaultsOnly, Category="Input | Map")
-	UInputMappingContext* SlashMappingContext;
+	TObjectPtr<UInputMappingContext> SlashMappingContext;
 	
 	UPROPERTY(EditDefaultsOnly, Category="Input | Action")	
-	UInputAction* MovementAction;
+	TObjectPtr<UInputAction> MovementAction;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input | Action")
-	UInputAction* LookAction;
+	TObjectPtr<UInputAction> LookAction;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input | Action")
-	UInputAction* JumpAction;	
+	TObjectPtr<UInputAction> JumpAction;	
 
 	UPROPERTY(EditDefaultsOnly, Category="Input | Action")
-	UInputAction* EquipWeaponAction;		
+	TObjectPtr<UInputAction> EquipWeaponAction;		
 
 	UPROPERTY(EditDefaultsOnly, Category="Input | Action")
-	UInputAction* AttackAction;		
+	TObjectPtr<UInputAction> AttackAction;		
 	
 	// Groom Component is used for the hair, eyebrows or etc.
 	UPROPERTY(EditDefaultsOnly, Category=Hair)
-	UGroomComponent* Hair;
+	TObjectPtr<UGroomComponent> Hair;
 
 	UPROPERTY(EditDefaultsOnly, Category=Hair)
-	UGroomComponent* EyeBrows;
+	TObjectPtr<UGroomComponent> EyeBrows;
 
 	UPROPERTY(VisibleInstanceOnly, Category=Item)
-	AItem* OverlappingItem;
+	TObjectPtr<AItem> OverlappingItem;
 
 	UPROPERTY(VisibleAnywhere, Category="Item | Weapon")
-	AWeapon* EquippedWeapon;
+	TObjectPtr<AWeapon> EquippedWeapon;
 	
 	UPROPERTY(EditDefaultsOnly, Category=Montage)
-	UAnimMontage* AttackMontage;
+	TObjectPtr<UAnimMontage> AttackMontage;
 	
 	UPROPERTY(EditDefaultsOnly, Category=Montage)
-	UAnimMontage* EquipMontage;
+	TObjectPtr<UAnimMontage> EquipMontage;
 
 	UPROPERTY(VisibleAnywhere, Category=Montage)
 	float AttackMontageSpeedRate;

@@ -42,30 +42,30 @@ protected:
 private:
 
 	UPROPERTY(EditDefaultsOnly, Category="Equip Sound")
-	USoundBase* EquipSound;
+	TObjectPtr<USoundBase> EquipSound;
 
 	UPROPERTY(VisibleAnywhere, Category="Damage")
-	UBoxComponent* DamageBox;
+	TObjectPtr<UBoxComponent> DamageBox;
 
 	UPROPERTY(VisibleAnywhere, Category="Trace")
-	USceneComponent* TraceStart;
+	TObjectPtr<USceneComponent> TraceStart;
 	
 	UPROPERTY(VisibleAnywhere, Category="Trace")
-	USceneComponent* TraceEnd;
+	TObjectPtr<USceneComponent> TraceEnd;
 
 	// Field System Variables
 
 	UPROPERTY(VisibleAnywhere)
-	UFieldSystemComponent* FieldSystemComponent;
+	TObjectPtr<UFieldSystemComponent> FieldSystemComponent;
 	
 	UPROPERTY(VisibleAnywhere)
-	URadialFalloff* RadialFalloff;
+	TObjectPtr<URadialFalloff> RadialFalloff;
 
 	UPROPERTY(VisibleAnywhere)
-	URadialVector* RadialVector;
+	TObjectPtr<URadialVector> RadialVector;
 
 	UPROPERTY(VisibleAnywhere)
-	UFieldSystemMetaDataFilter* MetaDataFilter;
+	TObjectPtr<UFieldSystemMetaDataFilter> MetaDataFilter;
 	
 	UPROPERTY(EditAnywhere)
 	float FalloffMagnitude;

@@ -26,10 +26,10 @@ protected:
 	ECharacterState CharacterState;
 	
 	UPROPERTY(BlueprintReadOnly)
-	ASlashCharacter* SlashCharacter;
+	TObjectPtr<ASlashCharacter> SlashCharacter;
 
 	UPROPERTY(BlueprintReadOnly, Category=Movement)
-	UCharacterMovementComponent* SlashMovementComponent;
+	TObjectPtr<UCharacterMovementComponent> SlashMovementComponent;
 
 	UPROPERTY(BlueprintReadOnly, Category=Movement)	
 	float GroundSpeed;

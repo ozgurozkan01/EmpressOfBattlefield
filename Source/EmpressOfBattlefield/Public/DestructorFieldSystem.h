@@ -26,13 +26,13 @@ protected:
 private:
 
 	UPROPERTY(VisibleAnywhere)
-	URadialFalloff* RadialFalloff;
+	TObjectPtr<URadialFalloff> RadialFalloff;
 
 	UPROPERTY(VisibleAnywhere)
-	URadialVector* RadialVector;
+	TObjectPtr<URadialVector> RadialVector;
 
 	UPROPERTY(VisibleAnywhere)
-	UFieldSystemMetaDataFilter* MetaDataFilter;
+	TObjectPtr<UFieldSystemMetaDataFilter> MetaDataFilter;
 	
 	UPROPERTY(EditAnywhere)
 	float FalloffMagnitude;

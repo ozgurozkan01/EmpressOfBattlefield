@@ -29,11 +29,11 @@ protected:
 private:
 
 	UPROPERTY(EditDefaultsOnly, Category="Animation | Montage")
-	UAnimMontage* HitReactionMontage;
+	TObjectPtr<UAnimMontage> HitReactionMontage;
 
 	UPROPERTY(EditDefaultsOnly, Category="Sound")
-	USoundBase* HitSound;
+	TObjectPtr<USoundBase> HitSound;
 
 	UPROPERTY(EditDefaultsOnly, Category="Particle Effect")
-	UParticleSystem* HitParticle;
+	TObjectPtr<UParticleSystem> HitParticle;
 };
