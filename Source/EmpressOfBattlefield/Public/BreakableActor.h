@@ -7,6 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "BreakableActor.generated.h"
 
+class UCapsuleComponent;
 class ATreasure;
 struct FChaosBreakEvent;
 class UGeometryCollectionComponent;
@@ -31,6 +32,9 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UGeometryCollectionComponent> GeometryCollection;
 
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UCapsuleComponent> CapsuleComponent;
+	
 public:
 	UPROPERTY(EditDefaultsOnly, Category=Sound)
 	TObjectPtr<USoundBase> BreakSound;
