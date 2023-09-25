@@ -6,6 +6,18 @@
 #include "SlashCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
+ATreasure::ATreasure()
+{
+	PrimaryActorTick.bCanEverTick = true;
+}
+
+void ATreasure::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	
+	AddActorWorldRotation(FRotator(0.f,  0.01 * DeltaSeconds, 0.f));
+}
+
 void ATreasure::OverlappingBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                  UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
@@ -19,6 +31,12 @@ void ATreasure::OverlappingBegin(UPrimitiveComponent* OverlappedComponent, AActo
 			{
 				UGameplayStatics::PlaySoundAtLocation(this,PickupSound, GetActorLocation());
 			}
+
+			if (GEngine)
+			{
+				GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Cyan, FString::Printf(TEXT("%d"), GoldCount));
+			}
+			
 			Destroy();
 		}
 	}
