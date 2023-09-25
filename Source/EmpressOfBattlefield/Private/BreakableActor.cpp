@@ -45,9 +45,10 @@ void ABreakableActor::BreakActorActive(const FChaosBreakEvent& BreakEvent)
 
 	if (!bIsBroken)
 	{
-		if (GetWorld() && Treasure)
+		if (GetWorld() && !Treasures.IsEmpty())
 		{
-			GetWorld()->SpawnActor<ATreasure>(Treasure, GetActorLocation() + FVector(0.f, 0.f, 50.f), GetActorRotation());
+			const int32 TreasureIndex = FMath::RandRange(0, Treasures.Num()-1);
+			GetWorld()->SpawnActor<ATreasure>(Treasures[TreasureIndex], GetActorLocation() + FVector(0.f, 0.f, 50.f), GetActorRotation());
 		}
 
 		if (CapsuleComponent)

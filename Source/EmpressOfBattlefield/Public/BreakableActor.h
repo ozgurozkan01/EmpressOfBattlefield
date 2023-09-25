@@ -40,7 +40,7 @@ public:
 	TObjectPtr<USoundBase> BreakSound;
 
 	UPROPERTY(EditDefaultsOnly, Category=Treasure)
-	TSubclassOf<ATreasure> Treasure;
+	TArray<TSubclassOf<ATreasure>> Treasures;
 
 	UPROPERTY(VisibleAnywhere)
 	bool bIsBroken;
