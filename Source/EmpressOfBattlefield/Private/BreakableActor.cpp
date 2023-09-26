@@ -41,23 +41,23 @@ void ABreakableActor::BeginPlay()
 
 void ABreakableActor::BreakActorActive(const FChaosBreakEvent& BreakEvent)
 {
-	SetLifeSpan(4.f);
+	SetLifeSpan(2.f);
 
-	if (!bIsBroken)
+	if (bIsBroken) { return; }
+	
+	if (GetWorld() && !Treasures.IsEmpty())
 	{
-		if (GetWorld() && !Treasures.IsEmpty())
-		{
-			const int32 TreasureIndex = FMath::RandRange(0, Treasures.Num()-1);
-			GetWorld()->SpawnActor<ATreasure>(Treasures[TreasureIndex], GetActorLocation() + FVector(0.f, 0.f, 50.f), GetActorRotation());
-		}
-
-		if (CapsuleComponent)
-		{
-			CapsuleComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
-		}
-		
-		bIsBroken = true;
+		const int32 TreasureIndex = FMath::RandRange(0, Treasures.Num()-1);
+		const FVector TreasureLocation = GetActorLocation() + FVector(0.f, 0.f, CapsuleComponent->GetScaledCapsuleHalfHeight()/2);
+		GetWorld()->SpawnActor<ATreasure>(Treasures[TreasureIndex], TreasureLocation, GetActorRotation());
 	}
+
+	if (CapsuleComponent)
+	{
+		CapsuleComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+	}
+		
+	bIsBroken = true;
 }
 
 void ABreakableActor::GetHit_Implementation(const FVector& ImpactPoint)
