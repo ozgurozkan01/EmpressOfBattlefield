@@ -6,6 +6,7 @@
 
 
 class USphereComponent;
+class UParticleSystemComponent;
 
 UCLASS()
 class EMPRESSOFBATTLEFIELD_API AItem : public AActor
@@ -45,6 +46,10 @@ protected:
 	float OffsetSpeed;
 
 	UPROPERTY(VisibleInstanceOnly, Category="Equip")
-	bool IsItemTaken;	
+	bool IsItemTaken;
+
+	UPROPERTY(EditDefaultsOnly, Category=Particle)
+	UParticleSystemComponent* UnpickUpParticle;
+
 };
 

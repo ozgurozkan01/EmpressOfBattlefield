@@ -8,6 +8,7 @@
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Field/FieldSystemComponent.h"
+#include "Particles/ParticleSystemComponent.h"
 
 AWeapon::AWeapon()
 {
@@ -48,6 +49,11 @@ void AWeapon::Equip(USceneComponent* InParent, FName InSocketName)
 	IsItemTaken = true;
 	AttachMeshToSocket(InParent, InSocketName);
 
+	if (UnpickUpParticle)
+	{
+		UnpickUpParticle->Deactivate();
+	}
+	
 	if (EquipSound)
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, EquipSound, GetActorLocation());

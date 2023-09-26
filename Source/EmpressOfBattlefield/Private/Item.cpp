@@ -2,6 +2,7 @@
 
 #include "SlashCharacter.h"
 #include "Components/SphereComponent.h"
+#include "Particles/ParticleSystemComponent.h"
 
 AItem::AItem()
 {
@@ -12,6 +13,9 @@ AItem::AItem()
 	
 	SphereCollider = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollider"));
 	SphereCollider->SetupAttachment(GetRootComponent());
+
+	UnpickUpParticle = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("UnpickedUpParticle"));
+	UnpickUpParticle->SetupAttachment(GetRootComponent());
 	
 	RunningTime = 0;
 	SinResult = 0;
