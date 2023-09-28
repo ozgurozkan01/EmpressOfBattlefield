@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "Enemy.generated.h"
 
+class UAttributeComponent;
 class UAnimMontage;
 
 UCLASS()
@@ -28,6 +29,9 @@ protected:
 	FName DetermineWhichSideGetHit(const double& Theta);
 private:
 
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UAttributeComponent> AttributeComponent;
+	
 	UPROPERTY(EditDefaultsOnly, Category="Animation | Montage")
 	TObjectPtr<UAnimMontage> HitReactionMontage;
 

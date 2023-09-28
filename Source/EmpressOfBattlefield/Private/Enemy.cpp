@@ -3,6 +3,7 @@
 
 #include "Enemy.h"
 
+#include "AttributeComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "EmpressOfBattlefield/DebugMacros.h"
 #include "Kismet/GameplayStatics.h"
@@ -19,7 +20,9 @@ AEnemy::AEnemy()
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore); // prevent breakdown of player's camera when collide with enemy
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore); // same
 	GetMesh()->SetGenerateOverlapEvents(true); // Activate overlap event generation
-	
+
+	// UActorComponent does not need to attach to the any component
+	AttributeComponent = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attribute Component"));
 }
 
 // Called when the game starts or when spawned
