@@ -16,4 +16,13 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+private:
+
+	UPROPERTY(EditDefaultsOnly, Category="Custom Attributes")
+	float CurrentHealth;
+
+	UPROPERTY(EditDefaultsOnly, Category="Custom Attributes")
+	float MaxHealth;
+	
 };
