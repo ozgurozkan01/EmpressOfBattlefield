@@ -1,18 +1,13 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Enemy.h"
 
 #include "AttributeComponent.h"
+#include "HealthBarComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "EmpressOfBattlefield/DebugMacros.h"
+#include "Components/WidgetComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "Kismet/KismetSystemLibrary.h"
 
-// Sets default values
 AEnemy::AEnemy()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	GetMesh()->SetCollisionObjectType(ECC_WorldDynamic); // Weapon does not overlap with Pawns
@@ -23,23 +18,30 @@ AEnemy::AEnemy()
 
 	// UActorComponent does not need to attach to the any component
 	AttributeComponent = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attribute Component"));
+
+	HealthBarWidgetComponent = CreateDefaultSubobject<UHealthBarComponent>(TEXT("Health Bar Component"));
+	HealthBarWidgetComponent->SetupAttachment(GetRootComponent());
+	HealthBarWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
 }
 
-// Called when the game starts or when spawned
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	if (HealthBarWidgetComponent)
+	{
+		HealthBarWidgetComponent->SetWidgetClass(HealthBarWidgetBlueprint);
+		HealthBarWidgetComponent->SetHealthPercent(.6f);	
+	}
+
 }
 
-// Called every frame
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
-// Called to bind functionality to input
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);

@@ -7,7 +7,9 @@
 #include "GameFramework/Character.h"
 #include "Enemy.generated.h"
 
+class UHealthBarComponent;
 class UAttributeComponent;
+class UUserWidget;
 class UAnimMontage;
 
 UCLASS()
@@ -31,6 +33,12 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UAttributeComponent> AttributeComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UHealthBarComponent> HealthBarWidgetComponent;
+
+	UPROPERTY(EditDefaultsOnly, Category=HUD)
+	TSubclassOf<UUserWidget> HealthBarWidgetBlueprint;
 	
 	UPROPERTY(EditDefaultsOnly, Category="Animation | Montage")
 	TObjectPtr<UAnimMontage> HitReactionMontage;
