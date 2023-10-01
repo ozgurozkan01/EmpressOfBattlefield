@@ -131,6 +131,7 @@ void AWeapon::OnDamageBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 
 		IgnoredActors.AddUnique(BoxHit.GetActor());
 		CreateFields(BoxHit.ImpactPoint);
+		UGameplayStatics::ApplyDamage(BoxHit.GetActor(), 10, GetInstigatorController(), this, UDamageType::);
 	}
 }
 
