@@ -16,8 +16,25 @@ class EMPRESSOFBATTLEFIELD_API UHealthBar : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	FORCEINLINE UProgressBar* GetHealthBarWidget() { return HealthBar; };
-	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UProgressBar> HealthBar;
+
+private:
+
+	UPROPERTY(EditDefaultsOnly, Category="Color Values")
+	float Red = 0.f;
+	UPROPERTY(EditDefaultsOnly, Category="Color Values")
+	float Green = 1.f;
+	UPROPERTY(EditDefaultsOnly, Category="Color Values")
+	float Blue = 0.f;
+	UPROPERTY(EditDefaultsOnly, Category="Color Values")
+	float Alpha = 1.f;
+
+public:
+
+	// Getter
+	FORCEINLINE UProgressBar* GetHealthProgressBar() { return HealthBar; };
+
+	// Setter
+	void SetHealthBarColor(float DamageTaken);
 };
