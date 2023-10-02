@@ -3,6 +3,11 @@
 #include "RendererUtils.h"
 #include "Components/ProgressBar.h"
 
+void UHealthBar::NativeConstruct()
+{
+	HealthBar->SetFillColorAndOpacity(FLinearColor(Red, Green, Blue, Alpha));
+}
+
 void UHealthBar::SetHealthBarColor(float DamageTaken)
 {
 	if (HealthBar)

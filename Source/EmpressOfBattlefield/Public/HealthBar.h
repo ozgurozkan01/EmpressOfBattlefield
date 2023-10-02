@@ -15,6 +15,8 @@ class EMPRESSOFBATTLEFIELD_API UHealthBar : public UUserWidget
 {
 	GENERATED_BODY()
 
+	void NativeConstruct() override;
+	
 public:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UProgressBar> HealthBar;
