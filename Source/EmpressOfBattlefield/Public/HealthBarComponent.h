@@ -15,7 +15,7 @@ class EMPRESSOFBATTLEFIELD_API UHealthBarComponent : public UWidgetComponent
 
 public:
 	void SetHealthPercent(float Percent);
-
+	FORCEINLINE UHealthBar* GetHealthBarWidget() { return HealthBarWidget; }; 
 private:
 
 	TObjectPtr<UHealthBar> HealthBarWidget;
