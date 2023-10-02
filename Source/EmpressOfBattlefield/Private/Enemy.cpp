@@ -31,9 +31,8 @@ void AEnemy::BeginPlay()
 	if (HealthBarWidgetComponent)
 	{
 		HealthBarWidgetComponent->SetWidgetClass(HealthBarWidgetBlueprint);
-		HealthBarWidgetComponent->SetHealthPercent(.6f);	
+		HealthBarWidgetComponent->SetHealthPercent(AttributeComponent->GetHealthPercentage());
 	}
-
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -114,4 +113,16 @@ FName AEnemy::DetermineWhichSideGetHit(const double& Theta)
 	}
 
 	return Section;
+}
+
+float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+	AActor* DamageCauser)
+{
+	if (AttributeComponent && HealthBarWidgetComponent)
+	{
+		AttributeComponent->SetCurrentHealth(DamageAmount);
+		HealthBarWidgetComponent->SetHealthPercent(AttributeComponent->GetHealthPercentage());	
+	}
+
+	return DamageAmount;
 }

@@ -29,6 +29,7 @@ protected:
 	void PlayHitReactionMontage(const FName& SectionName);
 	void CalculateHitLocationAngle(const FVector& ImpactPoint);
 	FName DetermineWhichSideGetHit(const double& Theta);
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 private:
 
 	UPROPERTY(VisibleAnywhere)
