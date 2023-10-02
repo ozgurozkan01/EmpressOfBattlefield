@@ -25,7 +25,7 @@ public:
 	FORCEINLINE UBoxComponent* GetDamageBox() const { return DamageBox; }
 	
 	void AttachMeshToSocket(USceneComponent* InParent, FName InSocketName);
-	void Equip(USceneComponent* InParent, FName InSocketName);
+	void Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator);
 	void CreateFields(const FVector& FieldLocation);
 	
 	UPROPERTY()
@@ -53,6 +53,9 @@ private:
 	UPROPERTY(VisibleAnywhere, Category="Trace")
 	TObjectPtr<USceneComponent> TraceEnd;
 
+	UPROPERTY(EditAnywhere, Category=Damage)
+	float Damage;
+	
 	// Field System Variables
 
 	UPROPERTY(VisibleAnywhere)

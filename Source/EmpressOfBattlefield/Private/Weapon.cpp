@@ -34,6 +34,7 @@ AWeapon::AWeapon()
 	FalloffMagnitude = 1500000000.f;
 	VectorMagnitude = 50000000000.f;
 	SphereRadius = 200.f;
+	Damage = 20.f;
 }
 
 void AWeapon::BeginPlay()
@@ -44,8 +45,10 @@ void AWeapon::BeginPlay()
 	DamageBox->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::OnDamageBoxOverlapBegin);
 }
 
-void AWeapon::Equip(USceneComponent* InParent, FName InSocketName)
+void AWeapon::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator)
 {
+	SetOwner(NewOwner);
+	SetInstigator(NewInstigator);
 	IsItemTaken = true;
 	AttachMeshToSocket(InParent, InSocketName);
 
@@ -131,7 +134,13 @@ void AWeapon::OnDamageBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 
 		IgnoredActors.AddUnique(BoxHit.GetActor());
 		CreateFields(BoxHit.ImpactPoint);
-		UGameplayStatics::ApplyDamage(BoxHit.GetActor(), 10, GetInstigatorController(), this, UDamageType::);
+		UGameplayStatics::ApplyDamage(
+			BoxHit.GetActor(),
+			Damage,
+			GetInstigator()->GetController(),
+			this,
+			UDamageType::StaticClass()
+			);
 	}
 }
 
