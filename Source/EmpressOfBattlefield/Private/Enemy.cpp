@@ -1,6 +1,7 @@
 #include "Enemy.h"
 
 #include "AttributeComponent.h"
+#include "HealthBar.h"
 #include "HealthBarComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
@@ -118,11 +119,13 @@ FName AEnemy::DetermineWhichSideGetHit(const double& Theta)
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
 	AActor* DamageCauser)
 {
-	if (AttributeComponent && HealthBarWidgetComponent)
+	if (AttributeComponent &&
+		HealthBarWidgetComponent &&
+		HealthBarWidgetComponent->GetHealthBarWidget())
 	{
 		AttributeComponent->SetCurrentHealth(DamageAmount);
-		HealthBarWidgetComponent->SetHealthPercent(AttributeComponent->GetHealthPercentage());	
+		HealthBarWidgetComponent->SetHealthPercent(AttributeComponent->GetHealthPercentage());
+		HealthBarWidgetComponent->GetHealthBarWidget()->SetHealthBarColor(DamageAmount);
 	}
-
 	return DamageAmount;
 }
