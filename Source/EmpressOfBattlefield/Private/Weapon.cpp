@@ -123,6 +123,13 @@ void AWeapon::OnDamageBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 
 	if (BoxHit.GetActor())
 	{
+		UGameplayStatics::ApplyDamage(
+		BoxHit.GetActor(),
+		Damage,
+		GetInstigator()->GetController(),
+		this,
+		UDamageType::StaticClass()
+		);
 		// if hit object inherites from IHitInterface, then call the methods,
 		// But this method belongs to hit objects own. So we do not need to cast
 		// specific classes like actor, character etc.
@@ -134,13 +141,6 @@ void AWeapon::OnDamageBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 
 		IgnoredActors.AddUnique(BoxHit.GetActor());
 		CreateFields(BoxHit.ImpactPoint);
-		UGameplayStatics::ApplyDamage(
-			BoxHit.GetActor(),
-			Damage,
-			GetInstigator()->GetController(),
-			this,
-			UDamageType::StaticClass()
-			);
 	}
 }
 
