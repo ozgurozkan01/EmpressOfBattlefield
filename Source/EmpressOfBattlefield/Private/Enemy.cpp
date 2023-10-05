@@ -50,7 +50,19 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 {
-	CalculateHitLocationAngle(ImpactPoint);
+	double Theta = CalculateHitLocationAngle(ImpactPoint);
+	FName SectionName = DetermineWhichSideGetHit(Theta);
+
+	if (AttributeComponent && AttributeComponent->IsAlive())
+	{
+		PlayHitReactionMontage(SectionName);
+	}
+
+	else
+	{
+		Die(SectionName);
+	}
+
 	if (HitSound)
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
@@ -59,7 +71,8 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 	if (HitParticle)
 	{
 		UGameplayStatics::SpawnEmitterAtLocation(this, HitParticle, ImpactPoint);
-	}
+	}	
+
 }
 
 void AEnemy::PlayHitReactionMontage(const FName& SectionName)
@@ -73,7 +86,18 @@ void AEnemy::PlayHitReactionMontage(const FName& SectionName)
 	}
 }
 
-void AEnemy::CalculateHitLocationAngle(const FVector& ImpactPoint)
+void AEnemy::PlayDeathAnimMontage(const FName& SectionName)
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+
+	if (AnimInstance && DeathAnimMontage)
+	{
+		AnimInstance->Montage_Play(DeathAnimMontage);
+		AnimInstance->Montage_JumpToSection(SectionName, DeathAnimMontage);
+	}
+}
+
+double AEnemy::CalculateHitLocationAngle(const FVector& ImpactPoint)
 {
 	const FVector Forward = GetActorForwardVector();
 	const FVector LoweredHit(ImpactPoint.X, ImpactPoint.Y, GetActorLocation().Z);
@@ -90,8 +114,7 @@ void AEnemy::CalculateHitLocationAngle(const FVector& ImpactPoint)
 		Theta *= -1;
 	}
 
-	FName Section = DetermineWhichSideGetHit(Theta);
-	PlayHitReactionMontage(Section);
+	return Theta;
 }
 
 FName AEnemy::DetermineWhichSideGetHit(const double& Theta)
@@ -128,4 +151,9 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 		HealthBarWidgetComponent->GetHealthBarWidget()->SetHealthBarColor(DamageAmount);
 	}
 	return DamageAmount;
+}
+
+void AEnemy::Die(FName& SectionName)
+{
+	PlayDeathAnimMontage(SectionName);
 }

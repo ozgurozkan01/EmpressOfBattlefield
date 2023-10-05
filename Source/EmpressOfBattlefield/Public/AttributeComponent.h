@@ -13,6 +13,7 @@ class EMPRESSOFBATTLEFIELD_API UAttributeComponent : public UActorComponent
 public:	
 	UAttributeComponent();
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	bool IsAlive() const;
 
 	// Getter
 	float GetHealthPercentage();
