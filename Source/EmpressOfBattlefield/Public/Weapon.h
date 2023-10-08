@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Item.h"
+#include "CharacterTypes.h"
 #include "Weapon.generated.h"
 
 class UFieldSystemComponent;
@@ -23,7 +24,7 @@ public:
 	AWeapon();
 	
 	FORCEINLINE UBoxComponent* GetDamageBox() const { return DamageBox; }
-	
+	FORCEINLINE void SetAttackType(const EAttackType& CurrentAttackType) { AttackType = CurrentAttackType; }
 	void AttachMeshToSocket(USceneComponent* InParent, FName InSocketName);
 	void Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator);
 	void CreateFields(const FVector& FieldLocation);
@@ -53,6 +54,8 @@ private:
 	UPROPERTY(VisibleAnywhere, Category="Trace")
 	TObjectPtr<USceneComponent> TraceEnd;
 
+	EAttackType AttackType;
+	
 	UPROPERTY(EditAnywhere, Category=Damage)
 	float Damage;
 	
