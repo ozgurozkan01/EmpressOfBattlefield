@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "HitInterface.h"
 #include "GameFramework/Character.h"
+#include "CharacterTypes.h"
 #include "Enemy.generated.h"
 
 class UHealthBarComponent;
@@ -22,16 +23,22 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	void GetHit_Implementation(const FVector& ImpactPoint) override;	
-	
+
+	UPROPERTY(BlueprintReadOnly)
+	EDeathPose DeathPose;
+
 protected:
 	virtual void BeginPlay() override;
 	
 	void PlayHitReactionMontage(const FName& SectionName);
 	void PlayDeathAnimMontage(const FName& SectionName);
+	void Die(FName& SectionName);
+
 	double CalculateHitLocationAngle(const FVector& ImpactPoint);
 	FName DetermineWhichSideGetHit(const double& Theta);
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
-	void Die(FName& SectionName);
+	EDeathPose GetDeathPose(const FName& SectionName);
+	
 private:
 
 	UPROPERTY(VisibleAnywhere)

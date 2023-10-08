@@ -23,6 +23,8 @@ AEnemy::AEnemy()
 	HealthBarWidgetComponent = CreateDefaultSubobject<UHealthBarComponent>(TEXT("Health Bar Component"));
 	HealthBarWidgetComponent->SetupAttachment(GetRootComponent());
 	HealthBarWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
+
+	DeathPose = EDeathPose::EDP_Alive;
 }
 
 void AEnemy::BeginPlay()
@@ -31,6 +33,7 @@ void AEnemy::BeginPlay()
 
 	if (HealthBarWidgetComponent)
 	{
+		GEngine->AddOnScreenDebugMessage(1, 5, FColor::Cyan, "HealthBarComponent Valid");
 		HealthBarWidgetComponent->SetWidgetClass(HealthBarWidgetBlueprint);
 		HealthBarWidgetComponent->SetHealthPercent(AttributeComponent->GetHealthPercentage());
 	}
@@ -60,6 +63,7 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 
 	else
 	{
+		DeathPose = GetDeathPose(SectionName);
 		Die(SectionName);
 	}
 
@@ -120,7 +124,6 @@ double AEnemy::CalculateHitLocationAngle(const FVector& ImpactPoint)
 FName AEnemy::DetermineWhichSideGetHit(const double& Theta)
 {
 	FName Section("FromBack");
-
 	if (Theta >= -45.f && Theta < 45.f)
 	{
 		Section = FName("FromFront");
@@ -151,6 +154,26 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 		HealthBarWidgetComponent->GetHealthBarWidget()->SetHealthBarColor(DamageAmount);
 	}
 	return DamageAmount;
+}
+
+EDeathPose AEnemy::GetDeathPose(const FName& SectionName)
+{
+	if (SectionName == "FromBack")
+	{
+		return EDeathPose::EDP_DeathBackward;
+	}
+
+	if (SectionName == "FromFront")
+	{
+		return EDeathPose::EDP_DeathFront;
+	}
+
+	if (SectionName == "FromRight")
+	{
+		return EDeathPose::EDP_DeathRight;
+	}
+
+	return EDeathPose::EDP_DeathLeft;
 }
 
 void AEnemy::Die(FName& SectionName)
