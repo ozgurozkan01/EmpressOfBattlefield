@@ -23,7 +23,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	void GetHit_Implementation(const FVector& ImpactPoint) override;
+	void GetHit_Implementation(const FVector& ImpactPoint, const EAttackType& AttackType) override;
 
 	UFUNCTION()
 	virtual void BreakActorActive(const FChaosBreakEvent& BreakEvent);
