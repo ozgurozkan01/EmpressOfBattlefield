@@ -60,7 +60,7 @@ void ABreakableActor::BreakActorActive(const FChaosBreakEvent& BreakEvent)
 	bIsBroken = true;
 }
 
-void ABreakableActor::GetHit_Implementation(const FVector& ImpactPoint)
+void ABreakableActor::GetHit_Implementation(const FVector& ImpactPoint, const EAttackType& AttackType)
 {
 	if (BreakSound)
 	{
