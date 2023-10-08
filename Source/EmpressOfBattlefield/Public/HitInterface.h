@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "CharacterTypes.h"
 #include "HitInterface.generated.h"
 
 // This class does not need to be modified. It is just used to connect with reflection system
@@ -24,5 +25,5 @@ class EMPRESSOFBATTLEFIELD_API IHitInterface
 public:
 
 	UFUNCTION(BlueprintNativeEvent)
-	void GetHit(const FVector& ImpactPoint);
+	void GetHit(const FVector& ImpactPoint, const EAttackType& AttackType);
 };
