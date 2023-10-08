@@ -232,10 +232,12 @@ void ASlashCharacter::PlayAttackMontage()
 		switch (Selection)
 		{
 		case 0:
-			SectionName = FName("Attack1");
+			SectionName = FName("RightToLeft");
+			EquippedWeapon->SetAttackType(EAttackType::EAT_RightToLeft);
 			break;
 		case 1:
-			SectionName = FName("Attack2");
+			SectionName = FName("UpToDown");
+			EquippedWeapon->SetAttackType(EAttackType::EAT_UpToDown);
 			break;
 		default:
 			break;
