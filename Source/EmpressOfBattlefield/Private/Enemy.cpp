@@ -51,7 +51,7 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
-void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
+void AEnemy::GetHit_Implementation(const FVector& ImpactPoint, const EAttackType& AttackType)
 {
 	double Theta = CalculateHitLocationAngle(ImpactPoint);
 	FName SectionName = DetermineWhichSideGetHit(Theta);
@@ -64,7 +64,7 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 	else
 	{
 		DeathPose = GetDeathPose(SectionName);
-		Die(SectionName);
+		Die(SectionName, AttackType);
 	}
 
 	if (HitSound)
@@ -90,15 +90,24 @@ void AEnemy::PlayHitReactionMontage(const FName& SectionName)
 	}
 }
 
-void AEnemy::PlayDeathAnimMontage(const FName& SectionName)
+void AEnemy::PlayDeathAnimMontage(const FName& SectionName, const EAttackType& AttackType)
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 
-	if (AnimInstance && DeathAnimMontage)
+	if (AnimInstance == nullptr) { return; }
+	
+	if (AttackType == EAttackType::EAT_RightToLeft && RTLDeathAnimMontage)
 	{
-		AnimInstance->Montage_Play(DeathAnimMontage);
-		AnimInstance->Montage_JumpToSection(SectionName, DeathAnimMontage);
+		AnimInstance->Montage_Play(RTLDeathAnimMontage);
+		AnimInstance->Montage_JumpToSection(SectionName, RTLDeathAnimMontage);
 	}
+
+	else
+	{
+		AnimInstance->Montage_Play(UTDDeathAnimMontage);
+		AnimInstance->Montage_JumpToSection(SectionName, UTDDeathAnimMontage);
+	}
+	
 }
 
 double AEnemy::CalculateHitLocationAngle(const FVector& ImpactPoint)
@@ -177,7 +186,7 @@ EDeathPose AEnemy::GetDeathPose(const FName& SectionName)
 	return EDeathPose::EDP_DeathToRight;
 }
 
-void AEnemy::Die(FName& SectionName)
+void AEnemy::Die(FName& SectionName, const EAttackType& AttackType)
 {
-	PlayDeathAnimMontage(SectionName);
+	PlayDeathAnimMontage(SectionName, AttackType);
 }

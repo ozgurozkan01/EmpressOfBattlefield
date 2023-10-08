@@ -22,7 +22,7 @@ public:
 	AEnemy();
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	void GetHit_Implementation(const FVector& ImpactPoint) override;	
+	void GetHit_Implementation(const FVector& ImpactPoint, const EAttackType& AttackType) override;	
 
 	UPROPERTY(BlueprintReadOnly)
 	EDeathPose DeathPose;
@@ -31,8 +31,8 @@ protected:
 	virtual void BeginPlay() override;
 	
 	void PlayHitReactionMontage(const FName& SectionName);
-	void PlayDeathAnimMontage(const FName& SectionName);
-	void Die(FName& SectionName);
+	void PlayDeathAnimMontage(const FName& SectionName, const EAttackType& AttackType);
+	void Die(FName& SectionName, const EAttackType& AttackType);
 
 	double CalculateHitLocationAngle(const FVector& ImpactPoint);
 	FName DetermineWhichSideGetHit(const double& Theta);
@@ -54,7 +54,10 @@ private:
 	TObjectPtr<UAnimMontage> HitReactionMontage;
 
 	UPROPERTY(EditDefaultsOnly, Category="Animation | Montage")
-	TObjectPtr<UAnimMontage> DeathAnimMontage;
+	TObjectPtr<UAnimMontage> RTLDeathAnimMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category="Animation | Montage")
+	TObjectPtr<UAnimMontage> UTDDeathAnimMontage;
 	
 	UPROPERTY(EditDefaultsOnly, Category="Sound")
 	TObjectPtr<USoundBase> HitSound;
