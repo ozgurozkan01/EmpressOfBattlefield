@@ -25,3 +25,11 @@ enum class EDeathPose : uint8
 	EDP_DeathToFront UMETA(Display = "DeathToFront"),
 	EDP_DeathToBack UMETA(Display = "DeathToBack"),
 };
+
+UENUM(BlueprintType)
+enum class EAttackType : uint8
+{
+	EAT_RightToLeft UMETA(Display = "RTL"),
+	EAT_UpToDown UMETA(Display = "UTD"),
+	EAT_Default UMETA(Display = "Default")
+};
