@@ -20,8 +20,8 @@ UENUM(BlueprintType)
 enum class EDeathPose : uint8
 {
 	EDP_Alive UMETA(Display = "Alive"),
-	EDP_Death1 UMETA(Display = "Death1"),
-	EDP_Death2 UMETA(Display = "Death2"),
-	EDP_Death3 UMETA(Display = "Death3"),
-	EDP_Death4 UMETA(Display = "Death4"),
+	EDP_DeathRight UMETA(Display = "DeathRight"),
+	EDP_DeathLeft UMETA(Display = "DeathLeft"),
+	EDP_DeathFront UMETA(Display = "DeathFront"),
+	EDP_DeathBackward UMETA(Display = "DeathBackward"),
 };
