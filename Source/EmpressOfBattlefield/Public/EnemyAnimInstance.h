@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
 #include "CharacterTypes.h"
-#include "Animation/AnimInstanceProxy.h"
 #include "EnemyAnimInstance.generated.h"
 
 class AEnemy;
@@ -16,6 +15,8 @@ class EMPRESSOFBATTLEFIELD_API UEnemyAnimInstance : public UAnimInstance
 	GENERATED_BODY()
 public:
 	void NativeInitializeAnimation() override;
+
+	void NativeThreadSafeUpdateAnimation(float DeltaSeconds) override;
 protected:
 
 	UPROPERTY(BlueprintReadOnly)
@@ -23,6 +24,4 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite)
 	EDeathPose DeathPose;
-
-	FAnimInstanceProxy AnimInstanceProxy;
 };

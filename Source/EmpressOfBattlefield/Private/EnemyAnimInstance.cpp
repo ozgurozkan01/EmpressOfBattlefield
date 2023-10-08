@@ -4,6 +4,7 @@
 #include "EnemyAnimInstance.h"
 
 #include "Enemy.h"
+#include "PropertyAccess.h"
 
 void UEnemyAnimInstance::NativeInitializeAnimation()
 {
@@ -16,4 +17,12 @@ void UEnemyAnimInstance::NativeInitializeAnimation()
 	}
 
 	DeathPose = Enemy->DeathPose;
+}
+
+void UEnemyAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
+{
+	if (Enemy)
+	{
+		DeathPose = Enemy->DeathPose;
+	}
 }
