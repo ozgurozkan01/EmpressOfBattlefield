@@ -161,20 +161,20 @@ EDeathPose AEnemy::GetDeathPose(const FName& SectionName)
 {
 	if (SectionName == "FromBack")
 	{
-		return EDeathPose::EDP_DeathFront;
+		return EDeathPose::EDP_DeathToFront;
 	}
 
 	if (SectionName == "FromFront")
 	{
-		return EDeathPose::EDP_DeathBackward;
+		return EDeathPose::EDP_DeathToBack;
 	}
 
 	if (SectionName == "FromRight")
 	{
-		return EDeathPose::EDP_DeathLeft;
+		return EDeathPose::EDP_DeathToLeft;
 	}
 
-	return EDeathPose::EDP_DeathRight;
+	return EDeathPose::EDP_DeathToRight;
 }
 
 void AEnemy::Die(FName& SectionName)
