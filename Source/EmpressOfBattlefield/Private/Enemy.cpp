@@ -124,6 +124,7 @@ double AEnemy::CalculateHitLocationAngle(const FVector& ImpactPoint)
 FName AEnemy::DetermineWhichSideGetHit(const double& Theta)
 {
 	FName Section("FromBack");
+	
 	if (Theta >= -45.f && Theta < 45.f)
 	{
 		Section = FName("FromFront");
@@ -160,20 +161,20 @@ EDeathPose AEnemy::GetDeathPose(const FName& SectionName)
 {
 	if (SectionName == "FromBack")
 	{
-		return EDeathPose::EDP_DeathBackward;
+		return EDeathPose::EDP_DeathFront;
 	}
 
 	if (SectionName == "FromFront")
 	{
-		return EDeathPose::EDP_DeathFront;
+		return EDeathPose::EDP_DeathBackward;
 	}
 
 	if (SectionName == "FromRight")
 	{
-		return EDeathPose::EDP_DeathRight;
+		return EDeathPose::EDP_DeathLeft;
 	}
 
-	return EDeathPose::EDP_DeathLeft;
+	return EDeathPose::EDP_DeathRight;
 }
 
 void AEnemy::Die(FName& SectionName)
