@@ -17,6 +17,9 @@ public:
 	void NativeInitializeAnimation() override;
 
 	void NativeThreadSafeUpdateAnimation(float DeltaSeconds) override;
+
+	UPROPERTY(BlueprintReadOnly)
+	EAttackType AttackType;
 protected:
 
 	UPROPERTY(BlueprintReadOnly)
@@ -24,4 +27,6 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite)
 	EDeathPose DeathPose;
+
+
 };
