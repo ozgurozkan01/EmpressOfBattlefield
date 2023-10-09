@@ -1,6 +1,7 @@
 #include "Enemy.h"
 
 #include "AttributeComponent.h"
+#include "EnemyAnimInstance.h"
 #include "HealthBar.h"
 #include "HealthBarComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -76,13 +77,12 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint, const EAttackType
 	{
 		UGameplayStatics::SpawnEmitterAtLocation(this, HitParticle, ImpactPoint);
 	}	
-
 }
 
 void AEnemy::PlayHitReactionMontage(const FName& SectionName)
 {
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-
+	UEnemyAnimInstance* AnimInstance = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
+	
 	if (AnimInstance && HitReactionMontage)
 	{
 		AnimInstance->Montage_Play(HitReactionMontage);
@@ -92,8 +92,9 @@ void AEnemy::PlayHitReactionMontage(const FName& SectionName)
 
 void AEnemy::PlayDeathAnimMontage(const FName& SectionName, const EAttackType& AttackType)
 {
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-
+	UEnemyAnimInstance* AnimInstance = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
+	AnimInstance->AttackType = AttackType;
+	
 	if (AnimInstance == nullptr) { return; }
 	
 	if (AttackType == EAttackType::EAT_RightToLeft && RTLDeathAnimMontage)
