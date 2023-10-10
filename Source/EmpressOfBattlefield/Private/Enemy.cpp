@@ -4,6 +4,7 @@
 #include "EnemyAnimInstance.h"
 #include "HealthBar.h"
 #include "HealthBarComponent.h"
+#include "SlashCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -26,6 +27,8 @@ AEnemy::AEnemy()
 	HealthBarWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
 
 	DeathPose = EDeathPose::EDP_Alive;
+
+	CombatRadius = 500.f;
 }
 
 void AEnemy::BeginPlay()
@@ -37,6 +40,7 @@ void AEnemy::BeginPlay()
 		GEngine->AddOnScreenDebugMessage(1, 5, FColor::Cyan, "HealthBarComponent Valid");
 		HealthBarWidgetComponent->SetWidgetClass(HealthBarWidgetBlueprint);
 		HealthBarWidgetComponent->SetHealthPercent(AttributeComponent->GetHealthPercentage());
+		HealthBarWidgetComponent->SetVisibility(false);
 	}
 }
 
@@ -44,6 +48,16 @@ void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (!ShouldChaseTarget())
+	{
+		CombatTarget = nullptr;
+
+		if (HealthBarWidgetComponent)
+		{
+			HealthBarWidgetComponent->SetVisibility(false);
+		}
+	}
+	
 }
 
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -52,11 +66,17 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
-void AEnemy::GetHit_Implementation(const FVector& ImpactPoint, const EAttackType& AttackType)
+void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 {
 	double Theta = CalculateHitLocationAngle(ImpactPoint);
 	FName SectionName = DetermineWhichSideGetHit(Theta);
 
+	if (HealthBarWidgetComponent)
+	{
+		HealthBarWidgetComponent->SetVisibility(true);
+		GEngine->AddOnScreenDebugMessage(1, 5, FColor::Cyan, "true");
+	}
+	
 	if (AttributeComponent && AttributeComponent->IsAlive())
 	{
 		PlayHitReactionMontage(SectionName);
@@ -65,7 +85,7 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint, const EAttackType
 	else
 	{
 		DeathPose = GetDeathPose(SectionName);
-		Die(SectionName, AttackType);
+		Die(SectionName);
 	}
 
 	if (HitSound)
@@ -90,14 +110,18 @@ void AEnemy::PlayHitReactionMontage(const FName& SectionName)
 	}
 }
 
-void AEnemy::PlayDeathAnimMontage(const FName& SectionName, const EAttackType& AttackType)
+void AEnemy::PlayDeathAnimMontage(const FName& SectionName)
 {
 	UEnemyAnimInstance* AnimInstance = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
-	AnimInstance->AttackType = AttackType;
-	
+
 	if (AnimInstance == nullptr) { return; }
+
+	if (CombatTarget)
+	{
+		AnimInstance->AttackType = CombatTarget->AttackType;
+	}
 	
-	if (AttackType == EAttackType::EAT_RightToLeft && RTLDeathAnimMontage)
+	if (CombatTarget && CombatTarget->AttackType == EAttackType::EAT_RightToLeft && RTLDeathAnimMontage)
 	{
 		AnimInstance->Montage_Play(RTLDeathAnimMontage);
 		AnimInstance->Montage_JumpToSection(SectionName, RTLDeathAnimMontage);
@@ -163,6 +187,7 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 		AttributeComponent->SetCurrentHealth(DamageAmount);
 		HealthBarWidgetComponent->SetHealthPercent(AttributeComponent->GetHealthPercentage());
 		HealthBarWidgetComponent->GetHealthBarWidget()->SetHealthBarColor(DamageAmount);
+		CombatTarget = Cast<ASlashCharacter>(EventInstigator->GetPawn());
 	}
 	return DamageAmount;
 }
@@ -187,7 +212,23 @@ EDeathPose AEnemy::GetDeathPose(const FName& SectionName)
 	return EDeathPose::EDP_DeathToRight;
 }
 
-void AEnemy::Die(FName& SectionName, const EAttackType& AttackType)
+bool AEnemy::ShouldChaseTarget()
 {
-	PlayDeathAnimMontage(SectionName, AttackType);
+	if (CombatTarget == nullptr) { return false; }
+	const float Distance = (CombatTarget->GetActorLocation() - GetActorLocation()).Size();
+	
+	return Distance < CombatRadius;
+}
+
+void AEnemy::Die(FName& SectionName)
+{
+	PlayDeathAnimMontage(SectionName);
+
+	if (HealthBarWidgetComponent)
+	{
+		HealthBarWidgetComponent->SetVisibility(false);
+	}
+	
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	SetLifeSpan(5.f); // Destroy actor after 5 seconds.
 }
