@@ -25,5 +25,5 @@ class EMPRESSOFBATTLEFIELD_API IHitInterface
 public:
 
 	UFUNCTION(BlueprintNativeEvent)
-	void GetHit(const FVector& ImpactPoint, const EAttackType& AttackType);
+	void GetHit(const FVector& ImpactPoint);
 };
