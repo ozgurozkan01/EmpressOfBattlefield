@@ -233,11 +233,11 @@ void ASlashCharacter::PlayAttackMontage()
 		{
 		case 0:
 			SectionName = FName("RightToLeft");
-			EquippedWeapon->SetAttackType(EAttackType::EAT_RightToLeft);
+			AttackType = EAttackType::EAT_RightToLeft;
 			break;
 		case 1:
 			SectionName = FName("UpToDown");
-			EquippedWeapon->SetAttackType(EAttackType::EAT_UpToDown);
+			AttackType = EAttackType::EAT_UpToDown;
 			break;
 		default:
 			break;

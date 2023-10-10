@@ -37,6 +37,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess = "true"))
 	EActionState CurrentAction;
+
+	UPROPERTY(VisibleAnywhere)
+	EAttackType AttackType;
 	
 protected:
 	virtual void BeginPlay() override;
