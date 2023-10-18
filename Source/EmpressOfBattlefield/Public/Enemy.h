@@ -8,6 +8,7 @@
 #include "CharacterTypes.h"
 #include "Enemy.generated.h"
 
+class AAIController;
 class ASlashCharacter;
 class UHealthBarComponent;
 class UAttributeComponent;
@@ -43,7 +44,13 @@ protected:
 private:
 
 	UPROPERTY()
-	TObjectPtr<ASlashCharacter> CombatTarget;
+	TObjectPtr<AActor> CombatTarget;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<AActor> PatrolTarget;
+	
+	UPROPERTY(EditAnywhere)
+	TArray<TObjectPtr<AActor>> PatrolTargets;
 	
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UAttributeComponent> AttributeComponent;
@@ -69,6 +76,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category="Particle Effect")
 	TObjectPtr<UParticleSystem> HitParticle;
 
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<AAIController> AIController;
+	
 	UPROPERTY()
 	float CombatRadius;
 };

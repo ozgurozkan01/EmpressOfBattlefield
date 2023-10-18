@@ -1,5 +1,6 @@
 #include "Enemy.h"
 
+#include "AIController.h"
 #include "AttributeComponent.h"
 #include "EnemyAnimInstance.h"
 #include "HealthBar.h"
@@ -7,7 +8,9 @@
 #include "SlashCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Navigation/PathFollowingComponent.h"
 
 AEnemy::AEnemy()
 {
@@ -26,6 +29,12 @@ AEnemy::AEnemy()
 	HealthBarWidgetComponent->SetupAttachment(GetRootComponent());
 	HealthBarWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
 
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationRoll = false;
+	
 	DeathPose = EDeathPose::EDP_Alive;
 
 	CombatRadius = 500.f;
@@ -35,12 +44,41 @@ void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
+	AIController = Cast<AAIController>(GetController());
+	TObjectPtr<UCharacterMovementComponent> MovementController = GetCharacterMovement();
+
+	if (MovementController)
+	{
+		MovementController->MaxWalkSpeed = 300.f;
+	}
+	
 	if (HealthBarWidgetComponent)
 	{
-		GEngine->AddOnScreenDebugMessage(1, 5, FColor::Cyan, "HealthBarComponent Valid");
 		HealthBarWidgetComponent->SetWidgetClass(HealthBarWidgetBlueprint);
 		HealthBarWidgetComponent->SetHealthPercent(AttributeComponent->GetHealthPercentage());
 		HealthBarWidgetComponent->SetVisibility(false);
+	}
+	
+	if (AIController && PatrolTarget) 
+	{ 
+		FTimerDelegate TimerDelegate;
+		FTimerHandle TimerHandle; 
+		
+		TimerDelegate.BindLambda([&] { 
+				FAIMoveRequest MoveRequest; 
+				MoveRequest.SetGoalActor(PatrolTarget); 
+				MoveRequest.SetAcceptanceRadius(15.f); 
+				FNavPathSharedPtr NavPath; 
+				AIController->MoveTo(MoveRequest, &NavPath); 
+				TArray<FNavPathPoint>& PathPoints = NavPath->GetPathPoints(); 
+				for (auto& Point : PathPoints) 
+				{ 
+					const FVector& Location = Point.Location; 
+					DrawDebugSphere(GetWorld(), Location, 12.f, 12, FColor::Green, false, 10.f); 
+				} 
+			}); 
+
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, 4, false);
 	}
 }
 
@@ -57,7 +95,11 @@ void AEnemy::Tick(float DeltaTime)
 			HealthBarWidgetComponent->SetVisibility(false);
 		}
 	}
-	
+
+	if (AIController)
+	{
+		AIController->MoveToActor(CombatTarget);
+	}
 }
 
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -74,7 +116,6 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 	if (HealthBarWidgetComponent)
 	{
 		HealthBarWidgetComponent->SetVisibility(true);
-		GEngine->AddOnScreenDebugMessage(1, 5, FColor::Cyan, "true");
 	}
 	
 	if (AttributeComponent && AttributeComponent->IsAlive())
@@ -101,7 +142,7 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 
 void AEnemy::PlayHitReactionMontage(const FName& SectionName)
 {
-	UEnemyAnimInstance* AnimInstance = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
+		TObjectPtr<UEnemyAnimInstance> AnimInstance = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
 	
 	if (AnimInstance && HitReactionMontage)
 	{
@@ -112,16 +153,17 @@ void AEnemy::PlayHitReactionMontage(const FName& SectionName)
 
 void AEnemy::PlayDeathAnimMontage(const FName& SectionName)
 {
-	UEnemyAnimInstance* AnimInstance = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
-
-	if (AnimInstance == nullptr) { return; }
-
+	TObjectPtr<UEnemyAnimInstance> AnimInstance = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
+	TObjectPtr<ASlashCharacter> SlashCharacter = Cast<ASlashCharacter>(CombatTarget);
+	
+	if (AnimInstance == nullptr && SlashCharacter == nullptr) { return; }
+	
 	if (CombatTarget)
 	{
-		AnimInstance->AttackType = CombatTarget->AttackType;
+		AnimInstance->AttackType = SlashCharacter->AttackType;
 	}
 	
-	if (CombatTarget && CombatTarget->AttackType == EAttackType::EAT_RightToLeft && RTLDeathAnimMontage)
+	if (CombatTarget && SlashCharacter->AttackType == EAttackType::EAT_RightToLeft && RTLDeathAnimMontage)
 	{
 		AnimInstance->Montage_Play(RTLDeathAnimMontage);
 		AnimInstance->Montage_JumpToSection(SectionName, RTLDeathAnimMontage);
@@ -187,7 +229,7 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 		AttributeComponent->SetCurrentHealth(DamageAmount);
 		HealthBarWidgetComponent->SetHealthPercent(AttributeComponent->GetHealthPercentage());
 		HealthBarWidgetComponent->GetHealthBarWidget()->SetHealthBarColor(DamageAmount);
-		CombatTarget = Cast<ASlashCharacter>(EventInstigator->GetPawn());
+		CombatTarget = Cast<AActor>(EventInstigator->GetPawn());
 	}
 	return DamageAmount;
 }
