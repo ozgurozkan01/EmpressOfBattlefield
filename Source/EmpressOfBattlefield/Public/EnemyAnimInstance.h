@@ -8,7 +8,7 @@
 #include "EnemyAnimInstance.generated.h"
 
 class AEnemy;
-
+class UCharacterMovementComponent;
 UCLASS()
 class EMPRESSOFBATTLEFIELD_API UEnemyAnimInstance : public UAnimInstance
 {
@@ -23,10 +23,14 @@ public:
 protected:
 
 	UPROPERTY(BlueprintReadOnly)
-	AEnemy* Enemy;
+	TObjectPtr<AEnemy> Enemy;
 
 	UPROPERTY(BlueprintReadWrite)
 	EDeathPose DeathPose;
 
+	UPROPERTY(BlueprintReadOnly)
+	float GroundSpeed;
 
+	UPROPERTY(BlueprintReadOnly)
+	TObjectPtr<UCharacterMovementComponent> MovementController;
 };

@@ -4,7 +4,7 @@
 #include "EnemyAnimInstance.h"
 
 #include "Enemy.h"
-#include "PropertyAccess.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 void UEnemyAnimInstance::NativeInitializeAnimation()
 {
@@ -13,10 +13,14 @@ void UEnemyAnimInstance::NativeInitializeAnimation()
 	if (Enemy == nullptr)
 	{
 		Enemy = Cast<AEnemy>(TryGetPawnOwner());
-		return;
 	}
 
-	DeathPose = Enemy->DeathPose;
+	if (Enemy)
+	{
+		DeathPose = Enemy->DeathPose;
+		MovementController = Enemy->GetCharacterMovement();
+	}
+
 }
 
 void UEnemyAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
@@ -24,5 +28,6 @@ void UEnemyAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
 	if (Enemy)
 	{
 		DeathPose = Enemy->DeathPose;
+		GroundSpeed = MovementController->Velocity.Length();
 	}
 }
