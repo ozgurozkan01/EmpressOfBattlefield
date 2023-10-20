@@ -40,17 +40,17 @@ protected:
 	FName DetermineWhichSideGetHit(const double& Theta);
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	EDeathPose GetDeathPose(const FName& SectionName);
-	bool ShouldChaseTarget();
+	bool ShouldChaseTarget(AActor* Target, float Radius);
 private:
 
 	UPROPERTY()
 	TObjectPtr<AActor> CombatTarget;
 
 	UPROPERTY(EditAnywhere)
-	TObjectPtr<AActor> PatrolTarget;
+	TObjectPtr<AActor> CurrentPatrolTarget;
 	
 	UPROPERTY(EditAnywhere)
-	TArray<TObjectPtr<AActor>> PatrolTargets;
+	TArray<TObjectPtr<AActor>> PatrolTargetsContainer;
 	
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UAttributeComponent> AttributeComponent;
@@ -80,5 +80,8 @@ private:
 	TObjectPtr<AAIController> AIController;
 	
 	UPROPERTY()
-	float CombatRadius;
+	double CombatRadius;
+
+	UPROPERTY()
+	double PatrolRadius;
 };

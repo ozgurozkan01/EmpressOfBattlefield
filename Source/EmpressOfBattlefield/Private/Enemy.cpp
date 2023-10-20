@@ -3,6 +3,7 @@
 #include "AIController.h"
 #include "AttributeComponent.h"
 #include "EnemyAnimInstance.h"
+#include "Engine/EngineTypes.h"
 #include "HealthBar.h"
 #include "HealthBarComponent.h"
 #include "SlashCharacter.h"
@@ -11,6 +12,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Navigation/PathFollowingComponent.h"
+#include "TimerManager.h"
 
 AEnemy::AEnemy()
 {
@@ -30,6 +32,7 @@ AEnemy::AEnemy()
 	HealthBarWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->MaxWalkSpeed = 400.f;
 
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -44,14 +47,6 @@ void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AIController = Cast<AAIController>(GetController());
-	TObjectPtr<UCharacterMovementComponent> MovementController = GetCharacterMovement();
-
-	if (MovementController)
-	{
-		MovementController->MaxWalkSpeed = 300.f;
-	}
-	
 	if (HealthBarWidgetComponent)
 	{
 		HealthBarWidgetComponent->SetWidgetClass(HealthBarWidgetBlueprint);
@@ -59,17 +54,19 @@ void AEnemy::BeginPlay()
 		HealthBarWidgetComponent->SetVisibility(false);
 	}
 	
-	if (AIController && PatrolTarget) 
-	{ 
+		/*AIController = Cast<AAIController>(GetController());
+	
+	if (AIController && CurrentPatrolTarget) 
+	{
 		FTimerDelegate TimerDelegate;
 		FTimerHandle TimerHandle; 
 		
 		TimerDelegate.BindLambda([&] { 
 				FAIMoveRequest MoveRequest; 
-				MoveRequest.SetGoalActor(PatrolTarget); 
+				MoveRequest.SetGoalActor(CurrentPatrolTarget);
 				MoveRequest.SetAcceptanceRadius(15.f); 
 				FNavPathSharedPtr NavPath; 
-				AIController->MoveTo(MoveRequest, &NavPath); 
+				AIController->MoveTo(MoveRequest, &NavPath);
 				TArray<FNavPathPoint>& PathPoints = NavPath->GetPathPoints(); 
 				for (auto& Point : PathPoints) 
 				{ 
@@ -78,22 +75,25 @@ void AEnemy::BeginPlay()
 				} 
 			}); 
 
-		GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, 4, false);
-	}
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, 2, false);
+	}*/
 }
 
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (!ShouldChaseTarget())
+	if (CombatTarget)
 	{
-		CombatTarget = nullptr;
-
-		if (HealthBarWidgetComponent)
+		if (!ShouldChaseTarget(CombatTarget, CombatRadius))
 		{
-			HealthBarWidgetComponent->SetVisibility(false);
-		}
+			CombatTarget = nullptr;
+
+			if (HealthBarWidgetComponent)
+			{
+				HealthBarWidgetComponent->SetVisibility(false);
+			}
+		}	
 	}
 
 	if (AIController)
@@ -254,12 +254,11 @@ EDeathPose AEnemy::GetDeathPose(const FName& SectionName)
 	return EDeathPose::EDP_DeathToRight;
 }
 
-bool AEnemy::ShouldChaseTarget()
+bool AEnemy::ShouldChaseTarget(AActor* Target, float Radius)
 {
-	if (CombatTarget == nullptr) { return false; }
-	const float Distance = (CombatTarget->GetActorLocation() - GetActorLocation()).Size();
+	const float Distance = (Target->GetActorLocation() - GetActorLocation()).Size();
 	
-	return Distance < CombatRadius;
+	return Distance < Radius;
 }
 
 void AEnemy::Die(FName& SectionName)
