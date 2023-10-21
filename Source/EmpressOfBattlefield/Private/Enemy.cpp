@@ -13,6 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Navigation/PathFollowingComponent.h"
 #include "TimerManager.h"
+#include "EmpressOfBattlefield/DebugMacros.h"
 
 AEnemy::AEnemy()
 {
@@ -32,30 +33,34 @@ AEnemy::AEnemy()
 	HealthBarWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-	GetCharacterMovement()->MaxWalkSpeed = 400.f;
+	GetCharacterMovement()->MaxWalkSpeed = 125.f;
 
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
+	ShouldMove = true;
 	
 	DeathPose = EDeathPose::EDP_Alive;
 
 	CombatRadius = 500.f;
+	MinPatrolRadius = 200.f;
+	CurrentTarget = 0;
 }
 
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
+	AIController = Cast<AAIController>(GetController());
+	
 	if (HealthBarWidgetComponent)
 	{
 		HealthBarWidgetComponent->SetWidgetClass(HealthBarWidgetBlueprint);
 		HealthBarWidgetComponent->SetHealthPercent(AttributeComponent->GetHealthPercentage());
 		HealthBarWidgetComponent->SetVisibility(false);
 	}
-	
-		/*AIController = Cast<AAIController>(GetController());
-	
+
+	/*
 	if (AIController && CurrentPatrolTarget) 
 	{
 		FTimerDelegate TimerDelegate;
@@ -83,11 +88,11 @@ void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (CombatTarget)
+	if (CurrentTarget)
 	{
-		if (!ShouldChaseTarget(CombatTarget, CombatRadius))
+		if (!ShouldChaseTarget(CurrentTarget, CombatRadius))
 		{
-			CombatTarget = nullptr;
+			CurrentTarget = nullptr;
 
 			if (HealthBarWidgetComponent)
 			{
@@ -96,16 +101,45 @@ void AEnemy::Tick(float DeltaTime)
 		}	
 	}
 
-	if (AIController)
+	if (AIController && CurrentTarget)
 	{
-		AIController->MoveToActor(CombatTarget);
+		if (ShouldChangePatrolTarget(CurrentTarget, MinPatrolRadius))
+		{
+			ChangePatrolTarget();
+		}
+		
+		MoveToTarget(CurrentTarget);
 	}
+}
+
+bool AEnemy::ShouldChangePatrolTarget(TObjectPtr<AActor> Target, float Radius)
+{
+	float Distance = FVector::Dist(Target->GetActorLocation(), GetActorLocation());
+	return Distance <= Radius;
+}
+
+void AEnemy::ChangePatrolTarget()
+{
+	CurrentTarget = PatrolTargetsContainer[CurrentPatrolTargetIndex];
+	CurrentPatrolTargetIndex++;
+
+	if (CurrentPatrolTargetIndex >= PatrolTargetsContainer.Num())
+	{
+		CurrentPatrolTargetIndex = 0;
+	}
+}
+
+void AEnemy::MoveToTarget(TObjectPtr<AActor> Target)
+{
+	FAIMoveRequest MoveRequest; 
+	MoveRequest.SetGoalActor(Target);
+	MoveRequest.SetAcceptanceRadius(15.f);
+	AIController->MoveTo(MoveRequest);
 }
 
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
 
 void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
@@ -154,16 +188,16 @@ void AEnemy::PlayHitReactionMontage(const FName& SectionName)
 void AEnemy::PlayDeathAnimMontage(const FName& SectionName)
 {
 	TObjectPtr<UEnemyAnimInstance> AnimInstance = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
-	TObjectPtr<ASlashCharacter> SlashCharacter = Cast<ASlashCharacter>(CombatTarget);
+	TObjectPtr<ASlashCharacter> SlashCharacter = Cast<ASlashCharacter>(CurrentTarget);
 	
 	if (AnimInstance == nullptr && SlashCharacter == nullptr) { return; }
 	
-	if (CombatTarget)
+	if (CurrentTarget)
 	{
 		AnimInstance->AttackType = SlashCharacter->AttackType;
 	}
 	
-	if (CombatTarget && SlashCharacter->AttackType == EAttackType::EAT_RightToLeft && RTLDeathAnimMontage)
+	if (CurrentTarget && SlashCharacter->AttackType == EAttackType::EAT_RightToLeft && RTLDeathAnimMontage)
 	{
 		AnimInstance->Montage_Play(RTLDeathAnimMontage);
 		AnimInstance->Montage_JumpToSection(SectionName, RTLDeathAnimMontage);
@@ -229,7 +263,7 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 		AttributeComponent->SetCurrentHealth(DamageAmount);
 		HealthBarWidgetComponent->SetHealthPercent(AttributeComponent->GetHealthPercentage());
 		HealthBarWidgetComponent->GetHealthBarWidget()->SetHealthBarColor(DamageAmount);
-		CombatTarget = Cast<AActor>(EventInstigator->GetPawn());
+		CurrentTarget = Cast<AActor>(EventInstigator->GetPawn());
 	}
 	return DamageAmount;
 }
@@ -254,11 +288,10 @@ EDeathPose AEnemy::GetDeathPose(const FName& SectionName)
 	return EDeathPose::EDP_DeathToRight;
 }
 
-bool AEnemy::ShouldChaseTarget(AActor* Target, float Radius)
+bool AEnemy::ShouldChaseTarget(TObjectPtr<AActor> Target, float Radius)
 {
-	const float Distance = (Target->GetActorLocation() - GetActorLocation()).Size();
-	
-	return Distance < Radius;
+	const float Distance = FVector::Dist(Target->GetActorLocation(), GetActorLocation());
+	return Distance <= Radius;
 }
 
 void AEnemy::Die(FName& SectionName)

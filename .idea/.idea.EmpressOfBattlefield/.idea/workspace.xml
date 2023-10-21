@@ -8,7 +8,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fc94a891-8384-4775-afe2-ea58bce52809" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.EmpressOfBattlefield/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.EmpressOfBattlefield/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultEditor.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEditor.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Enemy/Animations/AnimBP/ABP_Paladin.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Enemy/Animations/AnimBP/ABP_Paladin.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Enemy/BP_Enemy.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Enemy/BP_Enemy.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Item/Weapon/BP_Sword.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Item/Weapon/BP_Sword.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/HUD/WBP_HealthBar.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/HUD/WBP_HealthBar.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/MSPresets/M_MS_Default_Material/M_MS_Default_Material.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/MSPresets/M_MS_Default_Material/M_MS_Default_Material.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/MainMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/MainMap.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Megascans/3D_Assets/Modular_Stone_Wall_xfxobiziy/MI_Modular_Stone_Wall_xfxobiziy_2K.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Megascans/3D_Assets/Modular_Stone_Wall_xfxobiziy/MI_Modular_Stone_Wall_xfxobiziy_2K.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/Enemy.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/Enemy.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/Enemy.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/Enemy.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,7 +52,7 @@
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -183,7 +194,37 @@
       <workItem from="1695193564132" duration="594000" />
       <workItem from="1695380268694" duration="2171000" />
       <workItem from="1695383009374" duration="11511000" />
-      <workItem from="1695453466610" duration="4477000" />
+      <workItem from="1695453466610" duration="11682000" />
+      <workItem from="1695552037906" duration="2940000" />
+      <workItem from="1695574444207" duration="5629000" />
+      <workItem from="1695625775226" duration="5500000" />
+      <workItem from="1695715298091" duration="3996000" />
+      <workItem from="1695742881734" duration="974000" />
+      <workItem from="1695804097340" duration="2559000" />
+      <workItem from="1695916057558" duration="1188000" />
+      <workItem from="1695977271254" duration="2147000" />
+      <workItem from="1695981801240" duration="1031000" />
+      <workItem from="1695982975909" duration="9672000" />
+      <workItem from="1696007231483" duration="4097000" />
+      <workItem from="1696110009985" duration="1289000" />
+      <workItem from="1696240142829" duration="12158000" />
+      <workItem from="1696489481654" duration="6322000" />
+      <workItem from="1696663293896" duration="2398000" />
+      <workItem from="1696765129000" duration="7283000" />
+      <workItem from="1696774627495" duration="10355000" />
+      <workItem from="1696825900392" duration="480000" />
+      <workItem from="1696857548913" duration="6556000" />
+      <workItem from="1697271130694" duration="7694000" />
+      <workItem from="1697397436041" duration="596000" />
+      <workItem from="1697466386262" duration="7216000" />
+      <workItem from="1697572458919" duration="644000" />
+      <workItem from="1697607091283" duration="3771000" />
+      <workItem from="1697612198882" duration="1627000" />
+      <workItem from="1697697988517" duration="2661000" />
+      <workItem from="1697789533048" duration="3538000" />
+      <workItem from="1697827650337" duration="593000" />
+      <workItem from="1697872834146" duration="14100000" />
+      <workItem from="1697917049188" duration="1530000" />
     </task>
     <servers />
   </component>

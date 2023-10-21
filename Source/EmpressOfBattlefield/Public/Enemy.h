@@ -35,20 +35,21 @@ protected:
 	void PlayHitReactionMontage(const FName& SectionName);
 	void PlayDeathAnimMontage(const FName& SectionName);
 	void Die(FName& SectionName);
-
+	void ChangePatrolTarget();
+	void MoveToTarget(TObjectPtr<AActor> Target);
+	
 	double CalculateHitLocationAngle(const FVector& ImpactPoint);
 	FName DetermineWhichSideGetHit(const double& Theta);
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	EDeathPose GetDeathPose(const FName& SectionName);
-	bool ShouldChaseTarget(AActor* Target, float Radius);
+	bool ShouldChaseTarget(TObjectPtr<AActor> Target, float Radius);
+	bool ShouldChangePatrolTarget(TObjectPtr<AActor> Target, float Radius);
+
 private:
 
-	UPROPERTY()
-	TObjectPtr<AActor> CombatTarget;
-
 	UPROPERTY(EditAnywhere)
-	TObjectPtr<AActor> CurrentPatrolTarget;
-	
+	TObjectPtr<AActor> CurrentTarget;
+
 	UPROPERTY(EditAnywhere)
 	TArray<TObjectPtr<AActor>> PatrolTargetsContainer;
 	
@@ -79,9 +80,14 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<AAIController> AIController;
 	
-	UPROPERTY()
+	UPROPERTY(EditInstanceOnly)
 	double CombatRadius;
 
-	UPROPERTY()
-	double PatrolRadius;
+	UPROPERTY(EditInstanceOnly, meta=(AllowPrivateAccess = "true"))
+	double MinPatrolRadius;
+
+	UPROPERTY(EditInstanceOnly)
+	int32 CurrentPatrolTargetIndex;
+
+	bool ShouldMove;
 };
