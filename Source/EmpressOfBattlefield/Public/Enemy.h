@@ -89,5 +89,5 @@ private:
 	UPROPERTY(EditInstanceOnly)
 	int32 CurrentPatrolTargetIndex;
 
-	bool ShouldMove;
+	bool bShouldChaseMainPlayer;
 };

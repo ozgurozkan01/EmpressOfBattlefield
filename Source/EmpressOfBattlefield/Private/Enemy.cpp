@@ -38,13 +38,14 @@ AEnemy::AEnemy()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
-	ShouldMove = true;
+	bShouldChaseMainPlayer = false;
 	
 	DeathPose = EDeathPose::EDP_Alive;
 
 	CombatRadius = 500.f;
 	MinPatrolRadius = 200.f;
 	CurrentTarget = 0;
+	CurrentPatrolTargetIndex = 1;
 }
 
 void AEnemy::BeginPlay()
@@ -60,28 +61,7 @@ void AEnemy::BeginPlay()
 		HealthBarWidgetComponent->SetVisibility(false);
 	}
 
-	/*
-	if (AIController && CurrentPatrolTarget) 
-	{
-		FTimerDelegate TimerDelegate;
-		FTimerHandle TimerHandle; 
-		
-		TimerDelegate.BindLambda([&] { 
-				FAIMoveRequest MoveRequest; 
-				MoveRequest.SetGoalActor(CurrentPatrolTarget);
-				MoveRequest.SetAcceptanceRadius(15.f); 
-				FNavPathSharedPtr NavPath; 
-				AIController->MoveTo(MoveRequest, &NavPath);
-				TArray<FNavPathPoint>& PathPoints = NavPath->GetPathPoints(); 
-				for (auto& Point : PathPoints) 
-				{ 
-					const FVector& Location = Point.Location; 
-					DrawDebugSphere(GetWorld(), Location, 12.f, 12, FColor::Green, false, 10.f); 
-				} 
-			}); 
-
-		GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, 2, false);
-	}*/
+ 
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -90,26 +70,26 @@ void AEnemy::Tick(float DeltaTime)
 
 	if (CurrentTarget)
 	{
-		if (!ShouldChaseTarget(CurrentTarget, CombatRadius))
+		if (!ShouldChaseTarget(CurrentTarget, CombatRadius) && bShouldChaseMainPlayer)
 		{
-			CurrentTarget = nullptr;
-
+			bShouldChaseMainPlayer = false;
+			CurrentTarget = PatrolTargetsContainer[CurrentPatrolTargetIndex];
 			if (HealthBarWidgetComponent)
 			{
 				HealthBarWidgetComponent->SetVisibility(false);
 			}
-		}	
+		}
+
+		if (AIController && !bShouldChaseMainPlayer)
+		{
+			if (ShouldChangePatrolTarget(CurrentTarget, MinPatrolRadius))
+			{
+				ChangePatrolTarget();
+			}
+		}
 	}
 
-	if (AIController && CurrentTarget)
-	{
-		if (ShouldChangePatrolTarget(CurrentTarget, MinPatrolRadius))
-		{
-			ChangePatrolTarget();
-		}
-		
-		MoveToTarget(CurrentTarget);
-	}
+	MoveToTarget(CurrentTarget);
 }
 
 bool AEnemy::ShouldChangePatrolTarget(TObjectPtr<AActor> Target, float Radius)
@@ -192,12 +172,12 @@ void AEnemy::PlayDeathAnimMontage(const FName& SectionName)
 	
 	if (AnimInstance == nullptr && SlashCharacter == nullptr) { return; }
 	
-	if (CurrentTarget)
+	if (SlashCharacter)
 	{
 		AnimInstance->AttackType = SlashCharacter->AttackType;
 	}
 	
-	if (CurrentTarget && SlashCharacter->AttackType == EAttackType::EAT_RightToLeft && RTLDeathAnimMontage)
+	if (SlashCharacter && SlashCharacter->AttackType == EAttackType::EAT_RightToLeft && RTLDeathAnimMontage)
 	{
 		AnimInstance->Montage_Play(RTLDeathAnimMontage);
 		AnimInstance->Montage_JumpToSection(SectionName, RTLDeathAnimMontage);
@@ -263,7 +243,12 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 		AttributeComponent->SetCurrentHealth(DamageAmount);
 		HealthBarWidgetComponent->SetHealthPercent(AttributeComponent->GetHealthPercentage());
 		HealthBarWidgetComponent->GetHealthBarWidget()->SetHealthBarColor(DamageAmount);
-		CurrentTarget = Cast<AActor>(EventInstigator->GetPawn());
+		CurrentTarget = Cast<ASlashCharacter>(EventInstigator->GetPawn());
+
+		if (CurrentTarget)
+		{
+			bShouldChaseMainPlayer = true;
+		}
 	}
 	return DamageAmount;
 }
