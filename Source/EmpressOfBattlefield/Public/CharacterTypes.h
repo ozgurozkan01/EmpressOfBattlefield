@@ -33,3 +33,10 @@ enum class EAttackType : uint8
 	EAT_UpToDown UMETA(Display = "UTD"),
 	EAT_Default UMETA(Display = "Default")
 };
+
+UENUM(BlueprintType)
+enum class ETargetType : uint8
+{
+	ETT_MainPlayer UMETA(Display = "MainPlayer"),
+	ETT_PatrolPoint UMETA(Display = "PatrolPoint"),
+};
