@@ -14,6 +14,7 @@ class UHealthBarComponent;
 class UAttributeComponent;
 class UUserWidget;
 class UAnimMontage;
+class UPawnSensingComponent;
 
 UCLASS()
 class EMPRESSOFBATTLEFIELD_API AEnemy : public ACharacter, public IHitInterface
@@ -24,11 +25,23 @@ public:
 	AEnemy();
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	UFUNCTION()
+	void SeePawn(APawn* SeenPawn);
+
+	UFUNCTION()
+	void HearNoise(APawn* PawnInstigator, const FVector& Location, float Volume);
+	
 	void GetHit_Implementation(const FVector& ImpactPoint) override;	
 
 	UPROPERTY(BlueprintReadOnly)
 	EDeathPose DeathPose;
 
+	UPROPERTY(BlueprintReadOnly)
+	ETargetType TargetType;
+
+	UPROPERTY(BlueprintReadOnly)
+	EEnemyState EnemyState;
 protected:
 	virtual void BeginPlay() override;
 	
@@ -37,12 +50,14 @@ protected:
 	void Die(FName& SectionName);
 	void ChangePatrolTarget();
 	void MoveToTarget(TObjectPtr<AActor> Target);
+	void PatrolTimerFinished();
+	void CheckPatrolTarget();
 	
 	double CalculateHitLocationAngle(const FVector& ImpactPoint);
 	FName DetermineWhichSideGetHit(const double& Theta);
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	EDeathPose GetDeathPose(const FName& SectionName);
-	bool ShouldChaseTarget(TObjectPtr<AActor> Target, float Radius);
+	bool CanChaseTarget(TObjectPtr<AActor> Target, float Radius);
 	bool ShouldChangePatrolTarget(TObjectPtr<AActor> Target, float Radius);
 
 private:
@@ -79,6 +94,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<AAIController> AIController;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UPawnSensingComponent> PawnSensingComponent;
 	
 	UPROPERTY(EditInstanceOnly)
 	double CombatRadius;
@@ -89,5 +107,6 @@ private:
 	UPROPERTY(EditInstanceOnly)
 	int32 CurrentPatrolTargetIndex;
 
-	bool bShouldChaseMainPlayer;
+	FTimerHandle PatrolTimer;
+	float PatrolWaitRate;
 };

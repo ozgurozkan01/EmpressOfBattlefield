@@ -13,11 +13,15 @@
 #include "Kismet/GameplayStatics.h"
 #include "Navigation/PathFollowingComponent.h"
 #include "TimerManager.h"
-#include "EmpressOfBattlefield/DebugMacros.h"
+#include "Perception/PawnSensingComponent.h"
 
 AEnemy::AEnemy()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	PawnSensingComponent = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("Pawn Sensing Component"));
+	PawnSensingComponent->SightRadius = 1250.f;
+	PawnSensingComponent->SetPeripheralVisionAngle(60.f);
 
 	GetMesh()->SetCollisionObjectType(ECC_WorldDynamic); // Weapon does not overlap with Pawns
 	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block); // Weapon trace channel
@@ -38,21 +42,31 @@ AEnemy::AEnemy()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
-	bShouldChaseMainPlayer = false;
-	
-	DeathPose = EDeathPose::EDP_Alive;
 
-	CombatRadius = 500.f;
+	DeathPose = EDeathPose::EDP_Alive;
+	TargetType = ETargetType::ETT_PatrolPoint;
+	EnemyState = EEnemyState::EES_Patroling;
+	
+	CombatRadius = 2000.f;
 	MinPatrolRadius = 200.f;
 	CurrentTarget = 0;
 	CurrentPatrolTargetIndex = 1;
+	PatrolWaitRate = 2.f;
 }
 
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
+	Tags.Add(FName("Enemy"));
+	
 	AIController = Cast<AAIController>(GetController());
+
+	if (PawnSensingComponent)
+	{
+		PawnSensingComponent->OnSeePawn.AddDynamic(this, &AEnemy::SeePawn);
+		PawnSensingComponent->OnHearNoise.AddDynamic(this, &AEnemy::HearNoise);
+	}
 	
 	if (HealthBarWidgetComponent)
 	{
@@ -60,40 +74,24 @@ void AEnemy::BeginPlay()
 		HealthBarWidgetComponent->SetHealthPercent(AttributeComponent->GetHealthPercentage());
 		HealthBarWidgetComponent->SetVisibility(false);
 	}
-
- 
+	
+	GetWorldTimerManager().SetTimer(PatrolTimer, this, &AEnemy::PatrolTimerFinished, PatrolWaitRate);
 }
 
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (CurrentTarget)
+	if (EnemyState == EEnemyState::EES_Patroling)
 	{
-		if (!ShouldChaseTarget(CurrentTarget, CombatRadius) && bShouldChaseMainPlayer)
-		{
-			bShouldChaseMainPlayer = false;
-			CurrentTarget = PatrolTargetsContainer[CurrentPatrolTargetIndex];
-			if (HealthBarWidgetComponent)
-			{
-				HealthBarWidgetComponent->SetVisibility(false);
-			}
-		}
-
-		if (AIController && !bShouldChaseMainPlayer)
-		{
-			if (ShouldChangePatrolTarget(CurrentTarget, MinPatrolRadius))
-			{
-				ChangePatrolTarget();
-			}
-		}
+		CheckPatrolTarget();
 	}
-
-	MoveToTarget(CurrentTarget);
 }
 
 bool AEnemy::ShouldChangePatrolTarget(TObjectPtr<AActor> Target, float Radius)
 {
+	if (Target == nullptr) { return false; }
+	
 	float Distance = FVector::Dist(Target->GetActorLocation(), GetActorLocation());
 	return Distance <= Radius;
 }
@@ -111,15 +109,60 @@ void AEnemy::ChangePatrolTarget()
 
 void AEnemy::MoveToTarget(TObjectPtr<AActor> Target)
 {
+	if (AIController == nullptr || Target == nullptr) { return; }
+	
 	FAIMoveRequest MoveRequest; 
 	MoveRequest.SetGoalActor(Target);
 	MoveRequest.SetAcceptanceRadius(15.f);
 	AIController->MoveTo(MoveRequest);
 }
 
+void AEnemy::PatrolTimerFinished()
+{
+	MoveToTarget(CurrentTarget);
+}
+
+void AEnemy::CheckPatrolTarget()
+{
+	if (!CanChaseTarget(CurrentTarget, CombatRadius) && TargetType == ETargetType::ETT_MainPlayer)
+	{
+		TargetType = ETargetType::ETT_PatrolPoint;
+		GetCharacterMovement()->MaxWalkSpeed = 125.f;
+		CurrentTarget = PatrolTargetsContainer[CurrentPatrolTargetIndex];
+		MoveToTarget(CurrentTarget);
+
+		if (ShouldChangePatrolTarget(CurrentTarget, MinPatrolRadius))
+		{
+			ChangePatrolTarget();
+		}
+		 
+		if (HealthBarWidgetComponent)
+		{
+			HealthBarWidgetComponent->SetVisibility(false);
+		}
+	}
+}
+
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
+
+void AEnemy::SeePawn(APawn* SeenPawn)
+{
+	//TObjectPtr<ASlashCharacter> MainPlayer = Cast<ASlashCharacter>(Pawn);
+
+	if (SeenPawn->ActorHasTag(FName("MainPlayer")))
+	{
+		TargetType = ETargetType::ETT_MainPlayer;
+		CurrentTarget = SeenPawn;
+		MoveToTarget(CurrentTarget);
+		GetCharacterMovement()->MaxWalkSpeed = 350.f;
+	}
+}
+
+void AEnemy::HearNoise(APawn* PawnInstigator, const FVector& Location, float Volume)
+{
 }
 
 void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
@@ -244,11 +287,7 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 		HealthBarWidgetComponent->SetHealthPercent(AttributeComponent->GetHealthPercentage());
 		HealthBarWidgetComponent->GetHealthBarWidget()->SetHealthBarColor(DamageAmount);
 		CurrentTarget = Cast<ASlashCharacter>(EventInstigator->GetPawn());
-
-		if (CurrentTarget)
-		{
-			bShouldChaseMainPlayer = true;
-		}
+		TargetType = ETargetType::ETT_MainPlayer;
 	}
 	return DamageAmount;
 }
@@ -273,8 +312,10 @@ EDeathPose AEnemy::GetDeathPose(const FName& SectionName)
 	return EDeathPose::EDP_DeathToRight;
 }
 
-bool AEnemy::ShouldChaseTarget(TObjectPtr<AActor> Target, float Radius)
+bool AEnemy::CanChaseTarget(TObjectPtr<AActor> Target, float Radius)
 {
+	if (Target == nullptr) { return false; }
+	
 	const float Distance = FVector::Dist(Target->GetActorLocation(), GetActorLocation());
 	return Distance <= Radius;
 }
