@@ -37,10 +37,7 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	EDeathPose DeathPose;
 
-	UPROPERTY(BlueprintReadOnly)
-	ETargetType TargetType;
-
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	EEnemyState EnemyState;
 protected:
 	virtual void BeginPlay() override;
@@ -51,13 +48,13 @@ protected:
 	void ChangePatrolTarget();
 	void MoveToTarget(TObjectPtr<AActor> Target);
 	void PatrolTimerFinished();
-	void CheckPatrolTarget();
+	void CheckCurrentTarget();
 	
 	double CalculateHitLocationAngle(const FVector& ImpactPoint);
 	FName DetermineWhichSideGetHit(const double& Theta);
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	EDeathPose GetDeathPose(const FName& SectionName);
-	bool CanChaseTarget(TObjectPtr<AActor> Target, float Radius);
+	bool InTargetRange(TObjectPtr<AActor> Target, float Radius);
 	bool ShouldChangePatrolTarget(TObjectPtr<AActor> Target, float Radius);
 
 private:
@@ -101,6 +98,9 @@ private:
 	UPROPERTY(EditInstanceOnly)
 	double CombatRadius;
 
+	UPROPERTY(EditInstanceOnly)
+	double AttackRadius;
+	
 	UPROPERTY(EditInstanceOnly, meta=(AllowPrivateAccess = "true"))
 	double MinPatrolRadius;
 
