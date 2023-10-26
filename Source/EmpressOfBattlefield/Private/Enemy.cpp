@@ -13,6 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Navigation/PathFollowingComponent.h"
 #include "TimerManager.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Perception/PawnSensingComponent.h"
 
 AEnemy::AEnemy()
@@ -144,6 +145,8 @@ void AEnemy::CheckCurrentTarget()
 	else if (InTargetRange(CurrentTarget, AttackRadius) && CurrentTarget->ActorHasTag("MainPlayer") && EnemyState != EEnemyState::EES_Attacking)
 	{
 		EnemyState = EEnemyState::EES_Attacking;
+		/*FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), CurrentTarget->GetActorLocation());
+		SetActorRotation(LookAtRotation);*/
 		UE_LOG(LogTemp, Warning, TEXT("Attack!"));
 	}
 
@@ -152,6 +155,7 @@ void AEnemy::CheckCurrentTarget()
 		EnemyState = EEnemyState::EES_Chasing;
 		UE_LOG(LogTemp, Warning, TEXT("Chasing!"));
 		MoveToTarget(CurrentTarget);
+		GetCharacterMovement()->MaxWalkSpeed = 350.f;
 	}
 }
 
@@ -301,6 +305,7 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 
 		if (CurrentTarget)
 		{
+			EnemyState = EEnemyState::EES_Attacking;
 			MoveToTarget(CurrentTarget);
 		}
 	}
