@@ -35,13 +35,6 @@ enum class EAttackType : uint8
 };
 
 UENUM(BlueprintType)
-enum class ETargetType : uint8
-{
-	ETT_MainPlayer UMETA(Display = "MainPlayer"),
-	ETT_PatrolPoint UMETA(Display = "PatrolPoint"),
-};
-
-UENUM(BlueprintType)
 enum class EEnemyState : uint8
 {
 	EES_Patroling UMETA(Display = "Patroling"),
