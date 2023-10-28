@@ -13,7 +13,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "Navigation/PathFollowingComponent.h"
 #include "TimerManager.h"
-#include "Kismet/KismetMathLibrary.h"
 #include "Perception/PawnSensingComponent.h"
 
 AEnemy::AEnemy()
@@ -29,10 +28,7 @@ AEnemy::AEnemy()
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore); // prevent breakdown of player's camera when collide with enemy
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore); // same
 	GetMesh()->SetGenerateOverlapEvents(true); // Activate overlap event generation
-
-	// UActorComponent does not need to attach to the any component
-	AttributeComponent = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attribute Component"));
-
+	
 	HealthBarWidgetComponent = CreateDefaultSubobject<UHealthBarComponent>(TEXT("Health Bar Component"));
 	HealthBarWidgetComponent->SetupAttachment(GetRootComponent());
 	HealthBarWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
@@ -212,17 +208,6 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 	}	
 }
 
-void AEnemy::PlayHitReactionMontage(const FName& SectionName)
-{
-		TObjectPtr<UEnemyAnimInstance> AnimInstance = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
-	
-	if (AnimInstance && HitReactionMontage)
-	{
-		AnimInstance->Montage_Play(HitReactionMontage);
-		AnimInstance->Montage_JumpToSection(SectionName, HitReactionMontage);
-	}
-}
-
 void AEnemy::PlayDeathAnimMontage(const FName& SectionName)
 {
 	TObjectPtr<UEnemyAnimInstance> AnimInstance = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
@@ -247,48 +232,6 @@ void AEnemy::PlayDeathAnimMontage(const FName& SectionName)
 		AnimInstance->Montage_JumpToSection(SectionName, UTDDeathAnimMontage);
 	}
 	
-}
-
-double AEnemy::CalculateHitLocationAngle(const FVector& ImpactPoint)
-{
-	const FVector Forward = GetActorForwardVector();
-	const FVector LoweredHit(ImpactPoint.X, ImpactPoint.Y, GetActorLocation().Z);
-	const FVector ToHit = (LoweredHit - GetActorLocation()).GetSafeNormal();
-
-	const double CosTheta = FVector::DotProduct(Forward, ToHit);
-	double Theta = FMath::Acos(CosTheta);
-	Theta = FMath::RadiansToDegrees(Theta);
-	
-	const FVector CrossProduct = FVector::CrossProduct(Forward, ToHit);
-
-	if (CrossProduct.Z < 0)
-	{
-		Theta *= -1;
-	}
-
-	return Theta;
-}
-
-FName AEnemy::DetermineWhichSideGetHit(const double& Theta)
-{
-	FName Section("FromBack");
-	
-	if (Theta >= -45.f && Theta < 45.f)
-	{
-		Section = FName("FromFront");
-	}
-
-	else if (Theta >= -135.f && Theta < -45.f)
-	{
-		Section = FName("FromLeft");
-	}
-
-	else if (Theta >= 45.f && Theta < 135.f)
-	{
-		Section = FName("FromRight");
-	}
-
-	return Section;
 }
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,

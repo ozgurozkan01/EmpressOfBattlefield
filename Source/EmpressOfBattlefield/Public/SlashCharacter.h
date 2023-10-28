@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "InputActionValue.h"
-#include "GameFramework/Character.h"
+#include "BaseCharacter.h"
 #include "CharacterTypes.h"
 #include "SlashCharacter.generated.h"
 
@@ -18,7 +18,7 @@ class UAnimMontage;
 class AWeapon;
 
 UCLASS()
-class EMPRESSOFBATTLEFIELD_API ASlashCharacter : public ACharacter
+class EMPRESSOFBATTLEFIELD_API ASlashCharacter : public ABaseCharacter
 {
 	GENERATED_BODY()
 
@@ -63,16 +63,12 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void FinishedEquipping();
-
-	UFUNCTION(BlueprintCallable)
-	void SetWeaponDamageBoxCollision(ECollisionEnabled::Type CollisionEnabled);
 	
 	// Play Montage Functions
-	void PlayAttackMontage();
+	void PlayAttackMontage() override;
 	void PlayEquipMontage(const FName& SectionName);
 	
-	UFUNCTION(BlueprintCallable)
-	void AttackEnd();
+	virtual void AttackEnd() override;
 public:
 
 	UPROPERTY(EditDefaultsOnly, Category=Camera)
@@ -108,12 +104,6 @@ public:
 
 	UPROPERTY(VisibleInstanceOnly, Category=Item)
 	TObjectPtr<AItem> OverlappingItem;
-
-	UPROPERTY(VisibleAnywhere, Category="Item | Weapon")
-	TObjectPtr<AWeapon> EquippedWeapon;
-	
-	UPROPERTY(EditDefaultsOnly, Category=Montage)
-	TObjectPtr<UAnimMontage> AttackMontage;
 	
 	UPROPERTY(EditDefaultsOnly, Category=Montage)
 	TObjectPtr<UAnimMontage> EquipMontage;

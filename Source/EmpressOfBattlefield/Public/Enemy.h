@@ -3,21 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "HitInterface.h"
-#include "GameFramework/Character.h"
+#include "BaseCharacter.h"
 #include "CharacterTypes.h"
 #include "Enemy.generated.h"
 
 class AAIController;
 class ASlashCharacter;
 class UHealthBarComponent;
-class UAttributeComponent;
 class UUserWidget;
 class UAnimMontage;
 class UPawnSensingComponent;
 
 UCLASS()
-class EMPRESSOFBATTLEFIELD_API AEnemy : public ACharacter, public IHitInterface
+class EMPRESSOFBATTLEFIELD_API AEnemy : public ABaseCharacter
 {
 	GENERATED_BODY()
 
@@ -42,16 +40,14 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	
-	void PlayHitReactionMontage(const FName& SectionName);
 	void PlayDeathAnimMontage(const FName& SectionName);
-	void Die(FName& SectionName);
+	void Die(FName& SectionName) override;
 	void ChangePatrolTarget();
 	void MoveToTarget(TObjectPtr<AActor> Target);
 	void PatrolTimerFinished();
 	void CheckCurrentTarget();
 	
-	double CalculateHitLocationAngle(const FVector& ImpactPoint);
-	FName DetermineWhichSideGetHit(const double& Theta);
+
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	EDeathPose GetDeathPose(const FName& SectionName);
 	bool InTargetRange(TObjectPtr<AActor> Target, float Radius);
@@ -64,9 +60,6 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	TArray<TObjectPtr<AActor>> PatrolTargetsContainer;
-	
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UAttributeComponent> AttributeComponent;
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UHealthBarComponent> HealthBarWidgetComponent;
@@ -75,20 +68,11 @@ private:
 	TSubclassOf<UUserWidget> HealthBarWidgetBlueprint;
 	
 	UPROPERTY(EditDefaultsOnly, Category="Animation | Montage")
-	TObjectPtr<UAnimMontage> HitReactionMontage;
-
-	UPROPERTY(EditDefaultsOnly, Category="Animation | Montage")
 	TObjectPtr<UAnimMontage> RTLDeathAnimMontage;
 
 	UPROPERTY(EditDefaultsOnly, Category="Animation | Montage")
 	TObjectPtr<UAnimMontage> UTDDeathAnimMontage;
 	
-	UPROPERTY(EditDefaultsOnly, Category="Sound")
-	TObjectPtr<USoundBase> HitSound;
-
-	UPROPERTY(EditDefaultsOnly, Category="Particle Effect")
-	TObjectPtr<UParticleSystem> HitParticle;
-
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<AAIController> AIController;
 

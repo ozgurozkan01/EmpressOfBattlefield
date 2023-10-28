@@ -3,27 +3,54 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "HitInterface.h"
 #include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
+class AWeapon;
+class UAttributeComponent;
+class UAnimMontage;
+
 UCLASS()
-class EMPRESSOFBATTLEFIELD_API ABaseCharacter : public ACharacter
+class EMPRESSOFBATTLEFIELD_API ABaseCharacter : public ACharacter, public IHitInterface
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	ABaseCharacter();
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	
+	UFUNCTION(BlueprintCallable)
+	void SetWeaponDamageBoxCollision(ECollisionEnabled::Type CollisionEnabled);
+	
+protected:
+	virtual void BeginPlay() override;
+	virtual void Die(FName& SectionName);
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	double CalculateHitLocationAngle(const FVector& ImpactPoint);
+	FName DetermineWhichSideGetHit(const double& Theta);
+	
+	UFUNCTION(BlueprintCallable)
+	virtual void AttackEnd();
 
+	void PlayHitReactionMontage(const FName& SectionName);
+	virtual void PlayAttackMontage();
+
+	UPROPERTY(VisibleAnywhere, Category="Item | Weapon")
+	TObjectPtr<AWeapon> EquippedWeapon;
+	
+	UPROPERTY(EditDefaultsOnly, Category=Montage)
+	TObjectPtr<UAnimMontage> AttackMontage;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Animation | Montage")
+	TObjectPtr<UAnimMontage> HitReactionMontage;
+	
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UAttributeComponent> AttributeComponent;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Sound")
+	TObjectPtr<USoundBase> HitSound;
+
+	UPROPERTY(EditDefaultsOnly, Category="Particle Effect")
+	TObjectPtr<UParticleSystem> HitParticle;
 };

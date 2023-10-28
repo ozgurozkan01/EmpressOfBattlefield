@@ -1,34 +1,100 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "BaseCharacter.h"
 
-// Sets default values
+#include "AttributeComponent.h"
+#include "EnemyAnimInstance.h"
+#include "Components//BoxComponent.h"
+#include "Weapon.h"
+
 ABaseCharacter::ABaseCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// UActorComponent does not need to attach to the any component
+	AttributeComponent = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attribute Component"));
 }
 
-// Called when the game starts or when spawned
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void ABaseCharacter::Die(FName& SectionName)
+{
+}
+
+double ABaseCharacter::CalculateHitLocationAngle(const FVector& ImpactPoint)
+{
+	const FVector Forward = GetActorForwardVector();
+	const FVector LoweredHit(ImpactPoint.X, ImpactPoint.Y, GetActorLocation().Z);
+	const FVector ToHit = (LoweredHit - GetActorLocation()).GetSafeNormal();
+
+	const double CosTheta = FVector::DotProduct(Forward, ToHit);
+	double Theta = FMath::Acos(CosTheta);
+	Theta = FMath::RadiansToDegrees(Theta);
+	
+	const FVector CrossProduct = FVector::CrossProduct(Forward, ToHit);
+
+	if (CrossProduct.Z < 0)
+	{
+		Theta *= -1;
+	}
+
+	return Theta;
+}
+
+FName ABaseCharacter::DetermineWhichSideGetHit(const double& Theta)
+{
+	FName Section("FromBack");
+	
+	if (Theta >= -45.f && Theta < 45.f)
+	{
+		Section = FName("FromFront");
+	}
+
+	else if (Theta >= -135.f && Theta < -45.f)
+	{
+		Section = FName("FromLeft");
+	}
+
+	else if (Theta >= 45.f && Theta < 135.f)
+	{
+		Section = FName("FromRight");
+	}
+
+	return Section;
+}
+
+void ABaseCharacter::AttackEnd()
+{
 	
 }
 
-// Called every frame
+void ABaseCharacter::PlayHitReactionMontage(const FName& SectionName)
+{
+	TObjectPtr<UEnemyAnimInstance> AnimInstance = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
+	
+	if (AnimInstance && HitReactionMontage)
+	{
+		AnimInstance->Montage_Play(HitReactionMontage);
+		AnimInstance->Montage_JumpToSection(SectionName, HitReactionMontage);
+	}
+}
+
+void ABaseCharacter::PlayAttackMontage()
+{
+	
+}
+
 void ABaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
-// Called to bind functionality to input
-void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ABaseCharacter::SetWeaponDamageBoxCollision(ECollisionEnabled::Type CollisionEnabled)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
+	if (EquippedWeapon && EquippedWeapon->GetDamageBox())
+	{
+		EquippedWeapon->GetDamageBox()->SetCollisionEnabled(CollisionEnabled);
+		EquippedWeapon->IgnoredActors.Empty();
+	}
 }
-

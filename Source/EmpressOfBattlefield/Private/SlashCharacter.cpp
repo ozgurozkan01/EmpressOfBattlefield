@@ -213,15 +213,6 @@ void ASlashCharacter::FinishedEquipping()
 	CurrentAction = EActionState::EAS_Unoccupied;
 }
 
-void ASlashCharacter::SetWeaponDamageBoxCollision(ECollisionEnabled::Type CollisionEnabled)
-{
-	if (EquippedWeapon && EquippedWeapon->GetDamageBox())
-	{
-		EquippedWeapon->GetDamageBox()->SetCollisionEnabled(CollisionEnabled);
-		EquippedWeapon->IgnoredActors.Empty();
-	}
-}
-
 void ASlashCharacter::PlayAttackMontage()
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
