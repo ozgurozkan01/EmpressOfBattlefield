@@ -1,6 +1,7 @@
 #include "Enemy.h"
 
 #include "AIController.h"
+#include "Weapon.h"
 #include "AttributeComponent.h"
 #include "EnemyAnimInstance.h"
 #include "Engine/EngineTypes.h"
@@ -70,6 +71,13 @@ void AEnemy::BeginPlay()
 		HealthBarWidgetComponent->SetWidgetClass(HealthBarWidgetBlueprint);
 		HealthBarWidgetComponent->SetHealthPercent(AttributeComponent->GetHealthPercentage());
 		HealthBarWidgetComponent->SetVisibility(false);
+	}
+
+	if (GetWorld())
+	{
+		TObjectPtr<AWeapon> DefaultWeapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass);
+		DefaultWeapon->Equip(GetMesh(), FName("WeaponSocket"), this, this);
+		EquippedWeapon = DefaultWeapon;	
 	}
 	
 	GetWorldTimerManager().SetTimer(PatrolTimer, this, &AEnemy::PatrolTimerFinished, PatrolWaitRate);
@@ -253,6 +261,16 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 		}
 	}
 	return DamageAmount;
+}
+
+void AEnemy::Destroyed()
+{
+	Super::Destroyed();
+
+	if (EquippedWeapon)
+	{
+		EquippedWeapon->Destroy();
+	}
 }
 
 EDeathPose AEnemy::GetDeathPose(const FName& SectionName)

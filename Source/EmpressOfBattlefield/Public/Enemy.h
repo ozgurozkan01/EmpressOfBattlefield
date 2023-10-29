@@ -49,6 +49,7 @@ protected:
 	
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+	virtual void Destroyed() override; // When actor is destroyed then this function runs.
 	EDeathPose GetDeathPose(const FName& SectionName);
 	bool InTargetRange(TObjectPtr<AActor> Target, float Radius);
 	bool ShouldChangePatrolTarget(TObjectPtr<AActor> Target, float Radius);
@@ -66,6 +67,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category=HUD)
 	TSubclassOf<UUserWidget> HealthBarWidgetBlueprint;
+	
+	UPROPERTY(EditDefaultsOnly, Category=HUD)
+	TSubclassOf<AWeapon> WeaponClass;
 	
 	UPROPERTY(EditDefaultsOnly, Category="Animation | Montage")
 	TObjectPtr<UAnimMontage> RTLDeathAnimMontage;
