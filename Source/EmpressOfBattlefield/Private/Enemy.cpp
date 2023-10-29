@@ -83,6 +83,11 @@ void AEnemy::BeginPlay()
 	GetWorldTimerManager().SetTimer(PatrolTimer, this, &AEnemy::PatrolTimerFinished, PatrolWaitRate);
 }
 
+void AEnemy::Attack()
+{
+	
+}
+
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -243,7 +248,7 @@ void AEnemy::PlayDeathAnimMontage(const FName& SectionName)
 }
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
-	AActor* DamageCauser)
+                         AActor* DamageCauser)
 {
 	if (AttributeComponent &&
 		HealthBarWidgetComponent &&

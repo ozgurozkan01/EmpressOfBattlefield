@@ -53,4 +53,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category="Particle Effect")
 	TObjectPtr<UParticleSystem> HitParticle;
+	
+	UPROPERTY(VisibleAnywhere, Category=Montage)
+	float AttackMontageSpeedRate;
 };

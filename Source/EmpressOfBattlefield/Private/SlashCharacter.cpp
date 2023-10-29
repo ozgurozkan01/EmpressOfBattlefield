@@ -53,8 +53,6 @@ ASlashCharacter::ASlashCharacter()
 
 	CurrentState = ECharacterState::ECS_Unequipped;
 	CurrentAction = EActionState::EAS_Unoccupied;
-
-	AttackMontageSpeedRate = 1.25f;
 }
 
 // Called when the game starts or when spawned
@@ -211,33 +209,6 @@ void ASlashCharacter::Arm()
 void ASlashCharacter::FinishedEquipping()
 {
 	CurrentAction = EActionState::EAS_Unoccupied;
-}
-
-void ASlashCharacter::PlayAttackMontage()
-{
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-
-	if (AttackMontage && AnimInstance)
-	{
-		AnimInstance->Montage_Play(AttackMontage, AttackMontageSpeedRate);
-		const int32 Selection = FMath::RandRange(0, 1);
-		FName SectionName = FName();
-		switch (Selection)
-		{
-		case 0:
-			SectionName = FName("RightToLeft");
-			AttackType = EAttackType::EAT_RightToLeft;
-			break;
-		case 1:
-			SectionName = FName("UpToDown");
-			AttackType = EAttackType::EAT_UpToDown;
-			break;
-		default:
-			break;
-		}
-
-		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
-	}
 }
 
 void ASlashCharacter::PlayEquipMontage(const FName& SectionName)

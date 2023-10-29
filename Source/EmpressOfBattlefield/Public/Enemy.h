@@ -40,6 +40,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	
+	void Attack();
 	void PlayDeathAnimMontage(const FName& SectionName);
 	void Die(FName& SectionName) override;
 	void ChangePatrolTarget();

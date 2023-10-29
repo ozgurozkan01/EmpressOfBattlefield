@@ -65,7 +65,6 @@ protected:
 	void FinishedEquipping();
 	
 	// Play Montage Functions
-	void PlayAttackMontage() override;
 	void PlayEquipMontage(const FName& SectionName);
 	
 	virtual void AttackEnd() override;
@@ -107,7 +106,4 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, Category=Montage)
 	TObjectPtr<UAnimMontage> EquipMontage;
-
-	UPROPERTY(VisibleAnywhere, Category=Montage)
-	float AttackMontageSpeedRate;
 };

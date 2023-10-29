@@ -11,6 +11,7 @@ ABaseCharacter::ABaseCharacter()
 
 	// UActorComponent does not need to attach to the any component
 	AttributeComponent = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attribute Component"));
+	AttackMontageSpeedRate = 1.25f;
 }
 
 void ABaseCharacter::BeginPlay()
@@ -82,7 +83,16 @@ void ABaseCharacter::PlayHitReactionMontage(const FName& SectionName)
 
 void ABaseCharacter::PlayAttackMontage()
 {
-	
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+
+	if (AttackMontage && AnimInstance)
+	{
+		AnimInstance->Montage_Play(AttackMontage, AttackMontageSpeedRate);
+		const int32 SectionNum = AttackMontage->GetNumSections();
+		const int32 Selection = FMath::RandRange(1, SectionNum);
+		FName SectionName = FName("Attack" + FString::FromInt(Selection));
+		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
+	}
 }
 
 void ABaseCharacter::Tick(float DeltaTime)
