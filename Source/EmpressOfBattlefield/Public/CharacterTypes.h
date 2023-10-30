@@ -19,7 +19,6 @@ enum class EActionState : uint8
 UENUM(BlueprintType)
 enum class EDeathPose : uint8
 {
-	EDP_Alive UMETA(Display = "Alive"),
 	EDP_DeathToRight UMETA(Display = "DeathToRight"),
 	EDP_DeathToLeft UMETA(Display = "DeathToLeft"),
 	EDP_DeathToFront UMETA(Display = "DeathToFront"),
@@ -37,7 +36,9 @@ enum class EAttackType : uint8
 UENUM(BlueprintType)
 enum class EEnemyState : uint8
 {
+	EES_Dead UMETA(Display = "Dead"),
 	EES_Patroling UMETA(Display = "Patroling"),
 	EES_Chasing UMETA(Display = "Chasing"),
 	EES_Attacking UMETA(Display = "Attacking"),
+	EES_Engaged UMETA(Display = "Engaged"),
 };
