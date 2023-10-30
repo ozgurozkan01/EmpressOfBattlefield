@@ -17,10 +17,16 @@ ABaseCharacter::ABaseCharacter()
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (AttackMontage)
+	{
+		AttackMontage->BlendIn = 0.f;
+	}
 }
 
 void ABaseCharacter::Die(FName& SectionName)
 {
+	
 }
 
 double ABaseCharacter::CalculateHitLocationAngle(const FVector& ImpactPoint)
