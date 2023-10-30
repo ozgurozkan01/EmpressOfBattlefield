@@ -28,6 +28,9 @@ protected:
 	UPROPERTY(BlueprintReadWrite)
 	EDeathPose DeathPose;
 
+	UPROPERTY(BlueprintReadWrite)
+	EEnemyState EnemyState;
+	
 	UPROPERTY(BlueprintReadOnly)
 	float GroundSpeed;
 

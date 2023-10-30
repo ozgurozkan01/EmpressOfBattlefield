@@ -28,6 +28,7 @@ void UEnemyAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
 	if (Enemy)
 	{
 		DeathPose = Enemy->DeathPose;
+		EnemyState = Enemy->EnemyState;
 		GroundSpeed = MovementController->Velocity.Length();
 	}
 }
