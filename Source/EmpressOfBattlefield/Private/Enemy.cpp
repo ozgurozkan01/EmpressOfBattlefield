@@ -41,7 +41,6 @@ AEnemy::AEnemy()
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
-	DeathPose = EDeathPose::EDP_Alive;
 	EnemyState = EEnemyState::EES_Patroling;
 	
 	CombatRadius = 1000.f;
@@ -85,7 +84,7 @@ void AEnemy::BeginPlay()
 
 void AEnemy::Attack()
 {
-	
+	PlayAttackMontage();
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -146,7 +145,6 @@ void AEnemy::CheckCurrentTarget()
 
 	else if(ShouldChangePatrolTarget(CurrentTarget, MinPatrolRadius) && EnemyState == EEnemyState::EES_Patroling)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Patrol Target!"));
 		ChangePatrolTarget();
 		GetWorldTimerManager().SetTimer(PatrolTimer, this, &AEnemy::PatrolTimerFinished, 2.2f);
 	}
@@ -156,7 +154,7 @@ void AEnemy::CheckCurrentTarget()
 		EnemyState = EEnemyState::EES_Attacking;
 		/*FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), CurrentTarget->GetActorLocation());
 		SetActorRotation(LookAtRotation);*/
-		UE_LOG(LogTemp, Warning, TEXT("Attack!"));
+		Attack();
 	}
 
 	else if (!InTargetRange(CurrentTarget, AttackRadius) && CurrentTarget->ActorHasTag("MainPlayer") && EnemyState == EEnemyState::EES_Attacking)
