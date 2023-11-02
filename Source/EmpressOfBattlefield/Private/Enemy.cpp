@@ -34,9 +34,6 @@ AEnemy::AEnemy()
 	HealthBarWidgetComponent->SetupAttachment(GetRootComponent());
 	HealthBarWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
 
-	GetCharacterMovement()->bOrientRotationToMovement = true;
-	GetCharacterMovement()->MaxWalkSpeed = 125.f;
-
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
@@ -49,6 +46,12 @@ AEnemy::AEnemy()
 	CurrentTarget = 0;
 	CurrentPatrolTargetIndex = 1;
 	PatrolWaitRate = 2.f;
+	PatrollingSpeed = 125.f;
+	ChasingSpeed = 350.f;
+	
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->MaxWalkSpeed = PatrollingSpeed;
+
 }
 
 void AEnemy::BeginPlay()
@@ -62,7 +65,6 @@ void AEnemy::BeginPlay()
 	if (PawnSensingComponent)
 	{
 		PawnSensingComponent->OnSeePawn.AddDynamic(this, &AEnemy::SeePawn);
-		PawnSensingComponent->OnHearNoise.AddDynamic(this, &AEnemy::HearNoise);
 	}
 	
 	if (HealthBarWidgetComponent)
@@ -102,6 +104,21 @@ bool AEnemy::ShouldChangePatrolTarget(TObjectPtr<AActor> Target, float Radius)
 	return Distance <= Radius;
 }
 
+bool AEnemy::IsInsideAttackRadius()
+{
+	return InTargetRange(CurrentTarget, AttackRadius);
+}
+
+bool AEnemy::IsInsideCombatRadius()
+{
+	return InTargetRange(CurrentTarget, CombatRadius);
+}
+
+bool AEnemy::IsChanginPatrolTarget()
+{
+	return ShouldChangePatrolTarget(CurrentTarget, MinPatrolRadius);
+}
+
 void AEnemy::ChangePatrolTarget()
 {
 	CurrentTarget = PatrolTargetsContainer[CurrentPatrolTargetIndex];
@@ -130,40 +147,47 @@ void AEnemy::PatrolTimerFinished()
 
 void AEnemy::CheckCurrentTarget()
 {
-	if (!InTargetRange(CurrentTarget, CombatRadius) && EnemyState == EEnemyState::EES_Chasing)
+	if (!IsInsideCombatRadius() && EnemyState == EEnemyState::EES_Chasing)
 	{
 		if (HealthBarWidgetComponent)
 		{
 			HealthBarWidgetComponent->SetVisibility(false);
 		}
-		
-		GetCharacterMovement()->MaxWalkSpeed = 125.f;
-		CurrentTarget = PatrolTargetsContainer[CurrentPatrolTargetIndex];
-		EnemyState = EEnemyState::EES_Patroling;
-		MoveToTarget(CurrentTarget);
+
+		Patrolling();
 	}
 
-	else if(ShouldChangePatrolTarget(CurrentTarget, MinPatrolRadius) && EnemyState == EEnemyState::EES_Patroling)
+	else if(IsChanginPatrolTarget() && EnemyState == EEnemyState::EES_Patroling)
 	{
 		ChangePatrolTarget();
 		GetWorldTimerManager().SetTimer(PatrolTimer, this, &AEnemy::PatrolTimerFinished, 2.2f);
 	}
 
-	else if (InTargetRange(CurrentTarget, AttackRadius) && CurrentTarget->ActorHasTag("MainPlayer") && EnemyState != EEnemyState::EES_Attacking)
+	else if (IsInsideAttackRadius() && CurrentTarget->ActorHasTag("MainPlayer") && EnemyState != EEnemyState::EES_Attacking)
 	{
 		EnemyState = EEnemyState::EES_Attacking;
-		/*FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), CurrentTarget->GetActorLocation());
-		SetActorRotation(LookAtRotation);*/
 		Attack();
 	}
 
-	else if (!InTargetRange(CurrentTarget, AttackRadius) && CurrentTarget->ActorHasTag("MainPlayer") && EnemyState == EEnemyState::EES_Attacking)
+	else if (!IsInsideAttackRadius() && CurrentTarget->ActorHasTag("MainPlayer") && EnemyState == EEnemyState::EES_Attacking)
 	{
-		EnemyState = EEnemyState::EES_Chasing;
-		UE_LOG(LogTemp, Warning, TEXT("Chasing!"));
-		MoveToTarget(CurrentTarget);
-		GetCharacterMovement()->MaxWalkSpeed = 350.f;
+		ChasingTarget();
 	}
+}
+
+void AEnemy::Patrolling()
+{
+	GetCharacterMovement()->MaxWalkSpeed = PatrollingSpeed;
+	CurrentTarget = PatrolTargetsContainer[CurrentPatrolTargetIndex];
+	EnemyState = EEnemyState::EES_Patroling;
+	MoveToTarget(CurrentTarget);
+}
+
+void AEnemy::ChasingTarget()
+{
+	EnemyState = EEnemyState::EES_Chasing;
+	MoveToTarget(CurrentTarget);
+	GetCharacterMovement()->MaxWalkSpeed = ChasingSpeed;
 }
 
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -179,12 +203,8 @@ void AEnemy::SeePawn(APawn* SeenPawn)
 		UE_LOG(LogTemp, Warning, TEXT("Pawn Seen!"));
 		CurrentTarget = SeenPawn;
 		MoveToTarget(CurrentTarget);
-		GetCharacterMovement()->MaxWalkSpeed = 350.f;
+		GetCharacterMovement()->MaxWalkSpeed = ChasingSpeed;
 	}
-}
-
-void AEnemy::HearNoise(APawn* PawnInstigator, const FVector& Location, float Volume)
-{
 }
 
 void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)

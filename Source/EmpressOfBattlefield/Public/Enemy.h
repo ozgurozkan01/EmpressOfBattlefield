@@ -26,10 +26,6 @@ public:
 
 	UFUNCTION()
 	void SeePawn(APawn* SeenPawn);
-
-	UFUNCTION()
-	void HearNoise(APawn* PawnInstigator, const FVector& Location, float Volume);
-	
 	void GetHit_Implementation(const FVector& ImpactPoint) override;	
 
 	UPROPERTY(BlueprintReadOnly)
@@ -39,6 +35,8 @@ public:
 	EEnemyState EnemyState;
 protected:
 	virtual void BeginPlay() override;
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+	virtual void Destroyed() override; // When actor is destroyed then this function runs.
 	
 	void Attack();
 	void PlayDeathAnimMontage(const FName& SectionName);
@@ -47,14 +45,15 @@ protected:
 	void MoveToTarget(TObjectPtr<AActor> Target);
 	void PatrolTimerFinished();
 	void CheckCurrentTarget();
+	void Patrolling();
+	void ChasingTarget();
 	
-
-	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
-	virtual void Destroyed() override; // When actor is destroyed then this function runs.
 	EDeathPose GetDeathPose(const FName& SectionName);
 	bool InTargetRange(TObjectPtr<AActor> Target, float Radius);
 	bool ShouldChangePatrolTarget(TObjectPtr<AActor> Target, float Radius);
-
+	bool IsInsideAttackRadius();
+	bool IsInsideCombatRadius();
+	bool IsChanginPatrolTarget();
 private:
 
 	UPROPERTY(EditAnywhere)
@@ -98,4 +97,10 @@ private:
 
 	FTimerHandle PatrolTimer;
 	float PatrolWaitRate;
+
+	UPROPERTY(EditAnywhere, Category=Speed)
+	float PatrollingSpeed;
+
+	UPROPERTY(EditAnywhere, Category=Speed)
+	float ChasingSpeed;
 };
