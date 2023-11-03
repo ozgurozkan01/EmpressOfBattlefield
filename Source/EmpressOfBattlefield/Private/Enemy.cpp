@@ -197,10 +197,12 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AEnemy::SeePawn(APawn* SeenPawn)
 {
-	if (!InTargetRange(CurrentTarget, AttackRadius) && SeenPawn->ActorHasTag(FName("MainPlayer")) && EnemyState != EEnemyState::EES_Chasing)
+	if (EnemyState == EEnemyState::EES_Chasing) { return; }
+	
+	if (!IsInsideAttackRadius() && SeenPawn->ActorHasTag(FName("MainPlayer")))
 	{
+		GetWorldTimerManager().ClearTimer(PatrolTimer);	
 		EnemyState = EEnemyState::EES_Chasing;
-		UE_LOG(LogTemp, Warning, TEXT("Pawn Seen!"));
 		CurrentTarget = SeenPawn;
 		MoveToTarget(CurrentTarget);
 		GetCharacterMovement()->MaxWalkSpeed = ChasingSpeed;
