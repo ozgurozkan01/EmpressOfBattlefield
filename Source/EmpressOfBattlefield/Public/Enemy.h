@@ -47,13 +47,18 @@ protected:
 	void CheckCurrentTarget();
 	void Patrolling();
 	void ChasingTarget();
+	void ClearTimerHandle(FTimerHandle& Timer);
 	
-	EDeathPose GetDeathPose(const FName& SectionName);
 	bool InTargetRange(TObjectPtr<AActor> Target, float Radius);
 	bool ShouldChangePatrolTarget(TObjectPtr<AActor> Target, float Radius);
 	bool IsInsideAttackRadius();
 	bool IsInsideCombatRadius();
-	bool IsChanginPatrolTarget();
+	bool CanChangePatrolTarget();
+	bool CanChaseTarget();
+	bool CanAttack();
+
+	EDeathPose GetDeathPose(const FName& SectionName);
+
 private:
 
 	UPROPERTY(EditAnywhere)
@@ -94,13 +99,15 @@ private:
 
 	UPROPERTY(EditInstanceOnly)
 	int32 CurrentPatrolTargetIndex;
-
-	FTimerHandle PatrolTimer;
-	float PatrolWaitRate;
-
+	
 	UPROPERTY(EditAnywhere, Category=Speed)
 	float PatrollingSpeed;
 
 	UPROPERTY(EditAnywhere, Category=Speed)
 	float ChasingSpeed;
+
+	FTimerHandle PatrolTimer;
+	FTimerHandle AttackTimer;
+	
+	float PatrolWaitRate;
 };

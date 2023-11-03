@@ -114,9 +114,19 @@ bool AEnemy::IsInsideCombatRadius()
 	return InTargetRange(CurrentTarget, CombatRadius);
 }
 
-bool AEnemy::IsChanginPatrolTarget()
+bool AEnemy::CanChangePatrolTarget()
 {
-	return ShouldChangePatrolTarget(CurrentTarget, MinPatrolRadius);
+	return ShouldChangePatrolTarget(CurrentTarget, MinPatrolRadius) && EnemyState == EEnemyState::EES_Patroling;
+}
+
+bool AEnemy::CanChaseTarget()
+{
+	return !IsInsideAttackRadius() && CurrentTarget->ActorHasTag("MainPlayer") && EnemyState == EEnemyState::EES_Attacking;
+}
+
+bool AEnemy::CanAttack()
+{
+	return IsInsideAttackRadius() && CurrentTarget->ActorHasTag("MainPlayer") && EnemyState != EEnemyState::EES_Attacking;
 }
 
 void AEnemy::ChangePatrolTarget()
@@ -157,19 +167,19 @@ void AEnemy::CheckCurrentTarget()
 		Patrolling();
 	}
 
-	else if(IsChanginPatrolTarget() && EnemyState == EEnemyState::EES_Patroling)
+	else if(CanChangePatrolTarget())
 	{
 		ChangePatrolTarget();
 		GetWorldTimerManager().SetTimer(PatrolTimer, this, &AEnemy::PatrolTimerFinished, 2.2f);
 	}
 
-	else if (IsInsideAttackRadius() && CurrentTarget->ActorHasTag("MainPlayer") && EnemyState != EEnemyState::EES_Attacking)
+	else if (CanAttack())
 	{
 		EnemyState = EEnemyState::EES_Attacking;
 		Attack();
 	}
 
-	else if (!IsInsideAttackRadius() && CurrentTarget->ActorHasTag("MainPlayer") && EnemyState == EEnemyState::EES_Attacking)
+	else if (CanChaseTarget())
 	{
 		ChasingTarget();
 	}
@@ -190,6 +200,11 @@ void AEnemy::ChasingTarget()
 	GetCharacterMovement()->MaxWalkSpeed = ChasingSpeed;
 }
 
+void AEnemy::ClearTimerHandle(FTimerHandle& Timer)
+{
+	GetWorldTimerManager().ClearTimer(Timer);
+}
+
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -201,11 +216,9 @@ void AEnemy::SeePawn(APawn* SeenPawn)
 	
 	if (!IsInsideAttackRadius() && SeenPawn->ActorHasTag(FName("MainPlayer")))
 	{
-		GetWorldTimerManager().ClearTimer(PatrolTimer);	
-		EnemyState = EEnemyState::EES_Chasing;
+		ClearTimerHandle(PatrolTimer);
 		CurrentTarget = SeenPawn;
-		MoveToTarget(CurrentTarget);
-		GetCharacterMovement()->MaxWalkSpeed = ChasingSpeed;
+		ChasingTarget();
 	}
 }
 
