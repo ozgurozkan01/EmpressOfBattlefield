@@ -22,7 +22,6 @@ class EMPRESSOFBATTLEFIELD_API AEnemy : public ABaseCharacter
 public:
 	AEnemy();
 	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION()
 	void SeePawn(APawn* SeenPawn);
@@ -48,7 +47,8 @@ protected:
 	void Patrolling();
 	void ChasingTarget();
 	void ClearTimerHandle(FTimerHandle& Timer);
-	
+	void StartAttackTimer();	
+
 	bool InTargetRange(TObjectPtr<AActor> Target, float Radius);
 	bool ShouldChangePatrolTarget(TObjectPtr<AActor> Target, float Radius);
 	bool IsInsideAttackRadius();
@@ -110,4 +110,5 @@ private:
 	FTimerHandle AttackTimer;
 	
 	float PatrolWaitRate;
+	float AttackWaitRate;
 };

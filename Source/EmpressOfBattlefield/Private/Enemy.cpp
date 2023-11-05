@@ -46,6 +46,7 @@ AEnemy::AEnemy()
 	CurrentTarget = 0;
 	CurrentPatrolTargetIndex = 1;
 	PatrolWaitRate = 2.f;
+	AttackWaitRate = 1.25;
 	PatrollingSpeed = 125.f;
 	ChasingSpeed = 350.f;
 	
@@ -170,13 +171,12 @@ void AEnemy::CheckCurrentTarget()
 	else if(CanChangePatrolTarget())
 	{
 		ChangePatrolTarget();
-		GetWorldTimerManager().SetTimer(PatrolTimer, this, &AEnemy::PatrolTimerFinished, 2.2f);
+		GetWorldTimerManager().SetTimer(PatrolTimer, this, &AEnemy::PatrolTimerFinished, PatrolWaitRate);
 	}
 
 	else if (CanAttack())
 	{
-		EnemyState = EEnemyState::EES_Attacking;
-		Attack();
+		StartAttackTimer();
 	}
 
 	else if (CanChaseTarget())
@@ -205,9 +205,10 @@ void AEnemy::ClearTimerHandle(FTimerHandle& Timer)
 	GetWorldTimerManager().ClearTimer(Timer);
 }
 
-void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AEnemy::StartAttackTimer()
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	EnemyState = EEnemyState::EES_Attacking;
+	GetWorldTimerManager().SetTimer(AttackTimer, this, &AEnemy::Attack, AttackWaitRate);
 }
 
 void AEnemy::SeePawn(APawn* SeenPawn)
@@ -292,11 +293,13 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 		HealthBarWidgetComponent->GetHealthBarWidget()->SetHealthBarColor(DamageAmount);
 		CurrentTarget = Cast<ASlashCharacter>(EventInstigator->GetPawn());
 
-		if (CurrentTarget)
+		/*if (CurrentTarget)
 		{
-			EnemyState = EEnemyState::EES_Attacking;
+			//EnemyState = EEnemyState::EES_Attacking;
+			EnemyState = EEnemyState::EES_Chasing;
 			MoveToTarget(CurrentTarget);
-		}
+		}*/
+		ChasingTarget();
 	}
 	return DamageAmount;
 }
