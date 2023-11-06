@@ -292,13 +292,6 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 		HealthBarWidgetComponent->SetHealthPercent(AttributeComponent->GetHealthPercentage());
 		HealthBarWidgetComponent->GetHealthBarWidget()->SetHealthBarColor(DamageAmount);
 		CurrentTarget = Cast<ASlashCharacter>(EventInstigator->GetPawn());
-
-		/*if (CurrentTarget)
-		{
-			//EnemyState = EEnemyState::EES_Attacking;
-			EnemyState = EEnemyState::EES_Chasing;
-			MoveToTarget(CurrentTarget);
-		}*/
 		ChasingTarget();
 	}
 	return DamageAmount;
