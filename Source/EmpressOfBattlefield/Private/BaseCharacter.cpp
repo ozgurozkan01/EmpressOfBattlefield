@@ -91,14 +91,14 @@ void ABaseCharacter::PlayAttackMontage()
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 
-	if (AttackMontage && AnimInstance)
-	{
-		AnimInstance->Montage_Play(AttackMontage, AttackMontageSpeedRate);
-		const int32 SectionNum = AttackMontage->GetNumSections();
-		const int32 Selection = FMath::RandRange(1, SectionNum);
-		FName SectionName = FName("Attack" + FString::FromInt(Selection));
-		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
-	}
+	if (!AttackMontage || AttackMontage->GetNumSections()  == 0 || !AnimInstance) { return; }
+
+	AnimInstance->Montage_Play(AttackMontage, AttackMontageSpeedRate);
+	const int32 SectionNum = AttackMontage->GetNumSections();
+	const int32 Selection = FMath::RandRange(0, SectionNum-1);
+	FName SectionName = AttackMontage->GetSectionName(Selection);;
+	AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
+
 }
 
 void ABaseCharacter::Tick(float DeltaTime)
