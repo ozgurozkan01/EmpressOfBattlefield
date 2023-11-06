@@ -47,8 +47,11 @@ protected:
 	void Patrolling();
 	void ChasingTarget();
 	void ClearTimerHandle(FTimerHandle& Timer);
-	void StartAttackTimer();	
-
+	void StartAttackTimer();
+	void SetHealthWidgetInitialProperties();
+	void SetHealthBarVisibility(bool bIsVisible);
+	void AttachDefaultWeaponAtStart();
+	
 	bool InTargetRange(TObjectPtr<AActor> Target, float Radius);
 	bool ShouldChangePatrolTarget(TObjectPtr<AActor> Target, float Radius);
 	bool IsInsideAttackRadius();
