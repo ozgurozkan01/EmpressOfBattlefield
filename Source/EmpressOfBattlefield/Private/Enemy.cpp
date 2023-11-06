@@ -60,28 +60,14 @@ void AEnemy::BeginPlay()
 	Super::BeginPlay();
 
 	Tags.Add(FName("Enemy"));
-	
 	AIController = Cast<AAIController>(GetController());
-
 	if (PawnSensingComponent)
 	{
 		PawnSensingComponent->OnSeePawn.AddDynamic(this, &AEnemy::SeePawn);
 	}
-	
-	if (HealthBarWidgetComponent)
-	{
-		HealthBarWidgetComponent->SetWidgetClass(HealthBarWidgetBlueprint);
-		HealthBarWidgetComponent->SetHealthPercent(AttributeComponent->GetHealthPercentage());
-		HealthBarWidgetComponent->SetVisibility(false);
-	}
 
-	if (GetWorld())
-	{
-		TObjectPtr<AWeapon> DefaultWeapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass);
-		DefaultWeapon->Equip(GetMesh(), FName("WeaponSocket"), this, this);
-		EquippedWeapon = DefaultWeapon;	
-	}
-	
+	SetHealthWidgetInitialProperties();
+	AttachDefaultWeaponAtStart();
 	GetWorldTimerManager().SetTimer(PatrolTimer, this, &AEnemy::PatrolTimerFinished, PatrolWaitRate);
 }
 
@@ -160,11 +146,7 @@ void AEnemy::CheckCurrentTarget()
 {
 	if (!IsInsideCombatRadius() && EnemyState == EEnemyState::EES_Chasing)
 	{
-		if (HealthBarWidgetComponent)
-		{
-			HealthBarWidgetComponent->SetVisibility(false);
-		}
-
+		SetHealthBarVisibility(false);
 		Patrolling();
 	}
 
@@ -211,6 +193,35 @@ void AEnemy::StartAttackTimer()
 	GetWorldTimerManager().SetTimer(AttackTimer, this, &AEnemy::Attack, AttackWaitRate);
 }
 
+void AEnemy::SetHealthWidgetInitialProperties()
+{
+	if (HealthBarWidgetComponent)
+	{
+		HealthBarWidgetComponent->SetWidgetClass(HealthBarWidgetBlueprint);
+		HealthBarWidgetComponent->SetHealthPercent(AttributeComponent->GetHealthPercentage());
+	}
+
+	SetHealthBarVisibility(false);
+}
+
+void AEnemy::SetHealthBarVisibility(bool bIsVisible)
+{
+	if (HealthBarWidgetComponent)
+	{
+		HealthBarWidgetComponent->SetVisibility(bIsVisible);
+	}
+}
+
+void AEnemy::AttachDefaultWeaponAtStart()
+{
+	if (GetWorld())
+	{
+		TObjectPtr<AWeapon> DefaultWeapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass);
+		DefaultWeapon->Equip(GetMesh(), FName("WeaponSocket"), this, this);
+		EquippedWeapon = DefaultWeapon;	
+	}
+}
+
 void AEnemy::SeePawn(APawn* SeenPawn)
 {
 	if (EnemyState == EEnemyState::EES_Chasing) { return; }
@@ -228,10 +239,8 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 	double Theta = CalculateHitLocationAngle(ImpactPoint);
 	FName SectionName = DetermineWhichSideGetHit(Theta);
 
-	if (HealthBarWidgetComponent)
-	{
-		HealthBarWidgetComponent->SetVisibility(true);
-	}
+
+	SetHealthBarVisibility(true);
 	
 	if (AttributeComponent && AttributeComponent->IsAlive())
 	{
@@ -338,12 +347,7 @@ bool AEnemy::InTargetRange(TObjectPtr<AActor> Target, float Radius)
 void AEnemy::Die(FName& SectionName)
 {
 	PlayDeathAnimMontage(SectionName);
-
-	if (HealthBarWidgetComponent)
-	{
-		HealthBarWidgetComponent->SetVisibility(false);
-	}
-	
+	SetHealthBarVisibility(false);
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	SetLifeSpan(5.f); // Destroy actor after 5 seconds.
 }
