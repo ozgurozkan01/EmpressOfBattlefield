@@ -25,8 +25,6 @@ class EMPRESSOFBATTLEFIELD_API ASlashCharacter : public ABaseCharacter
 public:
 	ASlashCharacter();
 
-	virtual void Tick(float DeltaTime) override;
-
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
@@ -48,18 +46,22 @@ protected:
 	void Movement(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void Jump(const FInputActionValue& Value);
-	void EquipWeapon(const FInputActionValue& Value);
+	void EKeyPressed(const FInputActionValue& Value);
 	void Attack(const FInputActionValue& Value);
+
+	void EquipWeapon(AWeapon* Weapon);
 	
 	bool CanArm();
 	bool CanDisarm();
-	
-	
-	UFUNCTION(BlueprintCallable)
+	void Arm();
 	void Disarm();
 
+	
 	UFUNCTION(BlueprintCallable)
-	void Arm();
+	void AttachWeaponToBack();
+
+	UFUNCTION(BlueprintCallable)
+	void AttachWeaponToHand();
 
 	UFUNCTION(BlueprintCallable)
 	void FinishedEquipping();

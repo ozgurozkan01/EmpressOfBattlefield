@@ -26,7 +26,8 @@ public:
 	UFUNCTION()
 	void SeePawn(APawn* SeenPawn);
 	void GetHit_Implementation(const FVector& ImpactPoint) override;	
-
+	void AttackEnd() override;
+	
 	UPROPERTY(BlueprintReadOnly)
 	EDeathPose DeathPose;
 

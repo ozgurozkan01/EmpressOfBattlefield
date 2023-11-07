@@ -11,7 +11,6 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Kismet/GameplayStatics.h"
 #include "Navigation/PathFollowingComponent.h"
 #include "TimerManager.h"
 #include "Perception/PawnSensingComponent.h"
@@ -46,7 +45,7 @@ AEnemy::AEnemy()
 	CurrentTarget = 0;
 	CurrentPatrolTargetIndex = 1;
 	PatrolWaitRate = 2.f;
-	AttackWaitRate = 1.25;
+	AttackWaitRate = 3.f;
 	PatrollingSpeed = 125.f;
 	ChasingSpeed = 350.f;
 	
@@ -73,6 +72,7 @@ void AEnemy::BeginPlay()
 
 void AEnemy::Attack()
 {
+	EnemyState = EEnemyState::EES_Engaged;
 	PlayAttackMontage();
 }
 
@@ -80,7 +80,11 @@ void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	CheckCurrentTarget();
+	if (IsAlive())
+	{
+		CheckCurrentTarget();
+		GEngine->AddOnScreenDebugMessage(1, 1, FColor::Cyan, "Alive");
+	}
 }
 
 bool AEnemy::ShouldChangePatrolTarget(TObjectPtr<AActor> Target, float Radius)
@@ -129,7 +133,7 @@ void AEnemy::ChangePatrolTarget()
 
 void AEnemy::MoveToTarget(TObjectPtr<AActor> Target)
 {
-	if (AIController == nullptr || Target == nullptr) { return; }
+	if (!IsAlive() || AIController == nullptr || Target == nullptr) { return; }
 	
 	FAIMoveRequest MoveRequest; 
 	MoveRequest.SetGoalActor(Target);
@@ -146,12 +150,14 @@ void AEnemy::CheckCurrentTarget()
 {
 	if (!IsInsideCombatRadius() && EnemyState == EEnemyState::EES_Chasing)
 	{
+		ClearTimerHandle(AttackTimer);
 		SetHealthBarVisibility(false);
 		Patrolling();
 	}
 
 	else if(CanChangePatrolTarget())
 	{
+		ClearTimerHandle(AttackTimer);
 		ChangePatrolTarget();
 		GetWorldTimerManager().SetTimer(PatrolTimer, this, &AEnemy::PatrolTimerFinished, PatrolWaitRate);
 	}
@@ -163,6 +169,7 @@ void AEnemy::CheckCurrentTarget()
 
 	else if (CanChaseTarget())
 	{
+		ClearTimerHandle(AttackTimer);
 		ChasingTarget();
 	}
 }
@@ -224,7 +231,7 @@ void AEnemy::AttachDefaultWeaponAtStart()
 
 void AEnemy::SeePawn(APawn* SeenPawn)
 {
-	if (EnemyState == EEnemyState::EES_Chasing) { return; }
+	if (!IsAlive() && EnemyState == EEnemyState::EES_Chasing) { return; }
 	
 	if (!IsInsideAttackRadius() && SeenPawn->ActorHasTag(FName("MainPlayer")))
 	{
@@ -242,26 +249,27 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 
 	SetHealthBarVisibility(true);
 	
-	if (AttributeComponent && AttributeComponent->IsAlive())
+	if (IsAlive() && EnemyState != EEnemyState::EES_Dead)
 	{
 		PlayHitReactionMontage(SectionName);
 	}
 
 	else
 	{
-		DeathPose = GetDeathPose(SectionName);
+		ClearTimerHandle(AttackTimer);
+		ClearTimerHandle(PatrolTimer);
+		EnemyState = EEnemyState::EES_Dead;
 		Die(SectionName);
 	}
 
-	if (HitSound)
-	{
-		UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
-	}
+	PlayEffects(ImpactPoint);
+}
 
-	if (HitParticle)
-	{
-		UGameplayStatics::SpawnEmitterAtLocation(this, HitParticle, ImpactPoint);
-	}	
+void AEnemy::AttackEnd()
+{
+	Super::AttackEnd();
+	EnemyState = EEnemyState::EES_NoState;
+	CheckCurrentTarget();
 }
 
 void AEnemy::PlayDeathAnimMontage(const FName& SectionName)
@@ -347,7 +355,9 @@ bool AEnemy::InTargetRange(TObjectPtr<AActor> Target, float Radius)
 void AEnemy::Die(FName& SectionName)
 {
 	PlayDeathAnimMontage(SectionName);
+	DeathPose = GetDeathPose(SectionName);
 	SetHealthBarVisibility(false);
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	SetLifeSpan(5.f); // Destroy actor after 5 seconds.
 }

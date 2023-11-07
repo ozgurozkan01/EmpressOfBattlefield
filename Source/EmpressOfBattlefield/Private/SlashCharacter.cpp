@@ -11,13 +11,12 @@
 #include "GroomComponent.h"
 #include "Weapon.h"
 #include "Animation/AnimMontage.h"
-#include "Components/BoxComponent.h"
 
 // Sets default values
 ASlashCharacter::ASlashCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(GetRootComponent());
@@ -71,14 +70,6 @@ void ASlashCharacter::BeginPlay()
 	}
 }
 
-// Called every frame
-void ASlashCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-	
-}
-
-// Called to bind functionality to input
 void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -89,7 +80,7 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Look);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
-		EnhancedInputComponent->BindAction(EquipWeaponAction, ETriggerEvent::Started, this, &ASlashCharacter::EquipWeapon);
+		EnhancedInputComponent->BindAction(EquipWeaponAction, ETriggerEvent::Started, this, &ASlashCharacter::EKeyPressed);
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Attack);
 	}
 }
@@ -113,9 +104,7 @@ void ASlashCharacter::Look(const FInputActionValue& Value)
 {
 	const FVector2D LookDirection = Value.Get<FVector2D>();
 
-	if (Controller == nullptr)
-	{ return; }
-
+	if (Controller == nullptr) { return; }
 	AddControllerPitchInput(LookDirection.Y);
 	AddControllerYawInput(LookDirection.X);
 }
@@ -130,7 +119,7 @@ void ASlashCharacter::Jump(const FInputActionValue& Value)
 	}
 }
 
-void ASlashCharacter::EquipWeapon(const FInputActionValue& Value)
+void ASlashCharacter::EKeyPressed(const FInputActionValue& Value)
 {
 	const bool bEKeyPressed = Value.Get<bool>();
 
@@ -138,24 +127,19 @@ void ASlashCharacter::EquipWeapon(const FInputActionValue& Value)
 
 	if(OverlappedWeapon && bEKeyPressed)
 	{
-		OverlappedWeapon->Equip(GetMesh(), FName("WeaponSocket"), this, this);
-		CurrentState = ECharacterState::ECS_EquippedOneHandWeapon;
-		OverlappingItem = nullptr;
-		EquippedWeapon = OverlappedWeapon;	
+		EquipWeapon(OverlappedWeapon);
 	}
 
 	else if (bEKeyPressed && EquippedWeapon)
 	{
 		if (CanDisarm())
 		{
-			PlayEquipMontage(FName("Unequip"));
-			CurrentState = ECharacterState::ECS_Unequipped;
+			Disarm();
 		}
 
 		else if (CanArm())
 		{
-			PlayEquipMontage(FName("Equip"));
-			CurrentState = ECharacterState::ECS_EquippedOneHandWeapon;
+			Arm();
 		}
 		
 		CurrentAction = EActionState::EAS_EquipWeapon;
@@ -177,6 +161,14 @@ void ASlashCharacter::Attack(const FInputActionValue& Value)
 	}
 }
 
+void ASlashCharacter::EquipWeapon(AWeapon* Weapon)
+{
+	Weapon->Equip(GetMesh(), FName("WeaponSocket"), this, this);
+	CurrentState = ECharacterState::ECS_EquippedOneHandWeapon;
+	OverlappingItem = nullptr;
+	EquippedWeapon = Weapon;
+}
+
 bool ASlashCharacter::CanArm()
 {
 	return CurrentAction == EActionState::EAS_Unoccupied &&
@@ -190,7 +182,19 @@ bool ASlashCharacter::CanDisarm()
 		   CurrentState != ECharacterState::ECS_Unequipped;
 }
 
+void ASlashCharacter::Arm()
+{
+	PlayEquipMontage(FName("Equip"));
+	CurrentState = ECharacterState::ECS_EquippedOneHandWeapon;
+}
+
 void ASlashCharacter::Disarm()
+{
+	PlayEquipMontage(FName("Unequip"));
+	CurrentState = ECharacterState::ECS_Unequipped;
+}
+
+void ASlashCharacter::AttachWeaponToBack()
 {
 	if (EquippedWeapon)
 	{
@@ -198,7 +202,7 @@ void ASlashCharacter::Disarm()
 	}
 }
 
-void ASlashCharacter::Arm()
+void ASlashCharacter::AttachWeaponToHand()
 {
 	if (EquippedWeapon)
 	{
