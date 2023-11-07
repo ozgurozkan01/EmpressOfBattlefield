@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Item.h"
-#include "CharacterTypes.h"
 #include "Weapon.generated.h"
 
 class UFieldSystemComponent;
