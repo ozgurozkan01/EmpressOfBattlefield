@@ -4,6 +4,7 @@
 #include "EnemyAnimInstance.h"
 #include "Components//BoxComponent.h"
 #include "Weapon.h"
+#include "Kismet/GameplayStatics.h"
 
 ABaseCharacter::ABaseCharacter()
 {
@@ -99,6 +100,24 @@ void ABaseCharacter::PlayAttackMontage()
 	FName SectionName = AttackMontage->GetSectionName(Selection);;
 	AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
 
+}
+
+void ABaseCharacter::PlayEffects(const FVector& ImpactPoint)
+{
+	if (HitSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
+	}
+
+	if (HitParticle)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(this, HitParticle, ImpactPoint);
+	}	
+}
+
+bool ABaseCharacter::IsAlive()
+{
+	return AttributeComponent && AttributeComponent->IsAlive();
 }
 
 void ABaseCharacter::Tick(float DeltaTime)

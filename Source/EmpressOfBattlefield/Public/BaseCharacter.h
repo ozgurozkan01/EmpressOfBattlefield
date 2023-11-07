@@ -35,25 +35,30 @@ protected:
 
 	void PlayHitReactionMontage(const FName& SectionName);
 	virtual void PlayAttackMontage();
-
+	void PlayEffects(const FVector& ImpactPoint);
+	
+	bool IsAlive();
+	
 	UPROPERTY(VisibleAnywhere, Category="Item | Weapon")
 	TObjectPtr<AWeapon> EquippedWeapon;
-	
-	UPROPERTY(EditDefaultsOnly, Category=Montage)
-	TObjectPtr<UAnimMontage> AttackMontage;
-	
-	UPROPERTY(EditDefaultsOnly, Category="Animation | Montage")
-	TObjectPtr<UAnimMontage> HitReactionMontage;
-	
+
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UAttributeComponent> AttributeComponent;
+
+private:
 	
 	UPROPERTY(EditDefaultsOnly, Category="Sound")
 	TObjectPtr<USoundBase> HitSound;
 
 	UPROPERTY(EditDefaultsOnly, Category="Particle Effect")
 	TObjectPtr<UParticleSystem> HitParticle;
-	
+
 	UPROPERTY(VisibleAnywhere, Category=Montage)
 	float AttackMontageSpeedRate;
+
+	UPROPERTY(EditDefaultsOnly, Category=Montage)
+	TObjectPtr<UAnimMontage> AttackMontage;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Animation | Montage")
+	TObjectPtr<UAnimMontage> HitReactionMontage;
 };
