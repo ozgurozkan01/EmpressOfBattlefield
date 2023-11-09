@@ -33,7 +33,7 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	virtual void AttackEnd();
 
-	void PlayHitReactionMontage(const FName& SectionName);
+	void PlayHitReactionMontage(const FName& SectionName, UAnimInstance* AnimInstance);
 	virtual void PlayAttackMontage();
 	void PlayEffects(const FVector& ImpactPoint);
 	
@@ -44,7 +44,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UAttributeComponent> AttributeComponent;
-
+	
 private:
 	
 	UPROPERTY(EditDefaultsOnly, Category="Sound")
