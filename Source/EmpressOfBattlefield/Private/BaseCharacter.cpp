@@ -77,10 +77,8 @@ void ABaseCharacter::AttackEnd()
 	
 }
 
-void ABaseCharacter::PlayHitReactionMontage(const FName& SectionName)
+void ABaseCharacter::PlayHitReactionMontage(const FName& SectionName, UAnimInstance* AnimInstance)
 {
-	TObjectPtr<UEnemyAnimInstance> AnimInstance = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
-	
 	if (AnimInstance && HitReactionMontage)
 	{
 		AnimInstance->Montage_Play(HitReactionMontage);
@@ -99,7 +97,6 @@ void ABaseCharacter::PlayAttackMontage()
 	const int32 Selection = FMath::RandRange(0, SectionNum-1);
 	FName SectionName = AttackMontage->GetSectionName(Selection);;
 	AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
-
 }
 
 void ABaseCharacter::PlayEffects(const FVector& ImpactPoint)
