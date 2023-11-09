@@ -9,6 +9,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GroomComponent.h"
+#include "SlashAnimInstance.h"
 #include "Weapon.h"
 #include "Animation/AnimMontage.h"
 
@@ -79,6 +80,17 @@ void ASlashCharacter::BeginPlay()
 
 void ASlashCharacter::GetHit_Implementation(const FVector& ImpactPoint)
 {
+	AnimInstance = Cast<USlashAnimInstance>(GetMesh()->GetAnimInstance());
+
+	CurrentAction = EActionState::EAS_HitReaction;
+	
+	double Theta = CalculateHitLocationAngle(ImpactPoint);
+	FName SectionName = DetermineWhichSideGetHit(Theta);	
+	if (IsAlive() && AnimInstance)
+	{
+		PlayHitReactionMontage(SectionName, AnimInstance);
+	}
+		
 	PlayEffects(ImpactPoint);
 }
 
@@ -227,9 +239,14 @@ void ASlashCharacter::FinishedEquipping()
 	CurrentAction = EActionState::EAS_Unoccupied;
 }
 
+void ASlashCharacter::HitReactionEnd()
+{
+	CurrentAction = EActionState::EAS_Unoccupied;
+}
+
 void ASlashCharacter::PlayEquipMontage(const FName& SectionName)
 {
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	/*UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();*/
 	if (AnimInstance && EquipMontage)
 	{
 		AnimInstance->Montage_Play(EquipMontage);

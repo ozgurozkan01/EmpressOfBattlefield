@@ -8,6 +8,7 @@
 #include "CharacterTypes.h"
 #include "SlashCharacter.generated.h"
 
+class USlashAnimInstance;
 class UGroomComponent;
 class UCameraComponent;
 class USpringArmComponent;
@@ -42,6 +43,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	void GetHit_Implementation(const FVector& ImpactPoint) override;
+	
 	// Callbacks for input
 	void Movement(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
@@ -65,6 +68,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void FinishedEquipping();
+
+	UFUNCTION(BlueprintCallable)
+	void HitReactionEnd();	
 	
 	// Play Montage Functions
 	void PlayEquipMontage(const FName& SectionName);
@@ -108,4 +114,7 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, Category=Montage)
 	TObjectPtr<UAnimMontage> EquipMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category="Animation")
+	TObjectPtr<USlashAnimInstance> AnimInstance;
 };
