@@ -8,8 +8,9 @@
 #include "BaseCharacter.generated.h"
 
 class AWeapon;
-class UAttributeComponent;
 class UAnimMontage;
+class UAttributeComponent;
+class UMotionWarpingComponent;
 
 UCLASS()
 class EMPRESSOFBATTLEFIELD_API ABaseCharacter : public ACharacter, public IHitInterface
@@ -44,6 +45,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UAttributeComponent> AttributeComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UMotionWarpingComponent> MotionWarpingComponent;
 	
 private:
 	

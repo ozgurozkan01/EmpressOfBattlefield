@@ -1,10 +1,9 @@
 #include "BaseCharacter.h"
-
 #include "AttributeComponent.h"
-#include "EnemyAnimInstance.h"
 #include "Components//BoxComponent.h"
 #include "Weapon.h"
 #include "Kismet/GameplayStatics.h"
+#include "MotionWarpingComponent.h"
 
 ABaseCharacter::ABaseCharacter()
 {
@@ -13,6 +12,8 @@ ABaseCharacter::ABaseCharacter()
 	// UActorComponent does not need to attach to the any component
 	AttributeComponent = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attribute Component"));
 	AttackMontageSpeedRate = 1.25f;
+	
+	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
 }
 
 void ABaseCharacter::BeginPlay()
@@ -27,7 +28,6 @@ void ABaseCharacter::BeginPlay()
 
 void ABaseCharacter::Die(FName& SectionName)
 {
-	
 }
 
 double ABaseCharacter::CalculateHitLocationAngle(const FVector& ImpactPoint)
