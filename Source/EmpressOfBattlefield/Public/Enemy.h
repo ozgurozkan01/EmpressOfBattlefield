@@ -7,6 +7,7 @@
 #include "CharacterTypes.h"
 #include "Enemy.generated.h"
 
+class UEnemyAnimInstance;
 class AAIController;
 class ASlashCharacter;
 class UHealthBarComponent;
@@ -25,7 +26,7 @@ public:
 
 	UFUNCTION()
 	void SeePawn(APawn* SeenPawn);
-	void GetHit_Implementation(const FVector& ImpactPoint) override;	
+	void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;	
 	void AttackEnd() override;
 	
 	UPROPERTY(BlueprintReadOnly)
@@ -37,6 +38,9 @@ protected:
 	virtual void BeginPlay() override;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	virtual void Destroyed() override; // When actor is destroyed then this function runs.
+	
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void SetWarpTarget();
 	
 	void Attack();
 	void PlayDeathAnimMontage(const FName& SectionName);
@@ -52,6 +56,7 @@ protected:
 	void SetHealthWidgetInitialProperties();
 	void SetHealthBarVisibility(bool bIsVisible);
 	void AttachDefaultWeaponAtStart();
+	void UpdateLookAtRotation();
 	
 	bool InTargetRange(TObjectPtr<AActor> Target, float Radius);
 	bool ShouldChangePatrolTarget(TObjectPtr<AActor> Target, float Radius);
@@ -60,6 +65,7 @@ protected:
 	bool CanChangePatrolTarget();
 	bool CanChaseTarget();
 	bool CanAttack();
+	bool CanPatrol();
 
 	EDeathPose GetDeathPose(const FName& SectionName);
 
@@ -85,6 +91,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category="Animation | Montage")
 	TObjectPtr<UAnimMontage> UTDDeathAnimMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category="Animation")
+	TObjectPtr<UEnemyAnimInstance> AnimInstance;
 	
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<AAIController> AIController;

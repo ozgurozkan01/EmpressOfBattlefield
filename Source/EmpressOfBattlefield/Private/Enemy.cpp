@@ -7,12 +7,14 @@
 #include "Engine/EngineTypes.h"
 #include "HealthBar.h"
 #include "HealthBarComponent.h"
+#include "MotionWarpingComponent.h"
 #include "SlashCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Navigation/PathFollowingComponent.h"
 #include "TimerManager.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Perception/PawnSensingComponent.h"
 
 AEnemy::AEnemy()
@@ -39,13 +41,13 @@ AEnemy::AEnemy()
 
 	EnemyState = EEnemyState::EES_Patroling;
 	
-	CombatRadius = 1000.f;
-	AttackRadius = 100.f;
+	CombatRadius = 450.f;
+	AttackRadius = 150.f;
 	MinPatrolRadius = 200.f;
 	CurrentTarget = 0;
 	CurrentPatrolTargetIndex = 1;
 	PatrolWaitRate = 2.f;
-	AttackWaitRate = 3.f;
+	AttackWaitRate = 1.5f;
 	PatrollingSpeed = 125.f;
 	ChasingSpeed = 350.f;
 	
@@ -73,17 +75,19 @@ void AEnemy::BeginPlay()
 void AEnemy::Attack()
 {
 	EnemyState = EEnemyState::EES_Engaged;
-	PlayAttackMontage();
+	UpdateLookAtRotation();
+	PlayAttackMontage();;
 }
 
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	DrawDebugSphere(GetWorld(), GetActorLocation(), AttackRadius, 15, FColor::Red);
+	DrawDebugSphere(GetWorld(), GetActorLocation(), CombatRadius, 15, FColor::Green);
 	if (IsAlive())
 	{
 		CheckCurrentTarget();
-		GEngine->AddOnScreenDebugMessage(1, 1, FColor::Cyan, "Alive");
 	}
 }
 
@@ -120,6 +124,11 @@ bool AEnemy::CanAttack()
 	return IsInsideAttackRadius() && CurrentTarget->ActorHasTag("MainPlayer") && EnemyState != EEnemyState::EES_Attacking;
 }
 
+bool AEnemy::CanPatrol()
+{
+	return !IsInsideCombatRadius() && EnemyState != EEnemyState::EES_Patroling;
+}
+
 void AEnemy::ChangePatrolTarget()
 {
 	CurrentTarget = PatrolTargetsContainer[CurrentPatrolTargetIndex];
@@ -133,8 +142,9 @@ void AEnemy::ChangePatrolTarget()
 
 void AEnemy::MoveToTarget(TObjectPtr<AActor> Target)
 {
-	if (!IsAlive() || AIController == nullptr || Target == nullptr) { return; }
-	
+	if (!IsAlive() || AIController == nullptr || Target == nullptr || EnemyState == EEnemyState::EES_Attacking) { return; }
+
+	ClearTimerHandle(AttackTimer); 
 	FAIMoveRequest MoveRequest; 
 	MoveRequest.SetGoalActor(Target);
 	MoveRequest.SetAcceptanceRadius(15.f);
@@ -148,30 +158,32 @@ void AEnemy::PatrolTimerFinished()
 
 void AEnemy::CheckCurrentTarget()
 {
-	if (!IsInsideCombatRadius() && EnemyState == EEnemyState::EES_Chasing)
+	if (CanPatrol())
 	{
 		ClearTimerHandle(AttackTimer);
 		SetHealthBarVisibility(false);
 		Patrolling();
 	}
 
-	else if(CanChangePatrolTarget())
+	if(CanChangePatrolTarget())
 	{
-		ClearTimerHandle(AttackTimer);
 		ChangePatrolTarget();
+		ClearTimerHandle(AttackTimer);
 		GetWorldTimerManager().SetTimer(PatrolTimer, this, &AEnemy::PatrolTimerFinished, PatrolWaitRate);
 	}
 
-	else if (CanAttack())
+	if (CanAttack())
 	{
+		ClearTimerHandle(AttackTimer);
 		StartAttackTimer();
 	}
 
-	else if (CanChaseTarget())
+	if (CanChaseTarget())
 	{
 		ClearTimerHandle(AttackTimer);
 		ChasingTarget();
 	}
+
 }
 
 void AEnemy::Patrolling()
@@ -229,11 +241,19 @@ void AEnemy::AttachDefaultWeaponAtStart()
 	}
 }
 
+void AEnemy::UpdateLookAtRotation()
+{
+	FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), CurrentTarget->GetActorLocation());
+	LookAtRotation.Yaw = GetActorRotation().Yaw;
+	LookAtRotation.Roll = GetActorRotation().Roll; 
+	SetActorRotation(LookAtRotation);
+}
+
 void AEnemy::SeePawn(APawn* SeenPawn)
 {
 	if (!IsAlive() && EnemyState == EEnemyState::EES_Chasing) { return; }
 	
-	if (!IsInsideAttackRadius() && SeenPawn->ActorHasTag(FName("MainPlayer")))
+	if (!IsInsideAttackRadius() && SeenPawn->ActorHasTag(FName("MainPlayer")) && EnemyState != EEnemyState::EES_Attacking)
 	{
 		ClearTimerHandle(PatrolTimer);
 		CurrentTarget = SeenPawn;
@@ -241,50 +261,52 @@ void AEnemy::SeePawn(APawn* SeenPawn)
 	}
 }
 
-void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
+void AEnemy::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
 {
-	double Theta = CalculateHitLocationAngle(ImpactPoint);
+	double Theta;
+	if (Hitter)
+	{
+		Theta = CalculateHitLocationAngle(Hitter->GetActorLocation());
+	}
+
 	FName SectionName = DetermineWhichSideGetHit(Theta);
 
-
+	AnimInstance = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
+	
 	SetHealthBarVisibility(true);
 	
-	if (IsAlive() && EnemyState != EEnemyState::EES_Dead)
+	if (IsAlive() && AnimInstance && EnemyState != EEnemyState::EES_Dead)
 	{
-		PlayHitReactionMontage(SectionName);
+		PlayHitReactionMontage(SectionName, AnimInstance);
 	}
 
 	else
 	{
-		ClearTimerHandle(AttackTimer);
-		ClearTimerHandle(PatrolTimer);
-		EnemyState = EEnemyState::EES_Dead;
 		Die(SectionName);
 	}
 
 	PlayEffects(ImpactPoint);
+	ClearTimerHandle(PatrolTimer);
+	ClearTimerHandle(AttackTimer);
 }
 
 void AEnemy::AttackEnd()
 {
 	Super::AttackEnd();
-	EnemyState = EEnemyState::EES_NoState;
+	ClearTimerHandle(AttackTimer);
 	CheckCurrentTarget();
 }
 
 void AEnemy::PlayDeathAnimMontage(const FName& SectionName)
 {
-	TObjectPtr<UEnemyAnimInstance> AnimInstance = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
+	/*TObjectPtr<UEnemyAnimInstance> AnimInstance = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());*/
 	TObjectPtr<ASlashCharacter> SlashCharacter = Cast<ASlashCharacter>(CurrentTarget);
 	
-	if (AnimInstance == nullptr && SlashCharacter == nullptr) { return; }
+	if (AnimInstance == nullptr || SlashCharacter == nullptr) { return; }
 	
-	if (SlashCharacter)
-	{
-		AnimInstance->AttackType = SlashCharacter->AttackType;
-	}
+	AnimInstance->AttackType = SlashCharacter->AttackType;
 	
-	if (SlashCharacter && SlashCharacter->AttackType == EAttackType::EAT_RightToLeft && RTLDeathAnimMontage)
+	if (SlashCharacter->AttackType == EAttackType::EAT_RightToLeft && RTLDeathAnimMontage)
 	{
 		AnimInstance->Montage_Play(RTLDeathAnimMontage);
 		AnimInstance->Montage_JumpToSection(SectionName, RTLDeathAnimMontage);
@@ -301,14 +323,20 @@ void AEnemy::PlayDeathAnimMontage(const FName& SectionName)
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
                          AActor* DamageCauser)
 {
-	if (AttributeComponent &&
-		HealthBarWidgetComponent &&
-		HealthBarWidgetComponent->GetHealthBarWidget())
+	if (AttributeComponent == nullptr || HealthBarWidgetComponent == nullptr || HealthBarWidgetComponent->GetHealthBarWidget() == nullptr) return 0;
+	
+	AttributeComponent->SetCurrentHealth(DamageAmount);
+	HealthBarWidgetComponent->SetHealthPercent(AttributeComponent->GetHealthPercentage());
+	HealthBarWidgetComponent->GetHealthBarWidget()->SetHealthBarColor(DamageAmount);
+	CurrentTarget = Cast<ASlashCharacter>(EventInstigator->GetPawn());
+
+	if (IsInsideAttackRadius())
 	{
-		AttributeComponent->SetCurrentHealth(DamageAmount);
-		HealthBarWidgetComponent->SetHealthPercent(AttributeComponent->GetHealthPercentage());
-		HealthBarWidgetComponent->GetHealthBarWidget()->SetHealthBarColor(DamageAmount);
-		CurrentTarget = Cast<ASlashCharacter>(EventInstigator->GetPawn());
+		EnemyState = EEnemyState::EES_Attacking;
+	}
+		
+	if (!IsInsideAttackRadius())
+	{
 		ChasingTarget();
 	}
 	return DamageAmount;
@@ -321,6 +349,15 @@ void AEnemy::Destroyed()
 	if (EquippedWeapon)
 	{
 		EquippedWeapon->Destroy();
+	}
+}
+
+void AEnemy::SetWarpTarget_Implementation()
+{
+	if (MotionWarpingComponent && CurrentTarget && CurrentTarget->ActorHasTag("MainPlayer"))
+	{
+		FTransform CombatTransform = CurrentTarget->GetTransform();
+		MotionWarpingComponent->AddOrUpdateWarpTargetFromTransform(FName("CombatTarget"), CombatTransform);
 	}
 }
 
@@ -354,10 +391,12 @@ bool AEnemy::InTargetRange(TObjectPtr<AActor> Target, float Radius)
 
 void AEnemy::Die(FName& SectionName)
 {
+	SetWeaponDamageBoxCollision(ECollisionEnabled::NoCollision);
 	PlayDeathAnimMontage(SectionName);
 	DeathPose = GetDeathPose(SectionName);
 	SetHealthBarVisibility(false);
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	EnemyState = EEnemyState::EES_Dead;
 	SetLifeSpan(5.f); // Destroy actor after 5 seconds.
 }
