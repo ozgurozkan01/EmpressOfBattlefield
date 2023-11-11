@@ -40,6 +40,9 @@ AWeapon::AWeapon()
 void AWeapon::BeginPlay()
 {
 	Super::BeginPlay();
+
+	Tags.Add(FName("Enemy"));
+	
 	MetaDataFilter->ObjectType = EFieldObjectType::Field_Object_Destruction;
 	MetaDataFilter->FilterType = EFieldFilterType::Field_Filter_Dynamic;
 	DamageBox->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::OnDamageBoxOverlapBegin);
@@ -89,24 +92,41 @@ void AWeapon::CreateFields(const FVector& FieldLocation)
 	}
 }
 
-void AWeapon::OverlappingBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+bool AWeapon::ActorHasSameTag(AActor* OtherActor)
 {
-	Super::OverlappingBegin(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
-}
-
-void AWeapon::OverlappingEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	Super::OverlappingEnd(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex);
+	return GetOwner()->ActorHasTag("Enemy") && OtherActor->ActorHasTag("Enemy");
 }
 
 void AWeapon::OnDamageBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                                      UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (ActorHasSameTag(OtherActor)) return;
+	
+	GEngine->AddOnScreenDebugMessage(1, 10, FColor::Cyan, "OnOverlap");
+
+	FHitResult BoxHit;
+	BoxTrace(BoxHit);
+	
+	if (BoxHit.GetActor())
+	{
+		// When actor is hitting the different type object , the actor has same tag at nearby the actor which is hitting,
+		// can effect. Because the collision on the weapon might not be deactivated.
+		// Because of that we check the hit actor
+		if (ActorHasSameTag(BoxHit.GetActor())) return; 
+		UGameplayStatics::ApplyDamage(BoxHit.GetActor(), Damage, GetInstigator()->GetController(), this, UDamageType::StaticClass());
+				// if hit object inherites from IHitInterface, then call the methods,
+		// But this method belongs to hit objects own. So we do not need to cast
+		// specific classes like actor, character etc.
+		ExecuteGetHit(BoxHit);
+		CreateFields(BoxHit.ImpactPoint);
+	}
+}
+
+void AWeapon::BoxTrace(FHitResult& BoxHit)
 {
 	const FVector Start = TraceStart->GetComponentLocation();
 	const FVector End = TraceEnd->GetComponentLocation();
-
-	FHitResult BoxHit;
-
+	
 	UKismetSystemLibrary::BoxTraceSingle(
 		this,
 		Start,
@@ -121,26 +141,17 @@ void AWeapon::OnDamageBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 		true
 		);
 
-	if (BoxHit.GetActor())
-	{
-		UGameplayStatics::ApplyDamage(
-		BoxHit.GetActor(),
-		Damage,
-		GetInstigator()->GetController(),
-		this,
-		UDamageType::StaticClass()
-		);
-		// if hit object inherites from IHitInterface, then call the methods,
-		// But this method belongs to hit objects own. So we do not need to cast
-		// specific classes like actor, character etc.
-		IHitInterface* HitInterface = Cast<IHitInterface>(BoxHit.GetActor());
-		if (HitInterface)
-		{
-			HitInterface->Execute_GetHit(BoxHit.GetActor(), BoxHit.ImpactPoint);
-		}
+	IgnoredActors.AddUnique(BoxHit.GetActor());
+}
 
-		IgnoredActors.AddUnique(BoxHit.GetActor());
-		CreateFields(BoxHit.ImpactPoint);
+void AWeapon::ExecuteGetHit(FHitResult& BoxHit)
+{
+	IHitInterface* HitInterface = Cast<IHitInterface>(BoxHit.GetActor());
+	GEngine->AddOnScreenDebugMessage(1, 10, FColor::Cyan, "GetHit");
+	if (HitInterface)
+	{
+		GEngine->AddOnScreenDebugMessage(1, 10, FColor::Cyan, "HitInterface");
+		HitInterface->Execute_GetHit(BoxHit.GetActor(), BoxHit.ImpactPoint, GetOwner());
 	}
 }
 

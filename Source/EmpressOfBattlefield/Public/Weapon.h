@@ -26,20 +26,21 @@ public:
 	void AttachMeshToSocket(USceneComponent* InParent, FName InSocketName);
 	void Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator);
 	void CreateFields(const FVector& FieldLocation);
-	
+	bool ActorHasSameTag(AActor* OtherActor);
+
 	UPROPERTY()
 	TArray<AActor*> IgnoredActors;
 protected:
 
 	virtual void BeginPlay() override;
 
-	void OverlappingBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult) override;
-	void OverlappingEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) override;
-
 	UFUNCTION()
 	void OnDamageBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResul);
 private:
 
+	void BoxTrace(FHitResult& BoxHit);
+	void ExecuteGetHit(FHitResult& BoxHit);
+	
 	UPROPERTY(EditDefaultsOnly, Category="Equip Sound")
 	TObjectPtr<USoundBase> EquipSound;
 
