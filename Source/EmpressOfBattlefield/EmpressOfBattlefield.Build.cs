@@ -8,7 +8,8 @@ public class EmpressOfBattlefield : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "HairStrandsCore", "Niagara", "GeometryCollectionEngine", "ChaosSolverEngine", "UMG", "AIModule"});
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "HairStrandsCore", 
+			"Niagara", "GeometryCollectionEngine", "ChaosSolverEngine", "UMG", "AIModule", "MotionWarping"});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
