@@ -43,7 +43,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	void GetHit_Implementation(const FVector& ImpactPoint) override;
+	void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 	
 	// Callbacks for input
 	void Movement(const FInputActionValue& Value);

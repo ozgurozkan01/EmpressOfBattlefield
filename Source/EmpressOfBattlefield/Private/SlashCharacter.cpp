@@ -78,14 +78,23 @@ void ASlashCharacter::BeginPlay()
 	}
 }
 
-void ASlashCharacter::GetHit_Implementation(const FVector& ImpactPoint)
+void ASlashCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
 {
 	AnimInstance = Cast<USlashAnimInstance>(GetMesh()->GetAnimInstance());
-
 	CurrentAction = EActionState::EAS_HitReaction;
+
+	// If player gets hit, weapon collision cannot be deactivated.
+	SetWeaponDamageBoxCollision(ECollisionEnabled::NoCollision);
+
+	double Theta;
+
+	if (Hitter)
+	{
+		Theta = CalculateHitLocationAngle(Hitter->GetActorLocation());
+	}
 	
-	double Theta = CalculateHitLocationAngle(ImpactPoint);
-	FName SectionName = DetermineWhichSideGetHit(Theta);	
+	FName SectionName = DetermineWhichSideGetHit(Theta);
+	
 	if (IsAlive() && AnimInstance)
 	{
 		PlayHitReactionMontage(SectionName, AnimInstance);
