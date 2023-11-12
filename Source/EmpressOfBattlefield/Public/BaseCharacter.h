@@ -23,19 +23,36 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void SetWeaponDamageBoxCollision(ECollisionEnabled::Type CollisionEnabled);
-	
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<AActor> CurrentTarget;
 protected:
+
+	/**	Virtual Functions */
 	virtual void BeginPlay() override;
 	virtual void Die(FName& SectionName);
+	virtual void PlayAttackMontage();
 
+	UFUNCTION(BlueprintCallable)
+	virtual void AttackEnd();
+	
 	double CalculateHitLocationAngle(const FVector& ImpactPoint);
 	FName DetermineWhichSideGetHit(const double& Theta);
 	
 	UFUNCTION(BlueprintCallable)
-	virtual void AttackEnd();
+	FVector GetTranslationWarpTarget();
 
+	UFUNCTION(BlueprintCallable)
+	FVector GetRotationWarpTarget();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void SetWarpTranslation();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void SetWarpRotation();
+	
 	void PlayHitReactionMontage(const FName& SectionName, UAnimInstance* AnimInstance);
-	virtual void PlayAttackMontage();
 	void PlayEffects(const FVector& ImpactPoint);
 	
 	bool IsAlive();
@@ -48,6 +65,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UMotionWarpingComponent> MotionWarpingComponent;
+
 	
 private:
 	
@@ -56,13 +74,16 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category="Particle Effect")
 	TObjectPtr<UParticleSystem> HitParticle;
-
-	UPROPERTY(VisibleAnywhere, Category=Montage)
-	float AttackMontageSpeedRate;
-
+	
 	UPROPERTY(EditDefaultsOnly, Category=Montage)
 	TObjectPtr<UAnimMontage> AttackMontage;
 	
 	UPROPERTY(EditDefaultsOnly, Category="Animation | Montage")
 	TObjectPtr<UAnimMontage> HitReactionMontage;
+
+	UPROPERTY(VisibleAnywhere, Category=Montage)
+	float AttackMontageSpeedRate;
+
+	UPROPERTY(VisibleAnywhere, Category=Montage)
+	float WarpingDistance;
 };

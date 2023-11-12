@@ -1,4 +1,6 @@
 #include "SlashCharacter.h"
+
+#include "AttributeComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
@@ -126,6 +128,16 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		EnhancedInputComponent->BindAction(EquipWeaponAction, ETriggerEvent::Started, this, &ASlashCharacter::EKeyPressed);
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Attack);
 	}
+}
+
+float ASlashCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+	AActor* DamageCauser)
+{
+	if (AttributeComponent == nullptr) return 0.f;
+
+	AttributeComponent->SetCurrentHealth(DamageAmount);
+	
+	return DamageAmount;
 }
 
 FRotator ASlashCharacter::GetLookAtRotation()
