@@ -30,7 +30,7 @@ public:
 
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
 	FORCEINLINE ECharacterState GetCharacterCurrentState() const { return CurrentState; }
-	
+
 	UPROPERTY(VisibleAnywhere)
 	ECharacterState CurrentState;
 
@@ -42,7 +42,8 @@ public:
 	
 protected:
 	virtual void BeginPlay() override;
-
+	virtual void Tick(float DeltaSeconds) override;
+	
 	void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 	
 	// Callbacks for input
@@ -53,7 +54,8 @@ protected:
 	void Attack(const FInputActionValue& Value);
 
 	void EquipWeapon(AWeapon* Weapon);
-	
+	FRotator GetLookAtRotation();
+
 	bool CanArm();
 	bool CanDisarm();
 	void Arm();
@@ -71,6 +73,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void HitReactionEnd();	
+
 	
 	// Play Montage Functions
 	void PlayEquipMontage(const FName& SectionName);
@@ -117,4 +120,10 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category="Animation")
 	TObjectPtr<USlashAnimInstance> AnimInstance;
+
+	UPROPERTY(EditAnywhere)
+	float RotationInterpSpeed;
+
+	UPROPERTY(EditAnywhere)
+	bool bCanRotateTarget;
 };
