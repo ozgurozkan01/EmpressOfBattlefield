@@ -39,9 +39,6 @@ protected:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	virtual void Destroyed() override; // When actor is destroyed then this function runs.
 	
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void SetWarpTarget();
-	
 	void Attack();
 	void PlayDeathAnimMontage(const FName& SectionName);
 	void Die(FName& SectionName) override;
@@ -56,7 +53,6 @@ protected:
 	void SetHealthWidgetInitialProperties();
 	void SetHealthBarVisibility(bool bIsVisible);
 	void AttachDefaultWeaponAtStart();
-	void UpdateLookAtRotation();
 	
 	bool InTargetRange(TObjectPtr<AActor> Target, float Radius);
 	bool ShouldChangePatrolTarget(TObjectPtr<AActor> Target, float Radius);
@@ -70,9 +66,6 @@ protected:
 	EDeathPose GetDeathPose(const FName& SectionName);
 
 private:
-
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<AActor> CurrentTarget;
 
 	UPROPERTY(EditAnywhere)
 	TArray<TObjectPtr<AActor>> PatrolTargetsContainer;
