@@ -1,8 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Weapon.h"
-
 #include "HitInterface.h"
 #include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
