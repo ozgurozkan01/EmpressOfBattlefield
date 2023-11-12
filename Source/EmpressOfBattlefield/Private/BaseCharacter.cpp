@@ -14,6 +14,8 @@ ABaseCharacter::ABaseCharacter()
 	AttackMontageSpeedRate = 1.25f;
 	
 	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
+
+	WarpingDistance = 100.f;
 }
 
 void ABaseCharacter::BeginPlay()
@@ -72,6 +74,31 @@ FName ABaseCharacter::DetermineWhichSideGetHit(const double& Theta)
 	return Section;
 }
 
+FVector ABaseCharacter::GetTranslationWarpTarget()
+{
+	if (CurrentTarget == nullptr || !CurrentTarget->ActorHasTag("MainPlayer")) { return FVector(); }
+
+	const FVector TargetLocation = CurrentTarget->GetActorLocation();
+	const FVector OwnerLocation = GetActorLocation();
+
+	FVector Direction = (OwnerLocation - TargetLocation).GetSafeNormal();
+	Direction *= WarpingDistance;
+
+	DrawDebugSphere(GetWorld(), TargetLocation + Direction, 14, 14, FColor::Red, false, 15.f);
+	
+	return TargetLocation + Direction;
+}
+
+FVector ABaseCharacter::GetRotationWarpTarget()
+{
+	if (CurrentTarget)
+	{
+		return CurrentTarget->GetActorLocation();
+	}
+
+	return FVector();
+}
+
 void ABaseCharacter::AttackEnd()
 {
 	
@@ -128,5 +155,29 @@ void ABaseCharacter::SetWeaponDamageBoxCollision(ECollisionEnabled::Type Collisi
 	{
 		EquippedWeapon->GetDamageBox()->SetCollisionEnabled(CollisionEnabled);
 		EquippedWeapon->IgnoredActors.Empty();
+	}
+}
+
+float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+	AActor* DamageCauser)
+{
+	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+}
+
+void ABaseCharacter::SetWarpRotation_Implementation()
+{
+	if (MotionWarpingComponent && CurrentTarget)
+	{
+		FVector WarpTargetLocation = GetRotationWarpTarget();
+		MotionWarpingComponent->AddOrUpdateWarpTargetFromLocation(FName("RotationTarget"), WarpTargetLocation);
+	}
+}
+
+void ABaseCharacter::SetWarpTranslation_Implementation()
+{
+	if (MotionWarpingComponent && CurrentTarget && CurrentTarget->ActorHasTag("MainPlayer"))
+	{
+		FVector WarpTargetLocation = GetTranslationWarpTarget();
+		MotionWarpingComponent->AddOrUpdateWarpTargetFromLocation(FName("TranslationTarget"), WarpTargetLocation);
 	}
 }
