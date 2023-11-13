@@ -232,7 +232,7 @@ void AEnemy::SetHealthBarVisibility(bool bIsVisible)
 
 void AEnemy::AttachDefaultWeaponAtStart()
 {
-	if (GetWorld())
+	if (GetWorld() && WeaponClass)
 	{
 		TObjectPtr<AWeapon> DefaultWeapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass);
 		DefaultWeapon->Equip(GetMesh(), FName("WeaponSocket"), this, this);
