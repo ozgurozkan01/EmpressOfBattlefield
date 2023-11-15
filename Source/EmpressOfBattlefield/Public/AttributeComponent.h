@@ -19,6 +19,8 @@ public:
 	float GetHealthPercentage();
 	// Setter
 	void SetCurrentHealth(float Damage);
+
+	void ActivateRagdoll();
 protected:
 	virtual void BeginPlay() override;
 

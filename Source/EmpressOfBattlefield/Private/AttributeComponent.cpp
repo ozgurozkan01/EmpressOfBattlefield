@@ -1,5 +1,7 @@
 #include "AttributeComponent.h"
 
+#include "GameFramework/Character.h"
+
 UAttributeComponent::UAttributeComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
@@ -32,4 +34,22 @@ float UAttributeComponent::GetHealthPercentage()
 void UAttributeComponent::SetCurrentHealth(float Damage)
 {
 	CurrentHealth = FMath::Clamp(CurrentHealth - Damage, 0.f, MaxHealth);
+}
+
+void UAttributeComponent::ActivateRagdoll()
+{
+	TObjectPtr<ACharacter> Owner = Cast<ACharacter>(GetOwner());
+	if (Owner)
+	{
+		if (Owner->GetController())
+		{
+			Owner->GetController()->SetIgnoreMoveInput(false);
+		}
+
+		if (Owner->GetMesh())
+		{
+			Owner->GetMesh()->SetAllBodiesSimulatePhysics(true);
+			Owner->GetMesh()->WakeAllRigidBodies();
+		}
+	}
 }
