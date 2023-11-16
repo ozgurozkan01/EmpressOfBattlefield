@@ -79,8 +79,6 @@ void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	DrawDebugSphere(GetWorld(), GetActorLocation(), AttackRadius, 15, FColor::Red);
-	DrawDebugSphere(GetWorld(), GetActorLocation(), CombatRadius, 15, FColor::Green);
 	if (IsAlive())
 	{
 		CheckCurrentTarget();
@@ -102,21 +100,29 @@ bool AEnemy::IsInsideAttackRadius()
 
 bool AEnemy::IsInsideCombatRadius()
 {
+	if (CurrentTarget == nullptr) { return false;}
+
 	return InTargetRange(CurrentTarget, CombatRadius);
 }
 
 bool AEnemy::CanChangePatrolTarget()
 {
+	if (CurrentTarget == nullptr) { return false;}
+
 	return ShouldChangePatrolTarget(CurrentTarget, MinPatrolRadius) && EnemyState == EEnemyState::EES_Patroling;
 }
 
 bool AEnemy::CanChaseTarget()
 {
+	if (CurrentTarget == nullptr) { return false;}
+	
 	return !IsInsideAttackRadius() && CurrentTarget->ActorHasTag("MainPlayer") && EnemyState == EEnemyState::EES_Attacking;
 }
 
 bool AEnemy::CanAttack()
 {
+	if (CurrentTarget == nullptr) { return false;}
+
 	return IsInsideAttackRadius() && CurrentTarget->ActorHasTag("MainPlayer") && EnemyState != EEnemyState::EES_Attacking;
 }
 
@@ -127,6 +133,8 @@ bool AEnemy::CanPatrol()
 
 void AEnemy::ChangePatrolTarget()
 {
+	if (CurrentTarget == nullptr) { return; }
+	
 	CurrentTarget = PatrolTargetsContainer[CurrentPatrolTargetIndex];
 	CurrentPatrolTargetIndex++;
 
@@ -387,8 +395,13 @@ void AEnemy::Die(FName& SectionName)
 {
 	EnemyState = EEnemyState::EES_Dead;
 	DeathPose = GetDeathPose(SectionName);
-	
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	
+	if (AttributeComponent)
+	{
+		AttributeComponent->ActivateRagdoll();
+	}
+		
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	PlayDeathAnimMontage(SectionName);

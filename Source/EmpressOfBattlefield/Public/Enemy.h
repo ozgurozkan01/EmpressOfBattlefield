@@ -14,6 +14,7 @@ class UHealthBarComponent;
 class UUserWidget;
 class UAnimMontage;
 class UPawnSensingComponent;
+class UPhysicsAsset;
 
 UCLASS()
 class EMPRESSOFBATTLEFIELD_API AEnemy : public ABaseCharacter
