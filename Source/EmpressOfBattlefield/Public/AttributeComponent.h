@@ -20,6 +20,7 @@ public:
 	// Setter
 	void SetCurrentHealth(float Damage);
 
+	UFUNCTION(BlueprintCallable)
 	void ActivateRagdoll();
 protected:
 	virtual void BeginPlay() override;

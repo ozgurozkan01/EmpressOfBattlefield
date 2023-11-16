@@ -1,5 +1,6 @@
 #include "AttributeComponent.h"
 
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/Character.h"
 
 UAttributeComponent::UAttributeComponent()
@@ -39,17 +40,18 @@ void UAttributeComponent::SetCurrentHealth(float Damage)
 void UAttributeComponent::ActivateRagdoll()
 {
 	TObjectPtr<ACharacter> Owner = Cast<ACharacter>(GetOwner());
+
 	if (Owner)
 	{
 		if (Owner->GetController())
 		{
-			Owner->GetController()->SetIgnoreMoveInput(false);
+			Owner->GetController()->SetIgnoreMoveInput(true);
 		}
 
 		if (Owner->GetMesh())
 		{
+			Owner->GetMesh()->SetCollisionProfileName(FName("Ragdoll"), true);
 			Owner->GetMesh()->SetAllBodiesSimulatePhysics(true);
-			Owner->GetMesh()->WakeAllRigidBodies();
 		}
 	}
 }
