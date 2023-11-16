@@ -60,7 +60,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category="Item | Weapon")
 	TObjectPtr<AWeapon> EquippedWeapon;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UAttributeComponent> AttributeComponent;
 
 	UPROPERTY(VisibleAnywhere)
