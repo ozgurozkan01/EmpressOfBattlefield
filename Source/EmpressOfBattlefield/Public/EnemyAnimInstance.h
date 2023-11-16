@@ -17,7 +17,7 @@ public:
 	void NativeInitializeAnimation() override;
 
 	void NativeThreadSafeUpdateAnimation(float DeltaSeconds) override;
-
+	
 	UPROPERTY(BlueprintReadOnly)
 	EAttackType AttackType;
 protected:
@@ -30,7 +30,7 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite)
 	EEnemyState EnemyState;
-	
+
 	UPROPERTY(BlueprintReadOnly)
 	float GroundSpeed;
 
