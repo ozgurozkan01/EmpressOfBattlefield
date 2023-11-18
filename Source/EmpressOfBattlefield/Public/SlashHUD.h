@@ -18,10 +18,14 @@ class EMPRESSOFBATTLEFIELD_API ASlashHUD : public AHUD
 public:
 
 	void BeginPlay() override;
-	
+
+	FORCEINLINE TObjectPtr<USlashOverlay> GetSlashOverlay() { return SlashOverlay; };
+
 private:
 
 	UPROPERTY(EditDefaultsOnly, Category="HUD")
 	TSubclassOf<USlashOverlay> SlashOverlayWidget;
-	
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<USlashOverlay> SlashOverlay;
 };

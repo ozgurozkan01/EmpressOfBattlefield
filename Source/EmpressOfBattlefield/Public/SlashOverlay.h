@@ -15,7 +15,6 @@ class EMPRESSOFBATTLEFIELD_API USlashOverlay : public UUserWidget
 	GENERATED_BODY()
 
 public:
-
 	void SetHealthBarPercentage(float Percentage);
 	void SetStaminaBarPercentage(float Percentage);
 	void SetGoldCount(int32 Gold);

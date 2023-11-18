@@ -35,5 +35,5 @@ void USlashOverlay::SetSoulsCount(int32 Souls)
 
 	const FString SoulsCountString = FString::Printf(TEXT("%d"), Souls);
 	const FText SoulsCount = FText::FromString(SoulsCountString);
-	GoldText->SetText(SoulsCount);
+	SoulsText->SetText(SoulsCount);
 }
