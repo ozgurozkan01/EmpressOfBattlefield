@@ -39,7 +39,7 @@ AEnemy::AEnemy()
 	EnemyState = EEnemyState::EES_Patroling;
 	
 	CombatRadius = 450.f;
-	AttackRadius = 150.f;
+	AttackRadius = 200.f;
 	MinPatrolRadius = 200.f;
 	CurrentTarget = 0;
 	CurrentPatrolTargetIndex = 1;
