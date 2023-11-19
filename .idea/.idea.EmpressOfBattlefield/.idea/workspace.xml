@@ -10,16 +10,45 @@
     <list default="true" id="fc94a891-8384-4775-afe2-ea58bce52809" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.EmpressOfBattlefield/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.EmpressOfBattlefield/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Config/DefaultEditor.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEditor.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Enemy/Animations/AnimBP/ABP_Paladin.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Enemy/Animations/AnimBP/ABP_Paladin.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Enemy/BP_Enemy.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Enemy/BP_Enemy.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/AncientContent/Characters/Echo/Meshes/Echo_Skeleton.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Assets/AncientContent/Characters/Echo/Meshes/Echo_Skeleton.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Character/Animations/AnimBP/ABP_SlashCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Character/Animations/AnimBP/ABP_SlashCharacter.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Character/Animations/AnimBP/ABP_Slash_IKControl.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Character/Animations/AnimBP/ABP_Slash_IKControl.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Character/Animations/AnimBP/ABP_Slash_Movement.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Character/Animations/AnimBP/ABP_Slash_Movement.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Character/Animations/AnimMontage/AM_AttackMontage.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Character/Animations/AnimMontage/AM_Equip.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Character/Animations/Animation/Equip.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Character/Animations/Animation/Great_Sword_Idle__1_.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Character/Animations/Animation/Great_Sword_Run__1_.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Character/Animations/Animation/Standard_Run.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Character/Animations/Animation/Standing_Idle.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Character/Animations/Animation/Standing_Idle1.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Character/Animations/Animation/Standing_Melee_Attack_360_High.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Character/Animations/Animation/Standing_Melee_Attack_Downward.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Character/Animations/Animation/Standing_Melee_Attack_Horizontal.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Character/Animations/Animation/Sword_And_Shield_Run__1_.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Character/Animations/Animation/Unequip.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Character/BP_SlashCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Character/BP_SlashCharacter.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Enemy/BP_BaseEnemy.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Enemy/BP_BaseEnemy.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Enemy/Paladın/Animations/AnimBP/ABP_Paladin.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Enemy/Paladın/Animations/AnimBP/ABP_Paladin.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Enemy/Paladın/Animations/Animations/Idle.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Enemy/Paladın/Animations/Animations/Idle.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Enemy/Paladın/BP_Paladin.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Enemy/Paladın/BP_Paladin.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Enemy/Paladın/Mesh/PA_Palading.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Enemy/Paladın/Mesh/PA_Palading.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Enemy/Paladın/Mesh/SKM_Paladin.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Enemy/Paladın/Mesh/SKM_Paladin.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Enemy/Paladın/Mesh/SK_Paladin.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Enemy/Paladın/Mesh/SK_Paladin.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/GameMode/BP_DefaultGameModeBase.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/GameMode/BP_DefaultGameModeBase.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Blueprints/Item/Weapon/BP_Sword.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Item/Weapon/BP_Sword.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/HUD/WBP_HealthBar.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/HUD/WBP_HealthBar.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/MSPresets/M_MS_Default_Material/M_MS_Default_Material.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/MSPresets/M_MS_Default_Material/M_MS_Default_Material.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/MainMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/MainMap.umap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Megascans/3D_Assets/Modular_Stone_Wall_xfxobiziy/MI_Modular_Stone_Wall_xfxobiziy_2K.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Megascans/3D_Assets/Modular_Stone_Wall_xfxobiziy/MI_Modular_Stone_Wall_xfxobiziy_2K.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/Enemy.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/Enemy.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/AttributeComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/AttributeComponent.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/BaseCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/BaseCharacter.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/HealthBarComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/HealthBarComponent.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/SlashCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Private/SlashCharacter.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/AttributeComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/AttributeComponent.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/BaseCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/BaseCharacter.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/Enemy.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/Enemy.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/SlashCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EmpressOfBattlefield/Public/SlashCharacter.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -224,7 +253,53 @@
       <workItem from="1697789533048" duration="3538000" />
       <workItem from="1697827650337" duration="593000" />
       <workItem from="1697872834146" duration="14100000" />
-      <workItem from="1697917049188" duration="1530000" />
+      <workItem from="1697917049188" duration="3944000" />
+      <workItem from="1697954811671" duration="6885000" />
+      <workItem from="1698073997368" duration="13305000" />
+      <workItem from="1698122374776" duration="3006000" />
+      <workItem from="1698136461408" duration="760000" />
+      <workItem from="1698138114331" duration="1320000" />
+      <workItem from="1698161921387" duration="327000" />
+      <workItem from="1698166823404" duration="4350000" />
+      <workItem from="1698209506402" duration="2391000" />
+      <workItem from="1698305228710" duration="2388000" />
+      <workItem from="1698310193850" duration="1346000" />
+      <workItem from="1698324394822" duration="2617000" />
+      <workItem from="1698397138037" duration="594000" />
+      <workItem from="1698480860543" duration="1105000" />
+      <workItem from="1698515484859" duration="3443000" />
+      <workItem from="1698570360436" duration="7543000" />
+      <workItem from="1698643723777" duration="828000" />
+      <workItem from="1698697935937" duration="19000" />
+      <workItem from="1698957161168" duration="2526000" />
+      <workItem from="1698999408668" duration="2020000" />
+      <workItem from="1699053421537" duration="923000" />
+      <workItem from="1699291871759" duration="4541000" />
+      <workItem from="1699301586317" duration="655000" />
+      <workItem from="1699345939453" duration="1750000" />
+      <workItem from="1699348286040" duration="2786000" />
+      <workItem from="1699375773968" duration="5118000" />
+      <workItem from="1699427083874" duration="9241000" />
+      <workItem from="1699511405422" duration="1591000" />
+      <workItem from="1699523398695" duration="1217000" />
+      <workItem from="1699547914636" duration="2438000" />
+      <workItem from="1699597627031" duration="4489000" />
+      <workItem from="1699620366321" duration="1547000" />
+      <workItem from="1699648657735" duration="1785000" />
+      <workItem from="1699690519848" duration="956000" />
+      <workItem from="1699691782691" duration="15771000" />
+      <workItem from="1699777791142" duration="17037000" />
+      <workItem from="1699994378294" duration="1291000" />
+      <workItem from="1700035803570" duration="6513000" />
+      <workItem from="1700045898691" duration="317000" />
+      <workItem from="1700081438775" duration="3514000" />
+      <workItem from="1700114751261" duration="4204000" />
+      <workItem from="1700141257876" duration="210000" />
+      <workItem from="1700148050323" duration="3433000" />
+      <workItem from="1700204593397" duration="3960000" />
+      <workItem from="1700232112215" duration="7449000" />
+      <workItem from="1700333956941" duration="1558000" />
+      <workItem from="1700336374470" duration="1197000" />
     </task>
     <servers />
   </component>
