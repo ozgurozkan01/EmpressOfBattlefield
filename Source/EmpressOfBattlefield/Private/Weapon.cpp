@@ -98,8 +98,6 @@ void AWeapon::OnDamageBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 {
 	if (ActorHasSameTag(OtherActor)) return;
 	
-	GEngine->AddOnScreenDebugMessage(1, 10, FColor::Cyan, "OnOverlap");
-
 	FHitResult BoxHit;
 	BoxTrace(BoxHit);
 	
@@ -110,7 +108,7 @@ void AWeapon::OnDamageBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 		// Because of that we check the hit actor
 		if (ActorHasSameTag(BoxHit.GetActor())) return; 
 		UGameplayStatics::ApplyDamage(BoxHit.GetActor(), Damage, GetInstigator()->GetController(), this, UDamageType::StaticClass());
-				// if hit object inherites from IHitInterface, then call the methods,
+		// if hit object inherites from IHitInterface, then call the methods,
 		// But this method belongs to hit objects own. So we do not need to cast
 		// specific classes like actor, character etc.
 		ExecuteGetHit(BoxHit);
@@ -143,10 +141,8 @@ void AWeapon::BoxTrace(FHitResult& BoxHit)
 void AWeapon::ExecuteGetHit(FHitResult& BoxHit)
 {
 	IHitInterface* HitInterface = Cast<IHitInterface>(BoxHit.GetActor());
-	GEngine->AddOnScreenDebugMessage(1, 10, FColor::Cyan, "GetHit");
 	if (HitInterface)
 	{
-		GEngine->AddOnScreenDebugMessage(1, 10, FColor::Cyan, "HitInterface");
 		HitInterface->Execute_GetHit(BoxHit.GetActor(), BoxHit.ImpactPoint, GetOwner());
 	}
 }
