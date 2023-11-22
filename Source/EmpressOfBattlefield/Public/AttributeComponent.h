@@ -32,5 +32,10 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category="Custom Attributes")
 	float MaxHealth;
-	
+
+	UPROPERTY(EditDefaultsOnly, Category="Custom Attributes")
+	float CurrentStamina;
+
+	UPROPERTY(EditDefaultsOnly, Category="Custom Attributes")
+	float MaxStamina;
 };

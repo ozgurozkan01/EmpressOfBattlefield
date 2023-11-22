@@ -9,6 +9,9 @@ UAttributeComponent::UAttributeComponent()
 
 	MaxHealth = 100.f;
 	CurrentHealth = MaxHealth;
+	MaxStamina = 150.f;
+	CurrentStamina = MaxStamina;
+	
 }
 
 void UAttributeComponent::BeginPlay()
