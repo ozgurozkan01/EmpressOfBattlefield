@@ -24,6 +24,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetWeaponDamageBoxCollision(ECollisionEnabled::Type CollisionEnabled);
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+	bool IsAlive();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<AActor> CurrentTarget;
@@ -55,8 +56,6 @@ protected:
 	void PlayHitReactionMontage(const FName& SectionName, UAnimInstance* AnimInstance);
 	void PlayEffects(const FVector& ImpactPoint);
 	
-	bool IsAlive();
-	
 	UPROPERTY(VisibleAnywhere, Category="Item | Weapon")
 	TObjectPtr<AWeapon> EquippedWeapon;
 
@@ -84,6 +83,6 @@ private:
 	UPROPERTY(VisibleAnywhere, Category=Montage)
 	float AttackMontageSpeedRate;
 
-	UPROPERTY(VisibleAnywhere, Category=Montage)
+	UPROPERTY(EditDefaultsOnly, Category=Montage)
 	float WarpingDistance;
 };

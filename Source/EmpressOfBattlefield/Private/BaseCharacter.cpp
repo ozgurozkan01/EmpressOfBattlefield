@@ -15,7 +15,7 @@ ABaseCharacter::ABaseCharacter()
 	
 	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
 
-	WarpingDistance = 100.f;
+	WarpingDistance = 150.f;
 }
 
 void ABaseCharacter::BeginPlay()
@@ -166,7 +166,7 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 
 void ABaseCharacter::SetWarpRotation_Implementation()
 {
-	if (MotionWarpingComponent && CurrentTarget)
+	if (MotionWarpingComponent && CurrentTarget && CurrentTarget->ActorHasTag("MainPlayer"))
 	{
 		FVector WarpTargetLocation = GetRotationWarpTarget();
 		MotionWarpingComponent->AddOrUpdateWarpTargetFromLocation(FName("RotationTarget"), WarpTargetLocation);
