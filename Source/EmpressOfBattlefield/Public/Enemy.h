@@ -29,9 +29,11 @@ public:
 	void SeePawn(APawn* SeenPawn);
 	void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;	
 	void AttackEnd() override;
-	
+	void Patrolling();
+	void ClearTimerHandle(FTimerHandle& Timer);
+
 	UPROPERTY(BlueprintReadOnly)
-	EDeathPose DeathPose;
+	EEnemyDeathPose DeathPose;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	EEnemyState EnemyState;
@@ -47,9 +49,7 @@ protected:
 	void MoveToTarget(TObjectPtr<AActor> Target);
 	void PatrolTimerFinished();
 	void CheckCurrentTarget();
-	void Patrolling();
 	void ChasingTarget();
-	void ClearTimerHandle(FTimerHandle& Timer);
 	void StartAttackTimer();
 	void SetHealthWidgetInitialProperties();
 	void SetHealthBarVisibility(bool bIsVisible);
@@ -64,7 +64,7 @@ protected:
 	bool CanAttack();
 	bool CanPatrol();
 
-	EDeathPose GetDeathPose(const FName& SectionName);
+	EEnemyDeathPose GetDeathPose(const FName& SectionName);
 
 private:
 
@@ -98,7 +98,7 @@ private:
 	UPROPERTY(EditInstanceOnly)
 	double CombatRadius;
 
-	UPROPERTY(EditInstanceOnly)
+	UPROPERTY(EditAnywhere)
 	double AttackRadius;
 	
 	UPROPERTY(EditInstanceOnly, meta=(AllowPrivateAccess = "true"))

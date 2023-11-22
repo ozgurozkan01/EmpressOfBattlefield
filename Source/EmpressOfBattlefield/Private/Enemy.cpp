@@ -71,6 +71,8 @@ void AEnemy::BeginPlay()
 
 void AEnemy::Attack()
 {
+	if (CurrentTarget->ActorHasTag("Dead")) { return;}
+	
 	EnemyState = EEnemyState::EES_Engaged;
 	PlayAttackMontage();;
 }
@@ -123,7 +125,7 @@ bool AEnemy::CanAttack()
 {
 	if (CurrentTarget == nullptr) { return false;}
 
-	return IsInsideAttackRadius() && CurrentTarget->ActorHasTag("MainPlayer") && EnemyState != EEnemyState::EES_Attacking;
+	return IsInsideAttackRadius() && CurrentTarget->ActorHasTag("MainPlayer") && !CurrentTarget->ActorHasTag("Dead") && EnemyState != EEnemyState::EES_Attacking;
 }
 
 bool AEnemy::CanPatrol()
@@ -195,6 +197,7 @@ void AEnemy::CheckCurrentTarget()
 
 void AEnemy::Patrolling()
 {
+	ClearTimerHandle(AttackTimer);
 	GetCharacterMovement()->MaxWalkSpeed = PatrollingSpeed;
 	CurrentTarget = PatrolTargetsContainer[CurrentPatrolTargetIndex];
 	EnemyState = EEnemyState::EES_Patroling;
@@ -363,24 +366,24 @@ void AEnemy::Destroyed()
 	}
 }
 
-EDeathPose AEnemy::GetDeathPose(const FName& SectionName)
+EEnemyDeathPose AEnemy::GetDeathPose(const FName& SectionName)
 {
 	if (SectionName == "FromBack")
 	{
-		return EDeathPose::EDP_DeathToFront;
+		return EEnemyDeathPose::EEDP_DeathToFront;
 	}
 
 	if (SectionName == "FromFront")
 	{
-		return EDeathPose::EDP_DeathToBack;
+		return EEnemyDeathPose::EEDP_DeathToBack;
 	}
 
 	if (SectionName == "FromRight")
 	{
-		return EDeathPose::EDP_DeathToLeft;
+		return EEnemyDeathPose::EEDP_DeathToLeft;
 	}
 
-	return EDeathPose::EDP_DeathToRight;
+	return EEnemyDeathPose::EEDP_DeathToRight;
 }
 
 bool AEnemy::InTargetRange(TObjectPtr<AActor> Target, float Radius)
