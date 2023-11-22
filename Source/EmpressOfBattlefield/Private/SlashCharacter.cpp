@@ -1,6 +1,7 @@
 #include "SlashCharacter.h"
 
 #include "AttributeComponent.h"
+#include "Enemy.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
@@ -8,8 +9,11 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GroomComponent.h"
 #include "SlashAnimInstance.h"
+#include "SlashHUD.h"
+#include "SlashOverlay.h"
 #include "Weapon.h"
 #include "Animation/AnimMontage.h"
+#include "Components/CapsuleComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
 ASlashCharacter::ASlashCharacter()
@@ -69,12 +73,31 @@ void ASlashCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	Tags.Add(FName("MainPlayer"));
-	
-	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	if (PlayerController)
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
 			Subsystem->AddMappingContext(SlashMappingContext, 0);
+		}
+	}
+
+	if (PlayerController)
+	{
+		TObjectPtr<ASlashHUD> SlashHUD = Cast<ASlashHUD>(PlayerController->GetHUD());
+
+		if (SlashHUD && AttributeComponent)
+		{
+			SlashOverlay = SlashHUD->GetSlashOverlay();
+
+			if (SlashOverlay)
+			{
+				SlashOverlay->SetHealthBarPercentage(AttributeComponent->GetHealthPercentage());
+				SlashOverlay->SetStaminaBarPercentage(1.f);
+				SlashOverlay->SetGoldCount(0.f);
+				SlashOverlay->SetSoulsCount(0.f);
+			}
 		}
 	}
 }
@@ -106,13 +129,19 @@ void ASlashCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* 
 	}
 	
 	FName SectionName = DetermineWhichSideGetHit(Theta);
-	
+
 	if (IsAlive() && AnimInstance)
 	{
 		PlayHitReactionMontage(SectionName, AnimInstance);
 	}
-		
+	
+	else
+	{
+		Die(SectionName);
+	}
+	
 	PlayEffects(ImpactPoint);
+	SetWeaponDamageBoxCollision(ECollisionEnabled::NoCollision);
 }
 
 void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -137,6 +166,21 @@ float ASlashCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 
 	AttributeComponent->SetCurrentHealth(DamageAmount);
 	
+	if (AttributeComponent->GetHealthPercentage() <= 0.f)
+	{
+		TObjectPtr<AEnemy> CurrentEnemy = Cast<AEnemy>(EventInstigator->GetPawn());
+		
+		if (CurrentEnemy)
+		{
+			CurrentEnemy->Patrolling();
+		}
+	}
+	
+	if (SlashOverlay)
+	{
+		SlashOverlay->SetHealthBarPercentage(AttributeComponent->GetHealthPercentage());
+	}
+
 	return DamageAmount;
 }
 
@@ -144,8 +188,6 @@ FRotator ASlashCharacter::GetLookAtRotation()
 {
 	if (CurrentTarget == nullptr || !CurrentTarget->ActorHasTag("Enemy")) { return GetActorRotation(); }
 
-	GEngine->AddOnScreenDebugMessage(1, 5, FColor::Red, TEXT("Get Look At Rotation"));
-	
 	FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), CurrentTarget->GetActorLocation());
 	LookAtRotation.Pitch = GetActorRotation().Pitch;
 	LookAtRotation.Roll = GetActorRotation().Roll;
@@ -180,11 +222,10 @@ void ASlashCharacter::Look(const FInputActionValue& Value)
 void ASlashCharacter::Jump(const FInputActionValue& Value)
 {
 	const bool CanJump = Value.Get<bool>();
-	
-	if (CanJump && !GetCharacterMovement()->IsFalling())
-	{
-		ACharacter::Jump();
-	}
+
+	if (!CanJump || GetCharacterMovement()->IsFalling() || CurrentAction != EActionState::EAS_Unoccupied) { return; }
+
+	ACharacter::Jump();
 }
 
 void ASlashCharacter::EKeyPressed(const FInputActionValue& Value)
@@ -266,6 +307,15 @@ void ASlashCharacter::Disarm()
 	CurrentState = ECharacterState::ECS_Unequipped;
 }
 
+void ASlashCharacter::Die(FName& SectionName)
+{
+	Tags.Add("Dead");
+	PlayDeathMontage();
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	CurrentState = ECharacterState::ECS_Dead;
+}
+
 void ASlashCharacter::AttachWeaponToBack()
 {
 	if (EquippedWeapon)
@@ -273,6 +323,7 @@ void ASlashCharacter::AttachWeaponToBack()
 		EquippedWeapon->AttachMeshToSocket(GetMesh(), FName("SpineSocket"));
 	}
 }
+
 
 void ASlashCharacter::AttachWeaponToHand()
 {
@@ -306,4 +357,29 @@ void ASlashCharacter::AttackEnd()
 {
 	CurrentAction = EActionState::EAS_Unoccupied;
 	bCanRotateTarget = false;
+}
+
+void ASlashCharacter::PlayDeathMontage()
+{
+	if (AnimInstance == nullptr) { return; }
+
+	int32 SectionAmount = DeathMontage->GetNumSections();
+	int32 SectionIndex = FMath::RandRange(0, SectionAmount-1);
+	FName SectionName = DeathMontage->GetSectionName(SectionIndex);
+	AnimInstance->Montage_Play(DeathMontage);
+	AnimInstance->Montage_JumpToSection(SectionName, DeathMontage);
+	SetDeathPose(SectionName);
+}
+
+void ASlashCharacter::SetDeathPose(FName SectionName)
+{
+	if (SectionName == "Death1")
+	{
+		DeathPose = ESlashDeathPose::ESDP_Death1;
+	}
+
+	else
+	{
+		DeathPose = ESlashDeathPose::ESDP_Death2;
+	}
 }

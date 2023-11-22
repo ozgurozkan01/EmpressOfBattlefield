@@ -8,6 +8,7 @@
 #include "CharacterTypes.h"
 #include "SlashCharacter.generated.h"
 
+class USlashOverlay;
 class USlashAnimInstance;
 class UGroomComponent;
 class UCameraComponent;
@@ -31,16 +32,25 @@ public:
 
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
 	FORCEINLINE ECharacterState GetCharacterCurrentState() const { return CurrentState; }
-
+	FORCEINLINE ESlashDeathPose GetDeathPose() const { return DeathPose; }
+	
 	UPROPERTY(VisibleAnywhere)
 	ECharacterState CurrentState;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	EActionState CurrentAction;
 
 	UPROPERTY(VisibleAnywhere)
 	EAttackType AttackType;
+
+	UPROPERTY(VisibleAnywhere)
+	ESlashDeathPose DeathPose;	
 	
+	UPROPERTY(EditAnywhere)
+	float RotationInterpSpeed;
+
+	UPROPERTY(EditAnywhere)
+	bool bCanRotateTarget;
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
@@ -62,6 +72,7 @@ protected:
 	void Arm();
 	void Disarm();
 
+	virtual void Die(FName& SectionName) override;
 	
 	UFUNCTION(BlueprintCallable)
 	void AttachWeaponToBack();
@@ -74,14 +85,22 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void HitReactionEnd();	
-
 	
 	// Play Montage Functions
 	void PlayEquipMontage(const FName& SectionName);
 	
 	virtual void AttackEnd() override;
-public:
+private:
 
+	void PlayDeathMontage();
+	void SetDeathPose(FName SectionName);
+	
+	UPROPERTY(EditDefaultsOnly, Category=Montage)
+	TObjectPtr<UAnimMontage> DeathMontage;
+	
+	UPROPERTY(EditDefaultsOnly, Category=UserWidget)
+	TObjectPtr<USlashOverlay> SlashOverlay;
+	
 	UPROPERTY(EditDefaultsOnly, Category=Camera)
 	TObjectPtr<USpringArmComponent> CameraBoom;
 	
@@ -121,10 +140,4 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category="Animation")
 	TObjectPtr<USlashAnimInstance> AnimInstance;
-
-	UPROPERTY(EditAnywhere)
-	float RotationInterpSpeed;
-
-	UPROPERTY(EditAnywhere)
-	bool bCanRotateTarget;
 };
