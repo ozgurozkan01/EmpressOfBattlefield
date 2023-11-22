@@ -24,6 +24,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category="Movement | Character State")
 	ECharacterState CharacterState;
+
+	UPROPERTY(BlueprintReadOnly, Category="Movement | Character State")
+	ESlashDeathPose CurrentDeathPose;
 	
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<ASlashCharacter> SlashCharacter;
@@ -36,4 +39,8 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category=Movement)	
 	bool IsFalling;
+	
+public:
+	
+	FORCEINLINE void SetDeathPose(ESlashDeathPose Pose) { CurrentDeathPose = Pose; }
 };
