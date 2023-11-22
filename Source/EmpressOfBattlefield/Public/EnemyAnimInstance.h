@@ -26,7 +26,7 @@ protected:
 	TObjectPtr<AEnemy> Enemy;
 
 	UPROPERTY(BlueprintReadWrite)
-	EDeathPose DeathPose;
+	EEnemyDeathPose DeathPose;
 
 	UPROPERTY(BlueprintReadWrite)
 	EEnemyState EnemyState;
